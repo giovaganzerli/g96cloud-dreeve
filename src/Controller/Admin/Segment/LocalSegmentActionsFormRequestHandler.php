@@ -65,7 +65,7 @@ final readonly class LocalSegmentActionsFormRequestHandler
                     'segmentId' => $segmentId, 'action' => 'upload',
                     'filename' => $file->getClientOriginalName(), 'content' => base64_encode($file->getContent()),
                 ]));
-                return new RedirectResponse($this->urls->generate('segment', ['segmentId' => $segmentId]), Response::HTTP_SEE_OTHER);
+                return new RedirectResponse($this->urls->generate('admin_local_segment_action', ['segmentId' => $segmentId, 'action' => 'generate']), Response::HTTP_SEE_OTHER);
             } catch (CouldNotProcessCommand|CouldNotDeserializeCommand $exception) {
                 $error = $exception->getMessage();
             }

@@ -51,7 +51,12 @@ final readonly class ManageLocalSegmentCommandHandler implements CommandHandler
             $hasGeometry = null !== $this->geometry->forDisplay($segment)->getPolyline();
             if ('search' === $command->getAction()) {
                 if (!$hasGeometry) {
-                    throw CouldNotProcessCommand::withReason('Genera o carica prima la traccia GPS del segmento.');
+                    $polyline = $this->generator->generate($segment);
+                    if (null === $polyline) {
+                        throw CouldNotProcessCommand::withReason('I passaggi archiviati non contengono dati GPS sufficienti. Puoi caricare il GPX qui sotto.');
+                    }
+                    $this->geometry->saveMissing($segment, $polyline, 'generated');
+                    $this->scans->deleteForSubject(ActivityScanType::CUSTOM_SEGMENT, (string) $segment->getId());
                 }
                 $this->matcher->searchSegment($segment->getId());
                 return;

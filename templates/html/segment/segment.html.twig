@@ -61,24 +61,12 @@
             </div>
         </div>
         {% if isAuthenticated() %}
-            <div class="flex flex-wrap items-center gap-2 mb-4">
+            <div class="flex items-center gap-2 mb-4">
                 {% include 'html/navigation/admin-edit-link.html.twig' with {
-                    path: 'admin/segments/' ~ segment.getId() ~ '/local/search',
+                    path: 'admin/segments/' ~ segment.getId() ~ '/local/generate',
                     redirectTo: 'segments/' ~ segment.getId(),
-                    title: 'Cerca le attività su questo segmento', label: 'Cerca attività', icon: 'search'
+                    title: 'Gestisci la traccia e cerca le attività del segmento', label: 'Genera traccia', icon: 'route'
                 } %}
-                {% if not segment.getPolyline() %}
-                    {% include 'html/navigation/admin-edit-link.html.twig' with {
-                        path: 'admin/segments/' ~ segment.getId() ~ '/local/generate',
-                        redirectTo: 'segments/' ~ segment.getId(),
-                        title: 'Ricostruisci il percorso dai passaggi archiviati', label: 'Genera traccia', icon: 'route'
-                    } %}
-                    {% include 'html/navigation/admin-edit-link.html.twig' with {
-                        path: 'admin/segments/' ~ segment.getId() ~ '/local/upload',
-                        redirectTo: 'segments/' ~ segment.getId(),
-                        title: 'Carica il GPX del segmento', label: 'Carica GPX', icon: 'upload'
-                    } %}
-                {% endif %}
             </div>
         {% endif %}
         <div class="space-y-4">
