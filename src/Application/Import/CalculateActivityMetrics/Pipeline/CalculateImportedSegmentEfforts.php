@@ -7,20 +7,25 @@ namespace App\Application\Import\CalculateActivityMetrics\Pipeline;
 use App\Domain\Activity\ActivityId;
 use App\Domain\Activity\ActivityRepository;
 use App\Domain\Activity\ImportSource;
+use App\Domain\Activity\Route\Signature\ActivityRouteSignatureRepository;
 use App\Domain\Activity\Route\Signature\RouteGrid;
 use App\Domain\Activity\Scan\ActivityScan;
 use App\Domain\Activity\Scan\ActivityScanRepository;
 use App\Domain\Activity\Scan\ActivityScanType;
+use App\Domain\Activity\SportType\SportType;
 use App\Domain\Activity\Stream\ActivityStreamRepository;
 use App\Domain\Activity\Stream\StreamType;
 use App\Domain\Import\ImportMode;
+use App\Domain\Segment\LocalSegmentGeometry;
 use App\Domain\Segment\SegmentEffort\Matching\SegmentEffortMatcher;
 use App\Domain\Segment\SegmentEffort\Matching\SegmentGeometryFromEffort;
 use App\Domain\Segment\SegmentEffort\SegmentEffort;
 use App\Domain\Segment\SegmentEffort\SegmentEffortId;
 use App\Domain\Segment\SegmentEffort\SegmentEffortRepository;
+use App\Domain\Segment\SegmentId;
 use App\Domain\Segment\SegmentRepository;
 use App\Domain\Segment\SegmentType;
+use App\Infrastructure\Exception\EntityNotFound;
 use App\Infrastructure\Serialization\Json;
 use App\Infrastructure\ValueObject\Geography\EncodedPolyline;
 use Doctrine\DBAL\ArrayParameterType;
@@ -43,6 +48,8 @@ final readonly class CalculateImportedSegmentEfforts implements CalculateActivit
         private ActivityScanRepository $activityScanRepository,
         private SegmentEffortRepository $segmentEffortRepository,
         private RouteGrid $routeGrid,
+        private LocalSegmentGeometry $localSegmentGeometry,
+        private ActivityRouteSignatureRepository $activityRouteSignatureRepository,
         private SegmentEffortMatcher $matcher,
         private SegmentGeometryFromEffort $geometryBuilder,
     ) {
@@ -61,26 +68,42 @@ final readonly class CalculateImportedSegmentEfforts implements CalculateActivit
         $this->scan(new NullOutput(), $activityId);
     }
 
-    private function scan(OutputInterface $output, ?ActivityId $selectedActivityId = null): void
+    public function searchSegment(SegmentId $segmentId): void
+    {
+        $this->scan(new NullOutput(), selectedSegmentId: $segmentId);
+    }
+
+    private function scan(OutputInterface $output, ?ActivityId $selectedActivityId = null, ?SegmentId $selectedSegmentId = null): void
     {
         $fingerprint = hash('sha256', Json::encode($this->connection->fetchAssociative(
             "SELECT (SELECT COUNT(*) FROM Segment WHERE type = 'imported') AS segments,
              (SELECT COUNT(*) FROM Activity WHERE importSource = 'stravaApi') AS activities,
              (SELECT MAX(st.rowid) FROM ActivityStream st JOIN Activity a ON a.activityId = st.activityId WHERE a.importSource = 'stravaApi' AND st.streamType IN ('latlng', 'distance')) AS streams"
         )));
+        $overrides = $this->localSegmentGeometry->overrides();
+        $revision = hash('sha256', $fingerprint.Json::encode($overrides));
         $ids = null !== $selectedActivityId ? [(string) $selectedActivityId] : $this->connection->fetchFirstColumn('SELECT a.activityId FROM Activity a
             WHERE a.importSource IN (:sources) AND NOT EXISTS (SELECT 1 FROM ActivityScan s
             WHERE s.activityId = a.activityId AND s.type = :type AND s.subjectId = :revision)
             AND EXISTS (SELECT 1 FROM ActivityStream st WHERE st.activityId = a.activityId AND st.streamType = :gps AND st.dataSize > 0)',
             ['sources' => array_map(fn (ImportSource $source): string => $source->value, ImportSource::fileBasedSources()),
-             'type' => ActivityScanType::LOCAL_IMPORTED_SEGMENTS->value, 'revision' => $fingerprint, 'gps' => StreamType::LAT_LNG->value],
+             'type' => ActivityScanType::LOCAL_IMPORTED_SEGMENTS->value, 'revision' => $revision, 'gps' => StreamType::LAT_LNG->value],
             ['sources' => ArrayParameterType::STRING]);
+        if (null !== $selectedSegmentId) {
+            $segment = $this->segmentRepository->find($selectedSegmentId);
+            $ids = $this->connection->fetchFirstColumn("SELECT a.activityId FROM Activity a
+                WHERE a.importSource != 'manual' AND a.sportType IN (:sports)
+                AND NOT EXISTS (SELECT 1 FROM SegmentEffort e WHERE e.activityId = a.activityId AND e.segmentId = :segment AND e.segmentEffortId NOT LIKE 'segmentEffort-local-%')
+                AND EXISTS (SELECT 1 FROM ActivityStream st WHERE st.activityId = a.activityId AND st.streamType = 'latlng' AND st.dataSize > 0)",
+                ['sports' => array_map(static fn (SportType $sport): string => $sport->value, $segment->getSportType()->getActivityType()->getSportTypes()->toArray()), 'segment' => $selectedSegmentId],
+                ['sports' => ArrayParameterType::STRING]);
+        }
         if ([] === $ids) {
             return;
         }
         $cached = $this->connection->fetchOne('SELECT value FROM KeyValue WHERE key = :key', ['key' => self::CACHE_KEY]);
         $cache = false !== $cached ? Json::decode($cached) : [];
-        if (($cache['fingerprint'] ?? null) !== $fingerprint) {
+        if (null === $selectedSegmentId && ($cache['fingerprint'] ?? null) !== $fingerprint) {
             $geometries = [];
             // Reconstruction is cached separately; never overwrite official Segment geometries.
             foreach ($this->connection->iterateAssociative("SELECT activityId, data FROM Activity WHERE importSource = 'stravaApi' ORDER BY activityId") as $row) {
@@ -107,12 +130,16 @@ final readonly class CalculateImportedSegmentEfforts implements CalculateActivit
                 ['key' => self::CACHE_KEY, 'value' => Json::encode($cache)]);
         }
         $candidates = [];
-        $segments = $this->segmentRepository->findByType(SegmentType::IMPORTED)->toArray();
-        if (null !== $selectedActivityId) {
-            $segments = array_merge($segments, $this->segmentRepository->findByType(SegmentType::CUSTOM)->toArray());
+        if (null !== $selectedSegmentId) {
+            $segments = [$this->localSegmentGeometry->forDisplay($this->segmentRepository->find($selectedSegmentId))];
+        } else {
+            $segments = $this->segmentRepository->findByType(SegmentType::IMPORTED)->toArray();
+            if (null !== $selectedActivityId) {
+                $segments = array_merge($segments, $this->segmentRepository->findByType(SegmentType::CUSTOM)->toArray());
+            }
         }
         foreach ($segments as $segment) {
-            $polyline = $segment->getPolyline() ?? EncodedPolyline::fromOptionalString($cache['geometries'][(string) $segment->getId()]['polyline'] ?? null);
+            $polyline = $segment->getPolyline() ?? EncodedPolyline::fromOptionalString($overrides[(string) $segment->getId()]['polyline'] ?? null) ?? EncodedPolyline::fromOptionalString($cache['geometries'][(string) $segment->getId()]['polyline'] ?? null);
             if (null === $polyline) {
                 continue;
             }
@@ -125,6 +152,17 @@ final readonly class CalculateImportedSegmentEfforts implements CalculateActivit
             $activity = $this->activityRepository->find($activityId);
             if (ImportSource::MANUAL === $activity->getImportSource()) {
                 continue;
+            }
+            if (null !== $selectedSegmentId && [] !== $candidates) {
+                try {
+                    $routeCells = array_flip($this->activityRouteSignatureRepository->find($activityId)->getCells()->toArray());
+                    $cells = $candidates[0][1];
+                    if (count(array_filter($cells, static fn (int $cell): bool => isset($routeCells[$cell]))) < count($cells) * 0.5) {
+                        continue;
+                    }
+                } catch (EntityNotFound) {
+                    // Older imports may not have a route signature; use the GPS stream below.
+                }
             }
             $streams = $this->activityStreamRepository->findByActivityId($activityId);
             $latLng = $streams->filterOnType(StreamType::LAT_LNG)?->getData() ?? [];
@@ -148,7 +186,7 @@ final readonly class CalculateImportedSegmentEfforts implements CalculateActivit
                         || count(array_filter($cells, static fn (int $cell): bool => isset($activityCells[$cell]))) < count($cells) * 0.5) {
                         continue;
                     }
-                    if (null !== $selectedActivityId && $segment->getType()->isCustom()) {
+                    if ((null !== $selectedActivityId || null !== $selectedSegmentId) && $segment->getType()->isCustom()) {
                         $this->activityScanRepository->add(ActivityScan::create($activityId, ActivityScanType::CUSTOM_SEGMENT, (string) $segment->getId()));
                     }
                     foreach ($this->matcher->match($segment, $latLng, $time, $distance,
@@ -166,8 +204,8 @@ final readonly class CalculateImportedSegmentEfforts implements CalculateActivit
                         ++$added;
                     }
                 }
-                if (null === $selectedActivityId) {
-                    $this->activityScanRepository->add(ActivityScan::create($activityId, ActivityScanType::LOCAL_IMPORTED_SEGMENTS, $fingerprint));
+                if (null === $selectedActivityId && null === $selectedSegmentId) {
+                    $this->activityScanRepository->add(ActivityScan::create($activityId, ActivityScanType::LOCAL_IMPORTED_SEGMENTS, $revision));
                 }
                 $this->connection->commit();
             } catch (\Throwable $e) {

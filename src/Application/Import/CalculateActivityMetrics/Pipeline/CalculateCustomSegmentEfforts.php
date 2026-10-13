@@ -31,6 +31,7 @@ final readonly class CalculateCustomSegmentEfforts implements CalculateActivityM
 
     public function __construct(
         private SegmentRepository $segmentRepository,
+        private \App\Domain\Segment\LocalSegmentGeometry $localSegmentGeometry,
         private ActivityScanRepository $activityScanRepository,
         private SegmentEffortRepository $segmentEffortRepository,
         private ActivityRepository $activityRepository,
@@ -48,6 +49,7 @@ final readonly class CalculateCustomSegmentEfforts implements CalculateActivityM
 
         $scannedActivityCount = 0;
         foreach ($this->segmentRepository->findByType(SegmentType::CUSTOM) as $segment) {
+            $segment = $this->localSegmentGeometry->forDisplay($segment);
             if (!($polyline = $segment->getPolyline()) instanceof EncodedPolyline) {
                 continue;
             }

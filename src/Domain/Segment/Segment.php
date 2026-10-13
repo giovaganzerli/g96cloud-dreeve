@@ -32,6 +32,7 @@ final class Segment implements SupportsAITooling
     private int $numberOfTimesRidden = 0;
     private ?SerializableDateTime $lastEffortDate = null;
     private bool $geometryWasReconstructed = false;
+    private bool $geometryWasUploaded = false;
 
     private function __construct(
         #[ORM\Id, ORM\Column(type: 'string', unique: true)]
@@ -349,6 +350,20 @@ final class Segment implements SupportsAITooling
             'startingCoordinate' => $polyline->getStartingCoordinate(),
             'geometryWasReconstructed' => true,
         ]);
+    }
+
+    public function withUploadedPolyline(EncodedPolyline $polyline): self
+    {
+        return clone ($this, [
+            'polyline' => $polyline,
+            'startingCoordinate' => $polyline->getStartingCoordinate(),
+            'geometryWasUploaded' => true,
+        ]);
+    }
+
+    public function hasUploadedGeometry(): bool
+    {
+        return $this->geometryWasUploaded;
     }
 
     public function hasReconstructedGeometry(): bool

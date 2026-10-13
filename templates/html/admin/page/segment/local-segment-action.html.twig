@@ -1,0 +1,70 @@
+{% extends "html/admin/page/template.html.twig" %}
+{% block main %}
+    {% set segmentUrl = relativeUrl(path('segment', {segmentId: segment.getId()})) %}
+    {% set titles = {search: 'Cerca attività sul segmento', generate: 'Genera traccia GPS', upload: 'Carica traccia GPX'} %}
+    {% set labels = {search: 'Cerca attività', generate: 'Genera traccia', upload: 'Carica GPX'} %}
+    {% set icons = {search: 'search', generate: 'route', upload: 'upload'} %}
+    {% set hasTrack = segment.getPolyline() is not null %}
+    {% set canSubmit = action == 'search' ? hasTrack : not hasTrack %}
+    <div class="modal-like-form">
+        <div class="w-full max-w-lg overflow-y-auto p-6 bg-white border border-gray-200 rounded-lg shadow-xl">
+            <div class="flex items-center justify-between gap-4 mb-4">
+                <div class="flex items-center gap-3 min-w-0">
+                    <span class="grid place-items-center size-10 shrink-0 rounded-lg bg-primary-soft text-primary" aria-hidden="true">{{ svg(icons[action], 'size-5') }}</span>
+                    <h3 class="text-lg font-semibold">{{ titles[action] }}</h3>
+                </div>
+                <a href="{{ segmentUrl }}" aria-label="Chiudi" title="Chiudi" class="grid place-items-center size-8 shrink-0 rounded-lg text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-900">{{ svg('close', 'size-5') }}</a>
+            </div>
+            {% if action == 'upload' %}
+                <form method="post" enctype="multipart/form-data" action="{{ relativeUrl(path('admin_local_segment_action', {segmentId: segment.getId(), action: action})) }}" class="flex flex-col gap-4">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('dispatch-command') }}">
+            {% else %}
+                <form data-dispatch-command="{{ dispatchCommand }}" class="flex flex-col gap-4">
+                    <input type="hidden" name="segmentId" value="{{ segment.getId() }}">
+                    <input type="hidden" name="action" value="{{ action }}">
+            {% endif %}
+                <div data-form-error class="form-error {{ not error ? 'hidden' }}" role="alert">{{ error }}</div>
+                <div class="flex items-center gap-3 rounded-lg bg-gray-50 p-3">
+                    <span class="shrink-0 text-primary" aria-hidden="true">{{ svgSportType(segment.getSportType(), 'size-5') }}</span>
+                    <p class="min-w-0 text-sm font-semibold text-gray-900">{{ segment.getName() }}</p>
+                </div>
+                <div class="space-y-2 text-sm text-gray-600">
+                    {% if action == 'search' %}
+                        <p>Confronta questo segmento con le attività GPS archiviate in Dreeve, incluse quelle di Zepp e quelle caricate da file.</p>
+                        <p>I passaggi già presenti vengono conservati. La ricerca può essere ripetuta senza creare duplicati.</p>
+                        {% if not hasTrack %}
+                            <p class="font-medium text-gray-900">Prima della ricerca serve una traccia GPS del segmento.</p>
+                            <div class="flex flex-wrap items-center gap-2">
+                                <a href="{{ relativeUrl(path('admin_local_segment_action', {segmentId: segment.getId(), action: 'generate'})) }}" type="button" class="btn--secondary">{{ svg('route', 'size-4') }} Genera traccia</a>
+                                <a href="{{ relativeUrl(path('admin_local_segment_action', {segmentId: segment.getId(), action: 'upload'})) }}" type="button" class="btn--secondary">{{ svg('upload', 'size-4') }} Carica GPX</a>
+                            </div>
+                        {% endif %}
+                    {% elseif hasTrack %}
+                        <p class="font-medium text-gray-900">La traccia GPS è già disponibile. Apri il segmento per vedere la mappa.</p>
+                    {% elseif action == 'generate' %}
+                        <p>Ricostruisce il percorso dai passaggi e dai dati GPS già archiviati. Non richiede le API Strava.</p>
+                        <p>Se i dati non sono sufficienti, puoi caricare il GPX del segmento.</p>
+                    {% else %}
+                        <p>Seleziona il GPX del solo segmento: un percorso continuo, fino a 5 MB. Sono accettate anche tracce senza orari.</p>
+                        <p>La traccia viene salvata localmente e usata per la mappa e il riconoscimento dei passaggi. I dati e i tempi ufficiali restano conservati.</p>
+                    {% endif %}
+                </div>
+                {% if action == 'upload' and canSubmit %}
+                    <div>
+                        <label for="segment-track">Traccia del segmento</label>
+                        <input type="file" id="segment-track" name="track" accept=".gpx,application/gpx+xml" required>
+                    </div>
+                {% endif %}
+                <div class="flex flex-wrap items-center justify-end gap-2 border-t border-gray-200 pt-4">
+                    <a href="{{ segmentUrl }}" type="button" class="btn--secondary">{{ svg('arrow-left', 'size-4') }} Torna al segmento</a>
+                    {% if canSubmit %}
+                        <button type="submit" data-has-loading-state class="group btn--primary">
+                            <span class="label"><span class="inline-flex items-center gap-2">{{ svg(icons[action], 'size-4') }} {{ labels[action] }}</span></span>
+                            <span class="label--loading">{{ action == 'upload' ? 'Caricamento in corso...' : 'Elaborazione in corso...' }}</span>
+                        </button>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock main %}

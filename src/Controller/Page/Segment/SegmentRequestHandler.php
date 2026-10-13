@@ -22,6 +22,8 @@ use App\Domain\Segment\SegmentId;
 use App\Domain\Segment\SegmentRepository;
 use App\Domain\Settings\SettingsRepository;
 use App\Infrastructure\Cache\Cacheability;
+use App\Infrastructure\Cache\Context\AuthenticatedCacheContext;
+use App\Infrastructure\Cache\Context\CacheContexts;
 use App\Infrastructure\Cache\Tag\CacheTag;
 use App\Infrastructure\Cache\Tag\CacheTags;
 use App\Infrastructure\Cache\Tag\RootCacheTag;
@@ -70,6 +72,7 @@ final readonly class SegmentRequestHandler
 
         return $this->pageRenderer->render(
             cacheability: Cacheability::for(
+                cacheContexts: CacheContexts::of(AuthenticatedCacheContext::class),
                 cacheKey: sprintf('segments.%s', $segment->getId()->toUnprefixedString()),
                 cacheTags: CacheTags::of(
                     SegmentCacheTag::for($segment->getId()),
