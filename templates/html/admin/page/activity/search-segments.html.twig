@@ -1,0 +1,28 @@
+{% extends "html/admin/page/template.html.twig" %}
+{% block main %}
+    {% set activityUrl = relativeUrl(path('activity', {activityId: activity.getId()})) %}
+    <div class="modal-like-form">
+        <div class="w-full max-w-lg overflow-y-auto p-6 bg-white border border-gray-200 rounded-lg shadow-xl">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold">Cerca segmenti locali</h3>
+                <a href="{{ activityUrl }}" class="btn--secondary" aria-label="{{ 'Close'|trans({}, 'admin') }}">{{ 'Close'|trans({}, 'admin') }}</a>
+            </div>
+            <form data-dispatch-command="{{ dispatchCommand }}" class="flex flex-col gap-4">
+                <input type="hidden" name="activityId" value="{{ activity.getId() }}">
+                <div data-form-error class="form-error hidden" role="alert"></div>
+                <div class="space-y-2 text-sm text-gray-600">
+                    <p class="font-semibold text-gray-900">{{ activity.getName() }}</p>
+                    <p>Cerca i passaggi sui segmenti disponibili localmente, inclusi quelli importati da Strava con una traccia GPS disponibile.</p>
+                    <p>I passaggi già presenti vengono conservati. Puoi ripetere la ricerca dopo aver aggiunto nuovi segmenti.</p>
+                </div>
+                <div class="flex justify-end gap-2 border-t border-gray-200 pt-4">
+                    <a href="{{ activityUrl }}" class="btn--secondary">Torna all’attività</a>
+                    <button type="submit" data-has-loading-state class="group btn--primary">
+                        <span class="label">Cerca segmenti</span>
+                        <span class="label--loading">Ricerca in corso...</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock main %}

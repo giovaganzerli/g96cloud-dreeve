@@ -25,6 +25,7 @@ use App\Infrastructure\Serialization\Json;
 use App\Infrastructure\ValueObject\Geography\EncodedPolyline;
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
+use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\Attribute\AsTaggedItem;
 
@@ -52,12 +53,22 @@ final readonly class CalculateImportedSegmentEfforts implements CalculateActivit
         if (!$this->importMode->isFiles()) {
             return;
         }
+        $this->scan($output);
+    }
+
+    public function searchActivity(ActivityId $activityId): void
+    {
+        $this->scan(new NullOutput(), $activityId);
+    }
+
+    private function scan(OutputInterface $output, ?ActivityId $selectedActivityId = null): void
+    {
         $fingerprint = hash('sha256', Json::encode($this->connection->fetchAssociative(
             "SELECT (SELECT COUNT(*) FROM Segment WHERE type = 'imported') AS segments,
              (SELECT COUNT(*) FROM Activity WHERE importSource = 'stravaApi') AS activities,
              (SELECT MAX(st.rowid) FROM ActivityStream st JOIN Activity a ON a.activityId = st.activityId WHERE a.importSource = 'stravaApi' AND st.streamType IN ('latlng', 'distance')) AS streams"
         )));
-        $ids = $this->connection->fetchFirstColumn('SELECT a.activityId FROM Activity a
+        $ids = null !== $selectedActivityId ? [(string) $selectedActivityId] : $this->connection->fetchFirstColumn('SELECT a.activityId FROM Activity a
             WHERE a.importSource IN (:sources) AND NOT EXISTS (SELECT 1 FROM ActivityScan s
             WHERE s.activityId = a.activityId AND s.type = :type AND s.subjectId = :revision)
             AND EXISTS (SELECT 1 FROM ActivityStream st WHERE st.activityId = a.activityId AND st.streamType = :gps AND st.dataSize > 0)',
@@ -96,7 +107,11 @@ final readonly class CalculateImportedSegmentEfforts implements CalculateActivit
                 ['key' => self::CACHE_KEY, 'value' => Json::encode($cache)]);
         }
         $candidates = [];
-        foreach ($this->segmentRepository->findByType(SegmentType::IMPORTED) as $segment) {
+        $segments = $this->segmentRepository->findByType(SegmentType::IMPORTED)->toArray();
+        if (null !== $selectedActivityId) {
+            $segments = array_merge($segments, $this->segmentRepository->findByType(SegmentType::CUSTOM)->toArray());
+        }
+        foreach ($segments as $segment) {
             $polyline = $segment->getPolyline() ?? EncodedPolyline::fromOptionalString($cache['geometries'][(string) $segment->getId()]['polyline'] ?? null);
             if (null === $polyline) {
                 continue;
@@ -108,6 +123,9 @@ final readonly class CalculateImportedSegmentEfforts implements CalculateActivit
         foreach ($ids as $id) {
             $activityId = ActivityId::fromString($id);
             $activity = $this->activityRepository->find($activityId);
+            if (ImportSource::MANUAL === $activity->getImportSource()) {
+                continue;
+            }
             $streams = $this->activityStreamRepository->findByActivityId($activityId);
             $latLng = $streams->filterOnType(StreamType::LAT_LNG)?->getData() ?? [];
             $time = $streams->filterOnType(StreamType::TIME)?->getData() ?? [];
@@ -118,10 +136,20 @@ final readonly class CalculateImportedSegmentEfforts implements CalculateActivit
             $activityCells = array_flip($this->routeGrid->cellsFor(EncodedPolyline::fromCoordinates($latLng))->toArray());
             $this->connection->beginTransaction();
             try {
+                // Preserve existing official/custom passes; local passes have deterministic IDs.
+                $recordedSegments = array_flip($this->connection->fetchFirstColumn(
+                    "SELECT DISTINCT segmentId FROM SegmentEffort WHERE activityId = :id AND segmentEffortId NOT LIKE 'segmentEffort-local-%'",
+                    ['id' => $id]));
                 foreach ($candidates as [$segment, $cells]) {
+                    if (isset($recordedSegments[(string) $segment->getId()])) {
+                        continue;
+                    }
                     if ($segment->getSportType()->getActivityType() !== $activity->getSportType()->getActivityType()
                         || count(array_filter($cells, static fn (int $cell): bool => isset($activityCells[$cell]))) < count($cells) * 0.5) {
                         continue;
+                    }
+                    if (null !== $selectedActivityId && $segment->getType()->isCustom()) {
+                        $this->activityScanRepository->add(ActivityScan::create($activityId, ActivityScanType::CUSTOM_SEGMENT, (string) $segment->getId()));
                     }
                     foreach ($this->matcher->match($segment, $latLng, $time, $distance,
                         $streams->filterOnType(StreamType::WATTS)?->getData() ?? [],
@@ -138,7 +166,9 @@ final readonly class CalculateImportedSegmentEfforts implements CalculateActivit
                         ++$added;
                     }
                 }
-                $this->activityScanRepository->add(ActivityScan::create($activityId, ActivityScanType::LOCAL_IMPORTED_SEGMENTS, $fingerprint));
+                if (null === $selectedActivityId) {
+                    $this->activityScanRepository->add(ActivityScan::create($activityId, ActivityScanType::LOCAL_IMPORTED_SEGMENTS, $fingerprint));
+                }
                 $this->connection->commit();
             } catch (\Throwable $e) {
                 $this->connection->rollBack();
