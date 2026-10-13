@@ -34,6 +34,9 @@ final readonly class ManageLocalSegment extends DomainCommand implements Deseria
         }
         $contents = null;
         if ('upload' === $payload['action']) {
+            if (!in_array($payload['recalculate'] ?? null, [true, '1'], true)) {
+                throw CouldNotDeserializeCommand::invalidPayload('Conferma il ricalcolo dei risultati sulla lunghezza e sul dislivello del GPX.');
+            }
             if (!isset($payload['filename'], $payload['content']) || !is_string($payload['filename']) || !is_string($payload['content'])
                 || 'gpx' !== strtolower(pathinfo($payload['filename'], PATHINFO_EXTENSION))
                 || strlen($payload['content']) > (int) ceil(GpxSegmentTrackParser::MAX_BYTES * 4 / 3) + 4) {
@@ -67,7 +70,7 @@ final readonly class ManageLocalSegment extends DomainCommand implements Deseria
         return match ($this->action) {
             'search' => 'Ricerca completata. Gli eventuali nuovi passaggi sono visibili nel dettaglio del segmento.',
             'generate' => 'Traccia GPS generata dai dati archiviati. La mappa è disponibile nel dettaglio del segmento.',
-            default => 'Traccia GPX caricata. La mappa è disponibile nel dettaglio del segmento.',
+            default => 'Traccia GPX caricata e risultati ricalcolati sulle attività GPS disponibili.',
         };
     }
 }

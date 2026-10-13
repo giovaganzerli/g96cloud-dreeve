@@ -33,6 +33,8 @@ final class Segment implements SupportsAITooling
     private ?SerializableDateTime $lastEffortDate = null;
     private bool $geometryWasReconstructed = false;
     private bool $geometryWasUploaded = false;
+    private ?float $uploadedElevationGain = null;
+    private ?float $uploadedElevationLoss = null;
 
     private function __construct(
         #[ORM\Id, ORM\Column(type: 'string', unique: true)]
@@ -359,6 +361,21 @@ final class Segment implements SupportsAITooling
             'startingCoordinate' => $polyline->getStartingCoordinate(),
             'geometryWasUploaded' => true,
         ]);
+    }
+
+    public function withUploadedElevation(?float $gain, ?float $loss): self
+    {
+        return clone ($this, ['uploadedElevationGain' => $gain, 'uploadedElevationLoss' => $loss]);
+    }
+
+    public function getUploadedElevationGain(): ?float
+    {
+        return $this->uploadedElevationGain;
+    }
+
+    public function getUploadedElevationLoss(): ?float
+    {
+        return $this->uploadedElevationLoss;
     }
 
     public function hasUploadedGeometry(): bool

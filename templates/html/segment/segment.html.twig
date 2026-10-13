@@ -21,7 +21,14 @@
         <p class="text-sm text-gray-500 mb-3">Percorso ricostruito da una tua attività GPS archiviata; può differire dalla geometria ufficiale Strava.</p>
     {% endif %}
     {% if segment.hasUploadedGeometry() %}
-        <p class="text-sm text-gray-500 mb-3">Percorso caricato da GPX e salvato localmente in Dreeve.</p>
+        <p class="text-sm text-gray-500 mb-3">Percorso caricato da GPX e salvato localmente in Dreeve. I risultati sono calcolati sulla traccia locale.</p>
+    {% endif %}
+    {% if segment.hasUploadedGeometry() %}
+        <p class="text-sm text-gray-500 mb-3">Dislivello GPX:
+            {% if segment.getUploadedElevationGain() is not null %}
+                +{{ segment.getUploadedElevationGain()|round }} m / −{{ segment.getUploadedElevationLoss()|round }} m
+            {% else %}non disponibile (quote assenti).{% endif %}
+        </p>
     {% endif %}
     <div class="p-4 bg-white border border-gray-200 rounded-lg shadow-xs">
         <div class="mb-4 flex items-center justify-between">
@@ -50,11 +57,11 @@
                         <div class="text-xs text-gray-500">{{ segment.getDistance().getSymbol() }}</div>
                     </li>
                     <li class="flex flex-col px-2 text-sm" title="{{ "Avg gradient"|trans }}">
-                        <div>{{ segment.getAverageGradient() }}%</div>
+                        <div>{{ segment.getAverageGradient() is not null ? segment.getAverageGradient() ~ '%' : '—' }}</div>
                         <div class="text-xs text-gray-500">{{ "Avg gradient"|trans|lower }}</div>
                     </li>
                     <li class="flex flex-col pl-2 text-sm" title="{{ "Max gradient"|trans }}">
-                        <div>{{ segment.getMaxGradient() }}%</div>
+                        <div>{{ segment.hasUploadedGeometry() and segment.getUploadedElevationGain() is null ? '—' : segment.getMaxGradient() ~ '%' }}</div>
                         <div class="text-xs text-gray-500">{{ "Max gradient"|trans|lower }}</div>
                     </li>
                 </ul>

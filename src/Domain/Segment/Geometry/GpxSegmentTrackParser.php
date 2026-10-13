@@ -52,4 +52,57 @@ final readonly class GpxSegmentTrackParser
         }
         return EncodedPolyline::fromCoordinates($coordinates);
     }
+
+    /** Validate the track and calculate metrics from GPS coordinates and optional elevations. */
+    public function metrics(string $contents): array
+    {
+        $this->parse($contents);
+        $xml = Xml::load($contents);
+        $points = $xml->xpath('./*[local-name()="trk"]/*[local-name()="trkseg"]/*[local-name()="trkpt"] | ./*[local-name()="rte"]/*[local-name()="rtept"]');
+        $distance = [0.0];
+        $altitude = [];
+        $previous = null;
+        foreach ($points as $point) {
+            $coordinate = [(float) $point['lat'], (float) $point['lon']];
+            if (null !== $previous) {
+                $distance[] = end($distance) + GeoMath::haversineDistance(...$previous, ...$coordinate);
+            }
+            $previous = $coordinate;
+            $ele = $point->xpath('./*[local-name()="ele"]');
+            if ([] !== $ele) {
+                $value = (string) $ele[0];
+                if (!is_numeric($value) || !is_finite((float) $value)) {
+                    throw CouldNotProcessCommand::withReason('Il GPX contiene quote non valide.');
+                }
+                $altitude[] = (float) $value;
+            }
+        }
+        $length = end($distance);
+        $gain = $loss = $average = null;
+        $maximum = 0.0;
+        if (count($altitude) === count($points)) {
+            $gain = $loss = 0.0;
+            for ($i = 1; $i < count($altitude); ++$i) {
+                $delta = $altitude[$i] - $altitude[$i - 1];
+                $gain += max(0.0, $delta);
+                $loss += max(0.0, -$delta);
+            }
+            $average = round((end($altitude) - $altitude[0]) / $length * 100, 1);
+            $maximum = $average;
+            // Use the same 50 m gradient window as AddCustomSegmentCommandHandler.
+            $end = 0;
+            foreach ($distance as $i => $value) {
+                while ($end < count($distance) && $distance[$end] - $value < 50) {
+                    ++$end;
+                }
+                if ($end >= count($distance)) {
+                    break;
+                }
+                $maximum = max($maximum, round(($altitude[$end] - $altitude[$i]) / ($distance[$end] - $value) * 100, 1));
+            }
+        }
+        return ['distance' => $length, 'elevationGain' => $gain, 'elevationLoss' => $loss,
+            'averageGradient' => $average, 'maxGradient' => $maximum];
+    }
+
 }

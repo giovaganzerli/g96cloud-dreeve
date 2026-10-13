@@ -56,6 +56,10 @@
                             <label for="segment-track" class="sr-only">Traccia GPX del segmento</label>
                             <input type="file" id="segment-track" name="track" accept=".gpx,application/gpx+xml" required>
                         </div>
+                        <label class="flex items-start gap-3 rounded-lg bg-gray-50 p-3 text-sm text-gray-600">
+                            <input type="checkbox" name="recalculate" value="1" required class="mt-1 shrink-0">
+                            <span>Confermo che questo è il GPX del solo segmento. Lunghezza e dislivello saranno ricavati dal file, anche se diversi dai dati Strava. I risultati precedenti verranno archiviati e ricalcolati dalle attività GPS disponibili; tempi, velocità e classifiche potrebbero cambiare. Senza quote nel GPX, dislivello e pendenze non saranno disponibili.</span>
+                        </label>
                         <div class="flex justify-end">
                             <button type="submit" data-has-loading-state class="group btn--primary">
                                 <span class="label"><span class="inline-flex items-center gap-2">{{ svg('upload', 'size-4') }} Carica GPX</span></span>

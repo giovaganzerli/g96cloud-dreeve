@@ -63,6 +63,7 @@ final readonly class LocalSegmentActionsFormRequestHandler
                 }
                 $this->commands->dispatch(ManageLocalSegment::fromPayload([
                     'segmentId' => $segmentId, 'action' => 'upload',
+                    'recalculate' => $request->request->getString('recalculate'),
                     'filename' => $file->getClientOriginalName(), 'content' => base64_encode($file->getContent()),
                 ]));
                 return new RedirectResponse($this->urls->generate('admin_local_segment_action', ['segmentId' => $segmentId, 'action' => 'generate']), Response::HTTP_SEE_OTHER);

@@ -27,7 +27,7 @@ final readonly class LocalSegmentGeometry
         $override = $this->overrides()[(string) $segment->getId()] ?? null;
         if (null !== $override) {
             $polyline = EncodedPolyline::fromString($override['polyline']);
-            return 'gpx' === $override['source'] ? $segment->withUploadedPolyline($polyline) : $segment->withReconstructedPolyline($polyline);
+            return 'gpx' === $override['source'] ? $segment->withUploadedPolyline($polyline)->withUploadedElevation($override['metrics']['elevationGain'] ?? null, $override['metrics']['elevationLoss'] ?? null) : $segment->withReconstructedPolyline($polyline);
         }
         $value = $this->connection->fetchOne('SELECT value FROM KeyValue WHERE key = :key', ['key' => 'g96.localSegmentGeometry.v1']);
         if (false === $value) {
@@ -44,15 +44,22 @@ final readonly class LocalSegmentGeometry
         return false !== $value ? Json::decode($value) : [];
     }
 
-    public function saveMissing(Segment $segment, EncodedPolyline $polyline, string $source): void
+    public function saveMissing(Segment $segment, EncodedPolyline $polyline, string $source, ?array $metrics = null): void
     {
         if (null !== $this->forDisplay($segment)->getPolyline()) {
             throw CouldNotProcessCommand::withReason('Il segmento ha già una traccia GPS. Non è stata sostituita.');
         }
         $overrides = $this->overrides();
         $overrides[(string) $segment->getId()] = ['polyline' => (string) $polyline, 'source' => $source];
+        if (null !== $metrics) {
+            $overrides[(string) $segment->getId()]['metrics'] = $metrics;
+            $overrides[(string) $segment->getId()]['originalSegment'] = $this->connection->fetchAssociative('SELECT * FROM Segment WHERE segmentId = :id', ['id' => $segment->getId()]);
+            $overrides[(string) $segment->getId()]['originalEfforts'] = $this->connection->fetchAllAssociative('SELECT * FROM SegmentEffort WHERE segmentId = :id', ['id' => $segment->getId()]);
+            $this->connection->executeStatement('UPDATE Segment SET distance = :distance, averageGradient = :average, maxGradient = :maximum WHERE segmentId = :id',
+                ['distance' => (int) round($metrics['distance']), 'average' => $metrics['averageGradient'], 'maximum' => $metrics['maxGradient'], 'id' => $segment->getId()]);
+        }
         $this->connection->executeStatement('INSERT INTO KeyValue (key, value) VALUES (:key, :value) ON CONFLICT(key) DO UPDATE SET value = excluded.value',
             ['key' => self::OVERRIDES_KEY, 'value' => Json::encode($overrides)]);
-        $this->renderCache->invalidateTags(RootCacheTag::SEGMENTS, SegmentCacheTag::for($segment->getId()));
+        $this->renderCache->invalidateTags(RootCacheTag::ACTIVITIES, RootCacheTag::SEGMENTS, SegmentCacheTag::for($segment->getId()));
     }
 }

@@ -11,6 +11,7 @@ use App\Domain\Segment\Geometry\GenerateSegmentGeometry;
 use App\Domain\Segment\Geometry\GpxSegmentTrackParser;
 use App\Domain\Segment\LocalSegmentGeometry;
 use App\Domain\Segment\SegmentRepository;
+use App\Domain\Segment\SegmentEffort\SegmentEffortRepository;
 use App\Infrastructure\CQRS\Command\Command;
 use App\Infrastructure\CQRS\Command\CommandHandler;
 use App\Infrastructure\CQRS\Command\CouldNotProcessCommand;
@@ -31,6 +32,7 @@ final readonly class ManageLocalSegmentCommandHandler implements CommandHandler
         private CalculateImportedSegmentEfforts $matcher,
         private ActivityScanRepository $scans,
         private Mutex $mutex,
+        private SegmentEffortRepository $efforts,
     ) {
     }
 
@@ -65,13 +67,19 @@ final readonly class ManageLocalSegmentCommandHandler implements CommandHandler
                 throw CouldNotProcessCommand::withReason('Il segmento ha già una traccia GPS. Non è stata sostituita.');
             }
             $polyline = 'upload' === $command->getAction()
-                ? $this->gpxParser->parse($command->getContents() ?? '', $segment->getDistance()->toMeter()->toFloat())
+                ? $this->gpxParser->parse($command->getContents() ?? '')
                 : $this->generator->generate($segment);
             if (null === $polyline) {
                 throw CouldNotProcessCommand::withReason('I passaggi archiviati non contengono dati GPS sufficienti per ricostruire il segmento. Puoi caricare il suo GPX.');
             }
-            $this->geometry->saveMissing($segment, $polyline, 'upload' === $command->getAction() ? 'gpx' : 'generated');
+            $upload = 'upload' === $command->getAction();
+            $metrics = $upload ? $this->gpxParser->metrics($command->getContents() ?? '') : null;
+            $this->geometry->saveMissing($segment, $polyline, $upload ? 'gpx' : 'generated', $metrics);
             $this->scans->deleteForSubject(ActivityScanType::CUSTOM_SEGMENT, (string) $segment->getId());
+            if ($upload) {
+                $this->efforts->deleteForSegment($segment->getId());
+                $this->matcher->searchSegment($segment->getId());
+            }
         } finally {
             $this->mutex->releaseLock();
         }
