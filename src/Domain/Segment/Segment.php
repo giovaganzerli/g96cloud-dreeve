@@ -31,6 +31,7 @@ final class Segment implements SupportsAITooling
     private ?SegmentEffort $bestEffort = null;
     private int $numberOfTimesRidden = 0;
     private ?SerializableDateTime $lastEffortDate = null;
+    private bool $geometryWasReconstructed = false;
 
     private function __construct(
         #[ORM\Id, ORM\Column(type: 'string', unique: true)]
@@ -339,6 +340,20 @@ final class Segment implements SupportsAITooling
     public function getStartingCoordinate(): ?Coordinate
     {
         return $this->startingCoordinate;
+    }
+
+    public function withReconstructedPolyline(EncodedPolyline $polyline): self
+    {
+        return clone ($this, [
+            'polyline' => $polyline,
+            'startingCoordinate' => $polyline->getStartingCoordinate(),
+            'geometryWasReconstructed' => true,
+        ]);
+    }
+
+    public function hasReconstructedGeometry(): bool
+    {
+        return $this->geometryWasReconstructed;
     }
 
     public function getCountryCode(): ?string

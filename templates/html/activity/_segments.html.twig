@@ -19,6 +19,9 @@
                         </div>
                         <div class="flex-1 min-w-0">
                             <span class="font-semibold text-gray-900 truncate group-hover/segment:text-primary transition">{{ segmentEffort.getName() }}</span>
+                            {% if segmentEffort.isLocallyCalculated() %}
+                                <span class="text-xs text-gray-500" title="Tempo calcolato dalla traccia GPS in Dreeve, non da Strava">Calcolato in Dreeve</span>
+                            {% endif %}
                             <div class="text-xs text-gray-500 mt-0.5">{{ segmentEffort.getDistance()|renderMeasurement(2) }}</div>
                         </div>
                         <div class="hidden sm:flex gap-4 text-right">

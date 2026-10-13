@@ -23,6 +23,7 @@ final readonly class SegmentPolylinesRequestHandler
 {
     public function __construct(
         private SegmentRepository $segmentRepository,
+        private \App\Domain\Segment\LocalSegmentGeometry $localSegmentGeometry,
         private CacheableRenderer $cacheableRenderer,
     ) {
     }
@@ -32,6 +33,7 @@ final readonly class SegmentPolylinesRequestHandler
     {
         try {
             $segment = $this->segmentRepository->find(SegmentId::fromString($segmentId));
+            $segment = $this->localSegmentGeometry->forDisplay($segment);
         } catch (EntityNotFound) {
             throw new NotFoundHttpException('Not found');
         }

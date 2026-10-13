@@ -42,6 +42,7 @@ final readonly class SegmentRequestHandler
 
     public function __construct(
         private SegmentRepository $segmentRepository,
+        private \App\Domain\Segment\LocalSegmentGeometry $localSegmentGeometry,
         private SegmentEffortRepository $segmentEffortRepository,
         private EnrichedActivityRepository $enrichedActivityRepository,
         private SettingsRepository $settingsRepository,
@@ -57,6 +58,7 @@ final readonly class SegmentRequestHandler
     {
         try {
             $segment = $this->segmentRepository->find(SegmentId::fromString($segmentId));
+            $segment = $this->localSegmentGeometry->forDisplay($segment);
         } catch (EntityNotFound) {
             throw new NotFoundHttpException('Not found');
         }

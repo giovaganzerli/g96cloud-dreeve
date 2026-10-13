@@ -114,6 +114,11 @@ final class SegmentEffort implements SupportsAITooling
         return $this->segmentEffortId;
     }
 
+    public function isLocallyCalculated(): bool
+    {
+        return str_starts_with((string) $this->segmentEffortId, 'segmentEffort-local-');
+    }
+
     public function getSegmentId(): SegmentId
     {
         return $this->segmentId;
