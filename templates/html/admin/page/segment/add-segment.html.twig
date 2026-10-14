@@ -17,6 +17,9 @@
                     </svg>
                 </a>
             </div>
+            <details name="segment-source" class="rounded-lg border border-gray-200 p-4 mb-4" {{ error is null ? 'open' }}>
+                <summary class="flex items-center gap-2 cursor-pointer text-sm font-semibold text-gray-900">{{ svg('route', 'size-5') }} Da un’attività caricata</summary>
+                <div class="pt-4">
             <form data-dispatch-command="{{ dispatchCommand }}" data-redirect="{{ relativeUrl(path('admin_manage_segment_overview')) }}" class="flex flex-col gap-4">
                 <div data-form-error class="form-error hidden" role="alert"></div>
                 <div class="flex items-start gap-2 rounded-lg border border-gray-200 bg-gray-50 p-3 text-sm text-gray-600" role="note">
@@ -72,6 +75,50 @@
                     </button>
                 </div>
             </form>
+                </div>
+            </details>
+            {% autoescape 'html' %}
+            <details name="segment-source" class="rounded-lg border border-gray-200 p-4" {{ error is not null ? 'open' }}>
+                <summary class="flex items-center gap-2 cursor-pointer text-sm font-semibold text-gray-900">{{ svg('upload', 'size-5') }} Da un file GPX</summary>
+                <form method="post" enctype="multipart/form-data" action="{{ relativeUrl(path('admin_add_segment')) }}" class="flex flex-col gap-4 pt-4">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('dispatch-command') }}">
+                    <p class="text-sm text-gray-600">Carica il GPX del solo segmento, anche senza orari. Distanza, dislivello e pendenze vengono calcolati dal file; senza quote, il dislivello non è disponibile. Minimo 100 metri, massimo 5 MB.</p>
+                    <div class="flex items-start gap-2 rounded-lg border border-gray-200 bg-gray-50 p-3 text-sm text-gray-600" role="note">
+                        <span class="shrink-0 text-primary" aria-hidden="true">{{ svg('search', 'size-5') }}</span>
+                        <span>Le attività saranno cercate alla prossima importazione, ogni cinque minuti. Potrai avviare la ricerca anche dal dettaglio del segmento.</span>
+                    </div>
+                    {% if error %}<div class="form-error" role="alert">{{ error }}</div>{% endif %}
+                    <div>
+                        <label for="segment-gpx-name">{{ 'Name'|trans }}</label>
+                        <input type="text" id="segment-gpx-name" name="name" value="{{ gpxName }}" required>
+                    </div>
+                    <div>
+                        <label for="segment-gpx-sport">{{ 'Sport type'|trans }}</label>
+                        <select id="segment-gpx-sport" name="sportType" required>
+                            {% for sportType in sportTypes %}
+                                <option value="{{ sportType.value }}" {{ gpxSport == sportType.value ? 'selected' }}>{{ sportType|trans }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div>
+                        <label for="segment-gpx-file">Traccia GPX del segmento</label>
+                        <input type="file" id="segment-gpx-file" name="track" accept=".gpx,application/gpx+xml" required>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <input type="checkbox" id="segment-gpx-favourite" name="isFavourite" value="true" {{ gpxFavourite ? 'checked' }}>
+                        <label for="segment-gpx-favourite" class="mt-0!">{{ 'Favourite'|trans({}, 'admin') }}</label>
+                    </div>
+                    <div class="flex justify-end gap-2 border-t border-gray-200 pt-4">
+                        <a href="{{ relativeUrl(path('admin_manage_segment_overview')) }}" type="button" class="btn--secondary">{{ svg('arrow-left', 'size-4') }} {{ 'Cancel'|trans({}, 'admin') }}</a>
+                        <button type="submit" data-has-loading-state class="group btn--primary">
+                            <span class="label"><span class="inline-flex items-center gap-2">{{ svg('upload', 'size-4') }} Crea segmento</span></span>
+                            <span class="label--loading">{{ 'Saving...'|trans({}, 'admin') }}</span>
+                        </button>
+                    </div>
+                </form>
+            </details>
+            {% endautoescape %}
+
         </div>
     </div>
     {% endautoescape %}

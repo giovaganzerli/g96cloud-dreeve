@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Domain\Segment\AddCustomSegment;
 
 use App\Domain\Activity\ActivityId;
+use App\Domain\Activity\SportType\SportType;
+use App\Domain\Segment\Geometry\GpxSegmentTrackParser;
 use App\Infrastructure\CQRS\Command\Deserialize\CouldNotDeserializeCommand;
 use App\Infrastructure\CQRS\Command\Deserialize\DeserializableCommand;
 use App\Infrastructure\CQRS\Command\Deserialize\ProvidesCommandName;
@@ -18,22 +20,43 @@ final readonly class AddCustomSegment extends DomainCommand implements Deseriali
     use ProvidesCommandName;
 
     private function __construct(
-        private ActivityId $activityId,
+        private ?ActivityId $activityId,
         private int $startIndex,
         private int $endIndex,
         private Name $name,
         private bool $isFavourite,
+        private ?string $contents = null,
+        private ?SportType $sportType = null,
     ) {
     }
 
     public static function fromPayload(array $payload): self
     {
-        if (!isset($payload['activityId']) || !is_string($payload['activityId'])) {
-            throw CouldNotDeserializeCommand::invalidPayload('An "activityId" is required.');
-        }
-
         if (!isset($payload['name']) || !is_string($payload['name']) || '' === trim($payload['name'])) {
             throw CouldNotDeserializeCommand::invalidPayload('A "name" is required.');
+        }
+
+        if ('gpx' === ($payload['source'] ?? 'activity')) {
+            $sportType = is_string($payload['sportType'] ?? null) ? SportType::tryFrom($payload['sportType']) : null;
+            if (null === $sportType || !$sportType->supportsReverseGeocoding()) {
+                throw CouldNotDeserializeCommand::invalidPayload('Seleziona uno sport all’aperto valido per il segmento.');
+            }
+            if (!is_string($payload['filename'] ?? null) || 'gpx' !== strtolower(pathinfo($payload['filename'], PATHINFO_EXTENSION))
+                || !is_string($payload['content'] ?? null) || strlen($payload['content']) > (int) ceil(GpxSegmentTrackParser::MAX_BYTES * 4 / 3) + 4) {
+                throw CouldNotDeserializeCommand::invalidPayload('Carica un file GPX fino a 5 MB.');
+            }
+            $contents = base64_decode($payload['content'], strict: true);
+            if (false === $contents || '' === trim($contents) || strlen($contents) > GpxSegmentTrackParser::MAX_BYTES) {
+                throw CouldNotDeserializeCommand::invalidPayload('Il contenuto del GPX non è valido.');
+            }
+            return new self(null, 0, 0, Name::fromString(trim($payload['name'])),
+                filter_var($payload['isFavourite'] ?? false, FILTER_VALIDATE_BOOLEAN), $contents, $sportType);
+        }
+        if ('activity' !== ($payload['source'] ?? 'activity')) {
+            throw CouldNotDeserializeCommand::invalidPayload('Seleziona un’attività o un file GPX.');
+        }
+        if (!isset($payload['activityId']) || !is_string($payload['activityId'])) {
+            throw CouldNotDeserializeCommand::invalidPayload('An "activityId" is required.');
         }
 
         foreach (['startIndex', 'endIndex'] as $key) {
@@ -56,7 +79,7 @@ final readonly class AddCustomSegment extends DomainCommand implements Deseriali
         );
     }
 
-    public function getActivityId(): ActivityId
+    public function getActivityId(): ?ActivityId
     {
         return $this->activityId;
     }
@@ -69,6 +92,16 @@ final readonly class AddCustomSegment extends DomainCommand implements Deseriali
     public function getEndIndex(): int
     {
         return $this->endIndex;
+    }
+
+    public function getContents(): ?string
+    {
+        return $this->contents;
+    }
+
+    public function getSportType(): ?SportType
+    {
+        return $this->sportType;
     }
 
     public function getName(): Name

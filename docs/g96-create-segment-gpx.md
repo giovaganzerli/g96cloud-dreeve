@@ -1,0 +1,13 @@
+# Creazione di segmenti da GPX
+
+Il popup Admin per aggiungere un segmento offre due sezioni alternative, con icone: **Da un’attività caricata** e **Da un file GPX**. La prima conserva autocomplete, mappa e selezione degli estremi. La seconda usa un modulo multipart con nome, sport all’aperto, file GPX e preferito. Le sezioni si aprono tramite i controlli HTML nativi; non richiedono nuovi script o librerie.
+
+La modalità GPX riutilizza `AddCustomSegment`, `Segment::createCustom`, `GpxSegmentTrackParser` e `LocalSegmentGeometry`. Si crea un segmento custom con nuovo ID, indipendente da un’attività di origine. Distanza, dislivello positivo/negativo e pendenze sono calcolati dal file attraverso lo stesso parser dell’upload su segmenti esistenti. La mappa usa la polyline salvata direttamente nel segmento; provenienza e metriche del GPX sono conservate anche nella voce locale di geometria e mostrate nel dettaglio. Paese determinato dal geografo locale già usato dalla creazione da attività, senza API Strava.
+
+Restano i limiti di 5 MB, singolo percorso continuo, 2–25.000 punti e coordinate/quote valide. Il nuovo segmento deve essere lungo almeno 100 m, come nella creazione da attività. I timestamp non sono richiesti. Quote assenti o incomplete producono dislivello e pendenza media non disponibili, senza inventare valori. Il tipo di sport viene scelto dall’amministratore perché il GPX non identifica affidabilmente lo sport.
+
+Il modulo richiede login admin e CSRF; il comando JSON applica gli stessi controlli di payload e parser. Un errore torna alla modalità GPX aperta conservando nome, sport e preferito e mostra messaggi con escaping HTML. Il salvataggio usa le transazioni esistenti del command bus. La creazione rimane disponibile nella modalità files; le attività vengono riconosciute dall’importatore custom esistente alla prossima esecuzione (ogni cinque minuti), oppure attraverso Cerca attività nel dettaglio del segmento.
+
+Collaudo su database isolato: creazione GPX reale senza timestamp con namespace, distanza 409 m, pendenze/dislivello, mappa e API polyline; GPX senza quote; rifiuto di XML, file, sport e lunghezze non validi; protezione CSRF e escaping dei campi in errore. Creazione da attività e relativo endpoint della mappa verificati. Tre passaggi trovati dal matcher locale e dall’importatore automatico; seconda importazione senza duplicati. Tutti i record preesistenti di attività, segmenti e passaggi preservati. Template Twig e apertura esclusiva delle due sezioni verificati nel browser.
+
+La protezione CSRF usa il gestore già presente nell’app. Il listener HTML globale di Dreeve rende le eccezioni AccessDenied come errore 500, pur rifiutando la richiesta; questo comportamento preesistente non è stato modificato.

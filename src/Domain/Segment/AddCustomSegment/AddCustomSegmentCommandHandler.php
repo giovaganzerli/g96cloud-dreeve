@@ -9,6 +9,8 @@ use App\Domain\Activity\Route\RouteGeographyAnalyzer;
 use App\Domain\Activity\Stream\ActivityStreamRepository;
 use App\Domain\Activity\Stream\StreamType;
 use App\Domain\Segment\Segment;
+use App\Domain\Segment\Geometry\GpxSegmentTrackParser;
+use App\Domain\Segment\LocalSegmentGeometry;
 use App\Domain\Segment\SegmentId;
 use App\Domain\Segment\SegmentRepository;
 use App\Infrastructure\CQRS\Command\Command;
@@ -27,6 +29,8 @@ final readonly class AddCustomSegmentCommandHandler implements CommandHandler
         private ActivityStreamRepository $activityStreamRepository,
         private SegmentRepository $segmentRepository,
         private RouteGeographyAnalyzer $routeGeographyAnalyzer,
+        private GpxSegmentTrackParser $gpxParser,
+        private LocalSegmentGeometry $localGeometry,
     ) {
     }
 
@@ -34,12 +38,18 @@ final readonly class AddCustomSegmentCommandHandler implements CommandHandler
     {
         assert($command instanceof AddCustomSegment);
 
-        if (!$this->activityRepository->exists($command->getActivityId())) {
+        if (null !== $command->getContents()) {
+            $this->addFromGpx($command);
+            return;
+        }
+
+        $activityId = $command->getActivityId();
+        if (null === $activityId || !$this->activityRepository->exists($activityId)) {
             throw CouldNotProcessCommand::withReason('The selected activity does not exist.');
         }
 
-        $activity = $this->activityRepository->find($command->getActivityId());
-        $streams = $this->activityStreamRepository->findByActivityId($command->getActivityId());
+        $activity = $this->activityRepository->find($activityId);
+        $streams = $this->activityStreamRepository->findByActivityId($activityId);
         $latLng = array_values($streams->filterOnType(StreamType::LAT_LNG)?->getData() ?? []);
         $distance = array_values($streams->filterOnType(StreamType::DISTANCE)?->getData() ?? []);
         $altitude = array_values($streams->filterOnType(StreamType::ALTITUDE)?->getData() ?? []);
@@ -97,4 +107,26 @@ final readonly class AddCustomSegmentCommandHandler implements CommandHandler
             polyline: $polyline,
         ));
     }
+
+    private function addFromGpx(AddCustomSegment $command): void
+    {
+        $contents = $command->getContents();
+        $sportType = $command->getSportType();
+        assert(null !== $contents && null !== $sportType);
+        $metrics = $this->gpxParser->metrics($contents);
+        if ($metrics['distance'] < self::MIN_DISTANCE_IN_METERS) {
+            throw CouldNotProcessCommand::withReason(sprintf('Il segmento deve essere lungo almeno %d metri.', self::MIN_DISTANCE_IN_METERS));
+        }
+        $polyline = $this->gpxParser->parse($contents);
+        $countries = $this->routeGeographyAnalyzer->analyzeForPolyline($polyline);
+        $segment = Segment::createCustom(
+            segmentId: SegmentId::random(), name: $command->getName(), sportType: $sportType,
+            distance: Meter::from(round($metrics['distance']))->toKilometer(), maxGradient: $metrics['maxGradient'],
+            averageGradient: $metrics['averageGradient'], isFavourite: $command->isFavourite(),
+            countryCode: $countries ? strtolower($countries[0]) : null, polyline: $polyline,
+        );
+        $this->segmentRepository->add($segment);
+        $this->localGeometry->recordUploaded($segment, $metrics);
+    }
+
 }
