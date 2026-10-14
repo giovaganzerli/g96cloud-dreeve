@@ -14,8 +14,14 @@
                 {% for segmentEffort in segmentEfforts %}
                     <a href="{{ relativeUrl(path('segment', {'segmentId': segmentEffort.getSegmentId()})) }}"
                        class="group/segment flex items-center gap-3 bg-white hover:bg-gray-50 border border-gray-200 shadow-xs hover:ring-primary/30 rounded-xl p-3 transition">
-                        <div title="Rank" class="shrink-0 w-12 h-10 rounded-lg bg-gray-100 text-gray-700 flex items-center justify-center font-bold text-sm gap-0.5">
-                            {{ segmentEffort.getRank() }}
+                        {% set rank = segmentEffort.getRank() %}
+                        {% set podiumColors = {
+                            1: 'color: #906700; background-color: #fff4cc;',
+                            2: 'color: #526174; background-color: #edf1f5;',
+                            3: 'color: #965529; background-color: #f8e8db;'
+                        } %}
+                        <div title="{{ rank in [1, 2, 3] ? rank ~ '° miglior tempo' : 'Rank' }}" class="shrink-0 w-12 h-10 rounded-lg bg-gray-100 text-gray-700 flex items-center justify-center font-bold text-sm gap-0.5"{% if rank in [1, 2, 3] %} style="{{ podiumColors[rank] }}"{% endif %}>
+                            {% include 'html/segment/_rank.html.twig' with {rank: rank, showNumber: true} only %}
                         </div>
                         <div class="flex-1 min-w-0">
                             <span class="font-semibold text-gray-900 truncate group-hover/segment:text-primary transition">{{ segmentEffort.getName() }}</span>

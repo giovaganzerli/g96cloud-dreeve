@@ -1,0 +1,8 @@
+{% set medals = {1: '🥇', 2: '🥈', 3: '🥉'} %}
+{% set labels = {1: 'Primo miglior tempo', 2: 'Secondo miglior tempo', 3: 'Terzo miglior tempo'} %}
+{% if rank in [1, 2, 3] %}
+    <span class="text-lg" role="img" aria-label="{{ labels[rank] }}" title="{{ labels[rank] }}">{{ medals[rank] }}</span>
+    {% if showNumber ?? false %}<span aria-hidden="true">{{ rank }}</span>{% endif %}
+{% else %}
+    {{ rank }}
+{% endif %}

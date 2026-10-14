@@ -151,7 +151,7 @@
                                     {% set activity = enrichedActivity.getActivity() %}
                                     <tr>
                                         <td class="truncate lg:sticky lg:left-0">
-                                            {{ loop.index }}
+                                            {% include 'html/segment/_rank.html.twig' with {rank: loop.index, showNumber: false} only %}
                                         </td>
                                         <td class="narrow">
                                             <div class="flex justify-center">
