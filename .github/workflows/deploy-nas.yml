@@ -47,7 +47,26 @@ jobs:
       - name: Build geography assets
         run: |
           bin/console app:geography:build-countries-asset
-          test -s src/Domain/Activity/Route/assets/countries/index.json
+
+          ASSET_DIR=resources/countries
+          if [[ ! -f "$ASSET_DIR/index.json" ]]; then
+            echo "::error::$ASSET_DIR/index.json is missing, refusing to deploy without country boundaries"
+            exit 1
+          fi
+
+          ENTRIES=$(jq 'length' "$ASSET_DIR/index.json")
+          COUNTRIES=$(find "$ASSET_DIR" -name '*.json' -not -name 'index.json' | wc -l)
+
+          if (( ENTRIES < 4000 )); then
+            echo "::error::index.json holds only $ENTRIES polygons, expected 4000+"
+            exit 1
+          fi
+          if (( COUNTRIES < 200 )); then
+            echo "::error::Only $COUNTRIES country files were generated, expected 200+"
+            exit 1
+          fi
+
+          echo "$COUNTRIES country files, $ENTRIES polygons indexed"
 
       - uses: docker/setup-buildx-action@v4
 
