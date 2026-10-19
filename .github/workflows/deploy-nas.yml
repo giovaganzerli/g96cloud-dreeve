@@ -1,0 +1,95 @@
+name: Deploy to NAS
+
+on:
+  push:
+    branches: [g96-custom]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-nas
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: github.ref == 'refs/heads/g96-custom'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    environment: nas
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Check deployment credentials
+        env:
+          TS_CLIENT_ID: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          TS_SECRET: ${{ secrets.TS_OAUTH_SECRET }}
+          SSH_KEY: ${{ secrets.NAS_SSH_KEY }}
+          KNOWN_HOSTS: ${{ secrets.NAS_SSH_KNOWN_HOSTS }}
+        run: |
+          for name in TS_CLIENT_ID TS_SECRET SSH_KEY KNOWN_HOSTS; do
+            if [[ -z "${!name}" ]]; then
+              echo "::error::Missing deployment credential: $name (see docs/deploy-nas.md)"
+              exit 1
+            fi
+          done
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+          extensions: zstd
+          coverage: none
+
+      - name: Install production dependencies
+        run: composer install --prefer-dist --no-scripts --no-dev --no-interaction --optimize-autoloader
+
+      - name: Build geography assets
+        run: |
+          bin/console app:geography:build-countries-asset
+          test -s src/Domain/Activity/Route/assets/countries/index.json
+
+      - uses: docker/setup-buildx-action@v4
+
+      - name: Build NAS image
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: docker/app/Dockerfile
+          platforms: linux/amd64
+          load: true
+          tags: g96cloud-dreeve:sha-${{ github.sha }}
+          cache-from: type=gha,scope=nas
+          cache-to: type=gha,mode=max,scope=nas
+
+      - name: Connect to Tailscale
+        uses: tailscale/github-action@v4
+        with:
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
+          tags: tag:github-actions
+
+      - name: Configure SSH
+        env:
+          SSH_KEY: ${{ secrets.NAS_SSH_KEY }}
+          KNOWN_HOSTS: ${{ secrets.NAS_SSH_KNOWN_HOSTS }}
+        run: |
+          install -d -m 700 ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/nas_deploy
+          printf '%s\n' "$KNOWN_HOSTS" > ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/nas_deploy ~/.ssh/known_hosts
+
+      - name: Transfer image and deploy
+        env:
+          DEPLOY_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          docker save "g96cloud-dreeve:sha-$DEPLOY_SHA" | gzip -1 | \
+            ssh -T -i ~/.ssh/nas_deploy -o IdentitiesOnly=yes \
+              -o BatchMode=yes -o StrictHostKeyChecking=yes \
+              -o ConnectTimeout=30 -o ServerAliveInterval=15 -o ServerAliveCountMax=4 \
+              g96admin@100.115.48.28 "deploy $DEPLOY_SHA"
+
+      - name: Remove SSH credentials
+        if: always()
+        run: rm -f ~/.ssh/nas_deploy

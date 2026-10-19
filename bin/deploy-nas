@@ -1,0 +1,74 @@
+#!/usr/bin/env bash
+# Install as root-owned /usr/local/sbin/dreeve-deploy on the NAS.
+set -euo pipefail
+umask 077
+
+[[ $EUID -eq 0 ]] || { echo 'Run through sudo on the NAS.' >&2; exit 1; }
+[[ $# -eq 1 && $1 =~ ^[0-9a-f]{40}$ ]] || { echo 'Expected a commit SHA.' >&2; exit 1; }
+
+cd /srv/g96-data/compose/dreeve
+exec 9>.deploy.lock
+flock -n 9 || { echo 'Another deployment is running.' >&2; exit 1; }
+
+image="g96cloud-dreeve:sha-$1"
+compose=(docker compose --project-directory "$PWD" -f docker-compose.yml)
+test -f .env
+test -d data/storage/database
+"${compose[@]}" config --quiet
+
+# Receive the image before interrupting the running services.
+gzip -dc | docker load
+docker image inspect "$image" >/dev/null
+
+backup="$PWD/deploy-backups/$(date -u +%Y%m%dT%H%M%SZ)-$1"
+mkdir -p "$backup"
+cp -p .env "$backup/env"
+cp -p docker-compose.yml "$backup/docker-compose.yml"
+docker inspect dreeve --format '{{.Config.Image}}' > "$backup/previous-image"
+stopped=false
+switched=false
+on_exit() {
+    status=$?
+    if [[ $status -ne 0 ]]; then
+        echo "Deployment failed. Recovery files: $backup" >&2
+        if [[ $stopped == true && $switched == false ]]; then
+            "${compose[@]}" up -d --no-build app daemon || true
+        else
+            echo 'No automatic database rollback: inspect migrations and restore the backup if necessary.' >&2
+        fi
+    fi
+    exit "$status"
+}
+trap on_exit EXIT
+
+# Stop both writers so the SQLite database, WAL and SHM form a consistent backup.
+stopped=true
+"${compose[@]}" stop app daemon
+tar -czf "$backup/database.tar.gz" -C data/storage database
+
+# Update only the image setting; credentials, ports and persistent mounts stay intact.
+python3 - "$image" <<'PY'
+import os
+from pathlib import Path
+import re
+import sys
+
+path = Path('.env')
+text = path.read_text()
+pattern = r'^\s*(?:export\s+)?DREEVE_IMAGE\s*=.*$'
+line = f'DREEVE_IMAGE={sys.argv[1]}'
+if re.search(pattern, text, flags=re.MULTILINE):
+    text = re.sub(pattern, line, text, flags=re.MULTILINE)
+else:
+    text = text.rstrip('\n') + '\n' + line + '\n'
+temporary = Path('.env.deploy-tmp')
+temporary.write_text(text)
+os.chmod(temporary, path.stat().st_mode & 0o777)
+os.chown(temporary, path.stat().st_uid, path.stat().st_gid)
+temporary.replace(path)
+PY
+
+switched=true
+"${compose[@]}" up -d --no-build --wait --wait-timeout 300 app daemon
+printf '%s\n' "$1" > .deployed-commit
+echo "Deployment complete: $image; backup: $backup"
