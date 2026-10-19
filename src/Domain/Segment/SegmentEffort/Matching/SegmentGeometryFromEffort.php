@@ -9,8 +9,8 @@ use App\Infrastructure\ValueObject\Geography\EncodedPolyline;
 final readonly class SegmentGeometryFromEffort
 {
     /** @param array<string, mixed> $effort
-     *  @param array<int, array{float, float}> $latLng
-     *  @param array<int, int|float> $distance
+     *  @param array<int, mixed> $latLng
+     *  @param array<int, mixed> $distance
      */
     public function reconstruct(array $effort, array $latLng, array $distance, float $length): ?EncodedPolyline
     {
@@ -20,18 +20,32 @@ final readonly class SegmentGeometryFromEffort
             || !isset($distance[$start], $distance[$end]) || $length <= 0) {
             return null;
         }
-        $covered = $distance[$end] - $distance[$start];
+        $startDistance = $distance[$start];
+        $endDistance = $distance[$end];
+        if (!is_numeric($startDistance) || !is_numeric($endDistance)) {
+            return null;
+        }
+        $covered = (float) $endDistance - (float) $startDistance;
         // Reject missing, decimated or misaligned streams rather than guessing a route.
         if ($covered < $length * 0.65 || $covered > $length * 1.5) {
             return null;
         }
-        $points = array_slice($latLng, $start, $end - $start + 1);
-        foreach ($points as $point) {
-            if (count($point) !== 2 || !is_numeric($point[0]) || !is_numeric($point[1])
-                || !is_finite((float) $point[0]) || !is_finite((float) $point[1])
-                || abs($point[0]) > 90 || abs($point[1]) > 180) {
+        $points = [];
+        foreach (array_slice($latLng, $start, $end - $start + 1) as $point) {
+            if (!is_array($point) || 2 !== count($point)) {
                 return null;
             }
+            $values = array_values($point);
+            if (!is_numeric($values[0]) || !is_numeric($values[1])) {
+                return null;
+            }
+            $latitude = (float) $values[0];
+            $longitude = (float) $values[1];
+            if (!is_finite($latitude) || !is_finite($longitude)
+                || abs($latitude) > 90 || abs($longitude) > 180) {
+                return null;
+            }
+            $points[] = [$latitude, $longitude];
         }
         return EncodedPolyline::fromCoordinates($points);
     }

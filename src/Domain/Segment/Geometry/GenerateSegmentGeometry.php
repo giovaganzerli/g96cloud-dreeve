@@ -61,12 +61,17 @@ final readonly class GenerateSegmentGeometry
         return null;
     }
 
+    /** @param array<int, mixed> $time */
     private function nearestIndex(array $time, float $offset): ?int
     {
         $nearest = null;
         $delta = 5.0;
         foreach ($time as $index => $value) {
-            if (is_numeric($value) && abs($value - $offset) <= $delta) {
+            if (!is_numeric($value)) {
+                continue;
+            }
+            $value = (float) $value;
+            if (abs($value - $offset) <= $delta) {
                 $delta = abs($value - $offset);
                 $nearest = (int) $index;
             }

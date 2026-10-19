@@ -53,31 +53,44 @@ final readonly class GpxSegmentTrackParser
         return EncodedPolyline::fromCoordinates($coordinates);
     }
 
-    /** Validate the track and calculate metrics from GPS coordinates and optional elevations. */
+    /**
+     * Validate the track and calculate metrics from GPS coordinates and optional elevations.
+     *
+     * @return array{distance: float, elevationGain: ?float, elevationLoss: ?float, averageGradient: ?float, maxGradient: float}
+     */
     public function metrics(string $contents): array
     {
         $this->parse($contents);
         $xml = Xml::load($contents);
-        $points = $xml->xpath('./*[local-name()="trk"]/*[local-name()="trkseg"]/*[local-name()="trkpt"] | ./*[local-name()="rte"]/*[local-name()="rtept"]');
+        if (null === $xml) {
+            throw CouldNotProcessCommand::withReason('Il file non è un GPX valido.');
+        }
+        $points = $xml->xpath('./*[local-name()="trk"]/*[local-name()="trkseg"]/*[local-name()="trkpt"] | ./*[local-name()="rte"]/*[local-name()="rtept"]') ?: [];
         $distance = [0.0];
         $altitude = [];
+        $firstAltitude = null;
+        $lastAltitude = null;
+        $cumulative = 0.0;
         $previous = null;
         foreach ($points as $point) {
             $coordinate = [(float) $point['lat'], (float) $point['lon']];
             if (null !== $previous) {
-                $distance[] = end($distance) + GeoMath::haversineDistance(...$previous, ...$coordinate);
+                $cumulative += GeoMath::haversineDistance($previous[0], $previous[1], $coordinate[0], $coordinate[1]);
+                $distance[] = $cumulative;
             }
             $previous = $coordinate;
-            $ele = $point->xpath('./*[local-name()="ele"]');
+            $ele = $point->xpath('./*[local-name()="ele"]') ?: [];
             if ([] !== $ele) {
                 $value = (string) $ele[0];
                 if (!is_numeric($value) || !is_finite((float) $value)) {
                     throw CouldNotProcessCommand::withReason('Il GPX contiene quote non valide.');
                 }
                 $altitude[] = (float) $value;
+                $firstAltitude ??= (float) $value;
+                $lastAltitude = (float) $value;
             }
         }
-        $length = end($distance);
+        $length = $cumulative;
         $gain = $loss = $average = null;
         $maximum = 0.0;
         if (count($altitude) === count($points)) {
@@ -87,8 +100,10 @@ final readonly class GpxSegmentTrackParser
                 $gain += max(0.0, $delta);
                 $loss += max(0.0, -$delta);
             }
-            $average = round((end($altitude) - $altitude[0]) / $length * 100, 1);
-            $maximum = $average;
+            if (null !== $firstAltitude && null !== $lastAltitude) {
+                $average = round(($lastAltitude - $firstAltitude) / $length * 100, 1);
+            }
+            $maximum = $average ?? 0.0;
             // Use the same 50 m gradient window as AddCustomSegmentCommandHandler.
             $end = 0;
             foreach ($distance as $i => $value) {
