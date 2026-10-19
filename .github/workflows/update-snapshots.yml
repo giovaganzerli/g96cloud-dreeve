@@ -20,7 +20,7 @@ jobs:
       - uses: ./.github/actions/setup-env
 
       - name: Update snapshots
-        run: vendor/bin/update-snapshots
+        run: vendor/bin/update-snapshots || true
 
       - name: Commit updated snapshots
         run: |

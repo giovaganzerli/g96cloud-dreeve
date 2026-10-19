@@ -103,7 +103,7 @@ class SegmentRequestHandlerTest extends ControllerWebTestCase
 
         $this->assertResponseIsSuccessful();
         $this->assertSame(
-            [['1', '01-10-23', '10s', '145']],
+            [['🥇', '01-10-23', '10s', '145']],
             $crawler->filter('#segmentTabsTopTen tbody tr')->each(
                 fn (Crawler $row): array => [$row->filter('td')->eq(0)->text(), $row->filter('td')->eq(1)->text(), $row->filter('td')->eq(3)->text(), $row->filter('td')->eq(5)->text()],
             ),
