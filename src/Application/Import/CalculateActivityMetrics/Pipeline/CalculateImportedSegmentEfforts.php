@@ -8,13 +8,13 @@ use App\Domain\Activity\ActivityId;
 use App\Domain\Activity\ActivityRepository;
 use App\Domain\Activity\ImportSource;
 use App\Domain\Activity\Route\Signature\ActivityRouteSignatureRepository;
-use App\Domain\Activity\Route\Signature\RouteGrid;
 use App\Domain\Activity\Scan\ActivityScan;
 use App\Domain\Activity\Scan\ActivityScanRepository;
 use App\Domain\Activity\Scan\ActivityScanType;
 use App\Domain\Activity\SportType\SportType;
 use App\Domain\Activity\Stream\ActivityStreamRepository;
 use App\Domain\Activity\Stream\StreamType;
+use App\Domain\Geography\Grid\RouteGrid;
 use App\Domain\Import\ImportMode;
 use App\Domain\Segment\LocalSegmentGeometry;
 use App\Domain\Segment\SegmentEffort\Matching\SegmentEffortMatcher;
@@ -47,7 +47,6 @@ final readonly class CalculateImportedSegmentEfforts implements CalculateActivit
         private ActivityStreamRepository $activityStreamRepository,
         private ActivityScanRepository $activityScanRepository,
         private SegmentEffortRepository $segmentEffortRepository,
-        private RouteGrid $routeGrid,
         private LocalSegmentGeometry $localSegmentGeometry,
         private ActivityRouteSignatureRepository $activityRouteSignatureRepository,
         private SegmentEffortMatcher $matcher,
@@ -144,7 +143,7 @@ final readonly class CalculateImportedSegmentEfforts implements CalculateActivit
                 continue;
             }
             $segment = $segment->withPolyline($polyline);
-            $candidates[] = [$segment, $this->routeGrid->cellsFor($polyline)->toArray()];
+            $candidates[] = [$segment, RouteGrid::cellsFor($polyline)->toArray()];
         }
         $added = 0;
         foreach ($ids as $id) {
@@ -171,7 +170,7 @@ final readonly class CalculateImportedSegmentEfforts implements CalculateActivit
             if ([] === $time || [] === $distance || [] === $latLng) {
                 continue;
             }
-            $activityCells = array_flip($this->routeGrid->cellsFor(EncodedPolyline::fromCoordinates($latLng))->toArray());
+            $activityCells = array_flip(RouteGrid::cellsFor(EncodedPolyline::fromCoordinates($latLng))->toArray());
             $this->connection->beginTransaction();
             try {
                 // Preserve existing official/custom passes; local passes have deterministic IDs.
