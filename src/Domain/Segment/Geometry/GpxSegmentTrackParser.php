@@ -20,7 +20,7 @@ final readonly class GpxSegmentTrackParser
             throw CouldNotProcessCommand::withReason('Il GPX supera 5 MB o contiene dichiarazioni XML non supportate.');
         }
         $xml = Xml::load($contents);
-        if (null === $xml || 'gpx' !== $xml->getName()) {
+        if (!$xml instanceof \SimpleXMLElement || 'gpx' !== $xml->getName()) {
             throw CouldNotProcessCommand::withReason('Il file non è un GPX valido.');
         }
         $tracks = $xml->xpath('./*[local-name()="trk"]/*[local-name()="trkseg"] | ./*[local-name()="rte"]') ?: [];
@@ -42,7 +42,7 @@ final readonly class GpxSegmentTrackParser
             }
             $coordinate = [(float) $lat, (float) $lng];
             if ([] !== $coordinates) {
-                [$previousLat, $previousLng] = $coordinates[array_key_last($coordinates)];
+                [$previousLat, $previousLng] = array_last($coordinates);
                 $length += GeoMath::haversineDistance($previousLat, $previousLng, ...$coordinate);
             }
             $coordinates[] = $coordinate;
@@ -50,6 +50,7 @@ final readonly class GpxSegmentTrackParser
         if ($length < 1 || ($expectedLength > 0 && ($length < $expectedLength * 0.65 || $length > $expectedLength * 1.5))) {
             throw CouldNotProcessCommand::withReason('La lunghezza della traccia non corrisponde al segmento. Carica il GPX del solo segmento, non dell’intera attività.');
         }
+
         return EncodedPolyline::fromCoordinates($coordinates);
     }
 
@@ -62,7 +63,7 @@ final readonly class GpxSegmentTrackParser
     {
         $this->parse($contents);
         $xml = Xml::load($contents);
-        if (null === $xml) {
+        if (!$xml instanceof \SimpleXMLElement) {
             throw CouldNotProcessCommand::withReason('Il file non è un GPX valido.');
         }
         $points = $xml->xpath('./*[local-name()="trk"]/*[local-name()="trkseg"]/*[local-name()="trkpt"] | ./*[local-name()="rte"]/*[local-name()="rtept"]') ?: [];
@@ -95,7 +96,8 @@ final readonly class GpxSegmentTrackParser
         $maximum = 0.0;
         if (count($altitude) === count($points)) {
             $gain = $loss = 0.0;
-            for ($i = 1; $i < count($altitude); ++$i) {
+            $counter = count($altitude);
+            for ($i = 1; $i < $counter; ++$i) {
                 $delta = $altitude[$i] - $altitude[$i - 1];
                 $gain += max(0.0, $delta);
                 $loss += max(0.0, -$delta);
@@ -116,8 +118,8 @@ final readonly class GpxSegmentTrackParser
                 $maximum = max($maximum, round(($altitude[$end] - $altitude[$i]) / ($distance[$end] - $value) * 100, 1));
             }
         }
+
         return ['distance' => $length, 'elevationGain' => $gain, 'elevationLoss' => $loss,
             'averageGradient' => $average, 'maxGradient' => $maximum];
     }
-
 }

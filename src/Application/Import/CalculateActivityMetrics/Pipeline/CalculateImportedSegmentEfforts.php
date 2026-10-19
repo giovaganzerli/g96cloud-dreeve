@@ -81,14 +81,14 @@ final readonly class CalculateImportedSegmentEfforts implements CalculateActivit
         )));
         $overrides = $this->localSegmentGeometry->overrides();
         $revision = hash('sha256', $fingerprint.Json::encode($overrides));
-        $ids = null !== $selectedActivityId ? [(string) $selectedActivityId] : $this->connection->fetchFirstColumn('SELECT a.activityId FROM Activity a
+        $ids = $selectedActivityId instanceof ActivityId ? [(string) $selectedActivityId] : $this->connection->fetchFirstColumn('SELECT a.activityId FROM Activity a
             WHERE a.importSource IN (:sources) AND NOT EXISTS (SELECT 1 FROM ActivityScan s
             WHERE s.activityId = a.activityId AND s.type = :type AND s.subjectId = :revision)
             AND EXISTS (SELECT 1 FROM ActivityStream st WHERE st.activityId = a.activityId AND st.streamType = :gps AND st.dataSize > 0)',
             ['sources' => array_map(fn (ImportSource $source): string => $source->value, ImportSource::fileBasedSources()),
-             'type' => ActivityScanType::LOCAL_IMPORTED_SEGMENTS->value, 'revision' => $revision, 'gps' => StreamType::LAT_LNG->value],
+                'type' => ActivityScanType::LOCAL_IMPORTED_SEGMENTS->value, 'revision' => $revision, 'gps' => StreamType::LAT_LNG->value],
             ['sources' => ArrayParameterType::STRING]);
-        if (null !== $selectedSegmentId) {
+        if ($selectedSegmentId instanceof SegmentId) {
             $segment = $this->segmentRepository->find($selectedSegmentId);
             $ids = $this->connection->fetchFirstColumn("SELECT a.activityId FROM Activity a
                 WHERE a.importSource != 'manual' AND a.sportType IN (:sports)
@@ -102,7 +102,7 @@ final readonly class CalculateImportedSegmentEfforts implements CalculateActivit
         }
         $cached = $this->connection->fetchOne('SELECT value FROM KeyValue WHERE key = :key', ['key' => self::CACHE_KEY]);
         $cache = false !== $cached ? Json::decode($cached) : [];
-        if (null === $selectedSegmentId && ($cache['fingerprint'] ?? null) !== $fingerprint) {
+        if (!$selectedSegmentId instanceof SegmentId && ($cache['fingerprint'] ?? null) !== $fingerprint) {
             $geometries = [];
             // Reconstruction is cached separately; never overwrite official Segment geometries.
             foreach ($this->connection->iterateAssociative("SELECT activityId, data FROM Activity WHERE importSource = 'stravaApi' ORDER BY activityId") as $row) {
@@ -119,7 +119,7 @@ final readonly class CalculateImportedSegmentEfforts implements CalculateActivit
                         continue;
                     }
                     $polyline = $this->geometryBuilder->reconstruct($effort, $latLng, $distance, (float) ($effort['segment']['distance'] ?? 0));
-                    if (null !== $polyline) {
+                    if ($polyline instanceof EncodedPolyline) {
                         $geometries[$id] = ['polyline' => (string) $polyline, 'sourceActivity' => $row['activityId']];
                     }
                 }
@@ -129,11 +129,11 @@ final readonly class CalculateImportedSegmentEfforts implements CalculateActivit
                 ['key' => self::CACHE_KEY, 'value' => Json::encode($cache)]);
         }
         $candidates = [];
-        if (null !== $selectedSegmentId) {
+        if ($selectedSegmentId instanceof SegmentId) {
             $segments = [$this->localSegmentGeometry->forDisplay($this->segmentRepository->find($selectedSegmentId))];
         } else {
             $segments = $this->segmentRepository->findByType(SegmentType::IMPORTED)->toArray();
-            if (null !== $selectedActivityId) {
+            if ($selectedActivityId instanceof ActivityId) {
                 $segments = array_merge($segments, $this->segmentRepository->findByType(SegmentType::CUSTOM)->toArray());
             }
         }
@@ -152,7 +152,7 @@ final readonly class CalculateImportedSegmentEfforts implements CalculateActivit
             if (ImportSource::MANUAL === $activity->getImportSource()) {
                 continue;
             }
-            if (null !== $selectedSegmentId && [] !== $candidates) {
+            if ($selectedSegmentId instanceof SegmentId && [] !== $candidates) {
                 try {
                     $routeCells = array_flip($this->activityRouteSignatureRepository->find($activityId)->getCells()->toArray());
                     $cells = $candidates[0][1];
@@ -167,7 +167,7 @@ final readonly class CalculateImportedSegmentEfforts implements CalculateActivit
             $latLng = $streams->filterOnType(StreamType::LAT_LNG)?->getData() ?? [];
             $time = $streams->filterOnType(StreamType::TIME)?->getData() ?? [];
             $distance = $streams->filterOnType(StreamType::DISTANCE)?->getData() ?? [];
-            if ([] === $time || [] === $distance || [] === $latLng) {
+            if (in_array([], [$time, $distance, $latLng], true)) {
                 continue;
             }
             $activityCells = array_flip(RouteGrid::cellsFor(EncodedPolyline::fromCoordinates($latLng))->toArray());
@@ -185,7 +185,7 @@ final readonly class CalculateImportedSegmentEfforts implements CalculateActivit
                         || count(array_filter($cells, static fn (int $cell): bool => isset($activityCells[$cell]))) < count($cells) * 0.5) {
                         continue;
                     }
-                    if ((null !== $selectedActivityId || null !== $selectedSegmentId) && $segment->getType()->isCustom()) {
+                    if (($selectedActivityId instanceof ActivityId || $selectedSegmentId instanceof SegmentId) && $segment->getType()->isCustom()) {
                         $this->activityScanRepository->add(ActivityScan::create($activityId, ActivityScanType::CUSTOM_SEGMENT, (string) $segment->getId()));
                     }
                     foreach ($this->matcher->match($segment, $latLng, $time, $distance,
@@ -203,7 +203,7 @@ final readonly class CalculateImportedSegmentEfforts implements CalculateActivit
                         ++$added;
                     }
                 }
-                if (null === $selectedActivityId && null === $selectedSegmentId) {
+                if (!$selectedActivityId instanceof ActivityId && !$selectedSegmentId instanceof SegmentId) {
                     $this->activityScanRepository->add(ActivityScan::create($activityId, ActivityScanType::LOCAL_IMPORTED_SEGMENTS, $revision));
                 }
                 $this->connection->commit();

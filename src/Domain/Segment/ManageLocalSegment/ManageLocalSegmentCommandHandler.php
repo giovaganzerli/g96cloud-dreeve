@@ -10,8 +10,8 @@ use App\Domain\Activity\Scan\ActivityScanType;
 use App\Domain\Segment\Geometry\GenerateSegmentGeometry;
 use App\Domain\Segment\Geometry\GpxSegmentTrackParser;
 use App\Domain\Segment\LocalSegmentGeometry;
-use App\Domain\Segment\SegmentRepository;
 use App\Domain\Segment\SegmentEffort\SegmentEffortRepository;
+use App\Domain\Segment\SegmentRepository;
 use App\Infrastructure\CQRS\Command\Command;
 use App\Infrastructure\CQRS\Command\CommandHandler;
 use App\Infrastructure\CQRS\Command\CouldNotProcessCommand;
@@ -50,17 +50,18 @@ final readonly class ManageLocalSegmentCommandHandler implements CommandHandler
             throw CouldNotProcessCommand::withReason('È già in corso un’importazione o una ricerca. Riprova al termine.');
         }
         try {
-            $hasGeometry = null !== $this->geometry->forDisplay($segment)->getPolyline();
+            $hasGeometry = $this->geometry->forDisplay($segment)->getPolyline() instanceof \App\Infrastructure\ValueObject\Geography\EncodedPolyline;
             if ('search' === $command->getAction()) {
                 if (!$hasGeometry) {
                     $polyline = $this->generator->generate($segment);
-                    if (null === $polyline) {
+                    if (!$polyline instanceof \App\Infrastructure\ValueObject\Geography\EncodedPolyline) {
                         throw CouldNotProcessCommand::withReason('I passaggi archiviati non contengono dati GPS sufficienti. Puoi caricare il GPX qui sotto.');
                     }
                     $this->geometry->saveMissing($segment, $polyline, 'generated');
                     $this->scans->deleteForSubject(ActivityScanType::CUSTOM_SEGMENT, (string) $segment->getId());
                 }
                 $this->matcher->searchSegment($segment->getId());
+
                 return;
             }
             if ($hasGeometry) {
@@ -69,7 +70,7 @@ final readonly class ManageLocalSegmentCommandHandler implements CommandHandler
             $polyline = 'upload' === $command->getAction()
                 ? $this->gpxParser->parse($command->getContents() ?? '')
                 : $this->generator->generate($segment);
-            if (null === $polyline) {
+            if (!$polyline instanceof \App\Infrastructure\ValueObject\Geography\EncodedPolyline) {
                 throw CouldNotProcessCommand::withReason('I passaggi archiviati non contengono dati GPS sufficienti per ricostruire il segmento. Puoi caricare il suo GPX.');
             }
             $upload = 'upload' === $command->getAction();

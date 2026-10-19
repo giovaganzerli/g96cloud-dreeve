@@ -49,6 +49,7 @@ final readonly class AddCustomSegment extends DomainCommand implements Deseriali
             if (false === $contents || '' === trim($contents) || strlen($contents) > GpxSegmentTrackParser::MAX_BYTES) {
                 throw CouldNotDeserializeCommand::invalidPayload('Il contenuto del GPX non è valido.');
             }
+
             return new self(null, 0, 0, Name::fromString(trim($payload['name'])),
                 filter_var($payload['isFavourite'] ?? false, FILTER_VALIDATE_BOOLEAN), $contents, $sportType);
         }

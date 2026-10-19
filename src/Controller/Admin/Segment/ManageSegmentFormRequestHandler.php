@@ -4,32 +4,32 @@ declare(strict_types=1);
 
 namespace App\Controller\Admin\Segment;
 
-use App\Domain\Import\ImportMode;
 use App\Domain\Activity\SportType\SportType;
-use App\Domain\Segment\Geometry\GpxSegmentTrackParser;
-use App\Infrastructure\CQRS\Command\Bus\CommandBus;
-use App\Infrastructure\CQRS\Command\CouldNotProcessCommand;
-use App\Infrastructure\CQRS\Command\Deserialize\CouldNotDeserializeCommand;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\Security\Csrf\CsrfToken;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use App\Domain\Import\ImportMode;
 use App\Domain\Segment\AddCustomSegment\AddCustomSegment;
 use App\Domain\Segment\DeleteSegment\DeleteSegment;
+use App\Domain\Segment\Geometry\GpxSegmentTrackParser;
 use App\Domain\Segment\Segment;
 use App\Domain\Segment\SegmentId;
 use App\Domain\Segment\SegmentRepository;
 use App\Domain\Segment\UpdateSegment\UpdateSegment;
 use App\Domain\Settings\SettingsRepository;
+use App\Infrastructure\CQRS\Command\Bus\CommandBus;
+use App\Infrastructure\CQRS\Command\CouldNotProcessCommand;
+use App\Infrastructure\CQRS\Command\Deserialize\CouldNotDeserializeCommand;
 use App\Infrastructure\Exception\EntityNotFound;
 use App\Infrastructure\Http\HtmlResponse;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Csrf\CsrfToken;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Twig\Environment;
 
 #[AsController]
@@ -68,6 +68,7 @@ final readonly class ManageSegmentFormRequestHandler
                     'name' => $request->request->getString('name'), 'sportType' => $request->request->getString('sportType'),
                     'isFavourite' => $request->request->getBoolean('isFavourite'),
                 ]));
+
                 return new RedirectResponse($this->urls->generate('admin_manage_segment_overview'), Response::HTTP_SEE_OTHER);
             } catch (CouldNotProcessCommand|CouldNotDeserializeCommand $exception) {
                 $error = $exception->getMessage();
@@ -89,6 +90,7 @@ final readonly class ManageSegmentFormRequestHandler
                 'elevationInMetersPerUnit' => $unitSystem->elevation(1)->toMeter()->toFloat(),
             ],
         ]));
+
         return $response->setStatusCode(null !== $error ? Response::HTTP_BAD_REQUEST : Response::HTTP_OK);
     }
 

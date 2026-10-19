@@ -72,7 +72,6 @@ final readonly class SegmentRequestHandler
 
         return $this->pageRenderer->render(
             cacheability: Cacheability::for(
-                cacheContexts: CacheContexts::of(AuthenticatedCacheContext::class),
                 cacheKey: sprintf('segments.%s', $segment->getId()->toUnprefixedString()),
                 cacheTags: CacheTags::of(
                     SegmentCacheTag::for($segment->getId()),
@@ -84,6 +83,7 @@ final readonly class SegmentRequestHandler
                         $topTenSegmentEfforts->toArray(),
                     ),
                 ),
+                cacheContexts: CacheContexts::of(AuthenticatedCacheContext::class),
             ),
             render: fn (): string => $this->renderFor($segment, $topTenSegmentEfforts),
             navigationSection: NavigationSection::SEGMENTS,

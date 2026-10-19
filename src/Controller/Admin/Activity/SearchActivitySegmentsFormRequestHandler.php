@@ -28,6 +28,7 @@ final readonly class SearchActivitySegmentsFormRequestHandler
         if (ImportSource::MANUAL === $activity->getImportSource()) {
             throw new NotFoundHttpException();
         }
+
         return new HtmlResponse($this->twig->render('html/admin/page/activity/search-segments.html.twig', [
             'activity' => $activity,
             'dispatchCommand' => SearchActivitySegments::getCommandName(),

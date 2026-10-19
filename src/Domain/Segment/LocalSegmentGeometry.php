@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Domain\Segment;
 
-use App\Infrastructure\CQRS\Command\CouldNotProcessCommand;
 use App\Infrastructure\Cache\Render\RenderCache;
 use App\Infrastructure\Cache\Tag\RootCacheTag;
+use App\Infrastructure\CQRS\Command\CouldNotProcessCommand;
 use App\Infrastructure\Serialization\Json;
 use App\Infrastructure\ValueObject\Geography\EncodedPolyline;
 use Doctrine\DBAL\Connection;
@@ -25,15 +25,16 @@ final readonly class LocalSegmentGeometry
 
     public function forDisplay(Segment $segment): Segment
     {
-        if (null !== $segment->getPolyline() && !$segment->getType()->isCustom()) {
+        if ($segment->getPolyline() instanceof EncodedPolyline && !$segment->getType()->isCustom()) {
             return $segment;
         }
         $override = $this->overrides()[(string) $segment->getId()] ?? null;
         if (null !== $override) {
             $polyline = EncodedPolyline::fromString($override['polyline']);
+
             return 'gpx' === $override['source'] ? $segment->withUploadedPolyline($polyline)->withUploadedElevation($override['metrics']['elevationGain'] ?? null, $override['metrics']['elevationLoss'] ?? null) : $segment->withReconstructedPolyline($polyline);
         }
-        if (null !== $segment->getPolyline()) {
+        if ($segment->getPolyline() instanceof EncodedPolyline) {
             return $segment;
         }
         $value = $this->connection->fetchOne('SELECT value FROM KeyValue WHERE key = :key', ['key' => 'g96.localSegmentGeometry.v1']);
@@ -42,7 +43,8 @@ final readonly class LocalSegmentGeometry
         }
         $cache = Json::decode($value);
         $polyline = EncodedPolyline::fromOptionalString($this->cachedGeometry($cache, (string) $segment->getId()));
-        return null !== $polyline ? $segment->withReconstructedPolyline($polyline) : $segment;
+
+        return $polyline instanceof EncodedPolyline ? $segment->withReconstructedPolyline($polyline) : $segment;
     }
 
     /**
@@ -68,6 +70,7 @@ final readonly class LocalSegmentGeometry
                 $overrides[$segmentId] = $normalized;
             }
         }
+
         return $overrides;
     }
 
@@ -77,7 +80,7 @@ final readonly class LocalSegmentGeometry
     public function recordUploaded(Segment $segment, array $metrics): void
     {
         $overrides = $this->overrides();
-        if (isset($overrides[(string) $segment->getId()]) || null === $segment->getPolyline()) {
+        if (isset($overrides[(string) $segment->getId()]) || !$segment->getPolyline() instanceof EncodedPolyline) {
             throw CouldNotProcessCommand::withReason('La traccia del nuovo segmento non è valida.');
         }
         $overrides[(string) $segment->getId()] = ['polyline' => (string) $segment->getPolyline(), 'source' => 'gpx', 'metrics' => $metrics];
@@ -89,7 +92,7 @@ final readonly class LocalSegmentGeometry
      */
     public function saveMissing(Segment $segment, EncodedPolyline $polyline, string $source, ?array $metrics = null): void
     {
-        if (null !== $this->forDisplay($segment)->getPolyline()) {
+        if ($this->forDisplay($segment)->getPolyline() instanceof EncodedPolyline) {
             throw CouldNotProcessCommand::withReason('Il segmento ha già una traccia GPS. Non è stata sostituita.');
         }
         $overrides = $this->overrides();
@@ -148,6 +151,7 @@ final readonly class LocalSegmentGeometry
             }
             $normalized['originalEfforts'] = $efforts;
         }
+
         return $normalized;
     }
 
@@ -163,6 +167,7 @@ final readonly class LocalSegmentGeometry
         if (!is_numeric($distance)) {
             return null;
         }
+
         return [
             'distance' => (float) $distance,
             'elevationGain' => $this->optionalFloat($metrics['elevationGain'] ?? null),
@@ -190,6 +195,7 @@ final readonly class LocalSegmentGeometry
                 $normalized[$key] = $value;
             }
         }
+
         return $normalized;
     }
 
@@ -207,6 +213,7 @@ final readonly class LocalSegmentGeometry
             return null;
         }
         $polyline = $geometry['polyline'] ?? null;
+
         return is_string($polyline) ? $polyline : null;
     }
 }

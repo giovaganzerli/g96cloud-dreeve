@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Domain\Segment\ManageLocalSegment;
 
-use App\Domain\Segment\SegmentId;
 use App\Domain\Segment\Geometry\GpxSegmentTrackParser;
+use App\Domain\Segment\SegmentId;
 use App\Infrastructure\CQRS\Command\Deserialize\CouldNotDeserializeCommand;
 use App\Infrastructure\CQRS\Command\Deserialize\DeserializableCommand;
 use App\Infrastructure\CQRS\Command\Deserialize\ProvidesCommandName;
@@ -47,6 +47,7 @@ final readonly class ManageLocalSegment extends DomainCommand implements Deseria
                 throw CouldNotDeserializeCommand::invalidPayload('Il contenuto del GPX non è valido.');
             }
         }
+
         return new self($id, $payload['action'], $contents);
     }
 

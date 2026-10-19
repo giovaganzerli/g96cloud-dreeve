@@ -66,6 +66,7 @@ final readonly class LocalSegmentActionsFormRequestHandler
                     'recalculate' => $request->request->getString('recalculate'),
                     'filename' => $file->getClientOriginalName(), 'content' => base64_encode($file->getContent()),
                 ]));
+
                 return new RedirectResponse($this->urls->generate('admin_local_segment_action', ['segmentId' => $segmentId, 'action' => 'generate']), Response::HTTP_SEE_OTHER);
             } catch (CouldNotProcessCommand|CouldNotDeserializeCommand $exception) {
                 $error = $exception->getMessage();
@@ -75,6 +76,7 @@ final readonly class LocalSegmentActionsFormRequestHandler
             'segment' => $segment, 'action' => $action, 'error' => $error,
             'dispatchCommand' => ManageLocalSegment::getCommandName(),
         ]));
+
         return $response->setStatusCode(null !== $error ? Response::HTTP_BAD_REQUEST : Response::HTTP_OK);
     }
 }

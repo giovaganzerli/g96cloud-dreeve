@@ -43,7 +43,7 @@ final readonly class GenerateSegmentGeometry
                     if ('segment-'.($archivedEffort['segment']['id'] ?? '') !== (string) $segment->getId()) {
                         continue;
                     }
-                    if (null !== ($polyline = $this->builder->reconstruct($archivedEffort, $latLng, $distance, $length))) {
+                    if (($polyline = $this->builder->reconstruct($archivedEffort, $latLng, $distance, $length)) instanceof EncodedPolyline) {
                         return $polyline;
                     }
                 }
@@ -54,10 +54,11 @@ final readonly class GenerateSegmentGeometry
             $startOffset = $effort->getStartDateTime()->getTimestamp() - $this->activityRepository->find($id)->getStartDate()->getTimestamp();
             $start = $this->nearestIndex($time, $startOffset);
             $end = $this->nearestIndex($time, $startOffset + $effort->getElapsedTimeInSeconds());
-            if (null !== $start && null !== $end && null !== ($polyline = $this->builder->reconstruct(['start_index' => $start, 'end_index' => $end], $latLng, $distance, $length))) {
+            if (null !== $start && null !== $end && ($polyline = $this->builder->reconstruct(['start_index' => $start, 'end_index' => $end], $latLng, $distance, $length)) instanceof EncodedPolyline) {
                 return $polyline;
             }
         }
+
         return null;
     }
 
@@ -76,6 +77,7 @@ final readonly class GenerateSegmentGeometry
                 $nearest = (int) $index;
             }
         }
+
         return $nearest;
     }
 }

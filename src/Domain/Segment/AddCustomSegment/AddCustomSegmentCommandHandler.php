@@ -8,9 +8,9 @@ use App\Domain\Activity\ActivityRepository;
 use App\Domain\Activity\Stream\ActivityStreamRepository;
 use App\Domain\Activity\Stream\StreamType;
 use App\Domain\Geography\Country\RouteGeographyAnalyzer;
-use App\Domain\Segment\Segment;
 use App\Domain\Segment\Geometry\GpxSegmentTrackParser;
 use App\Domain\Segment\LocalSegmentGeometry;
+use App\Domain\Segment\Segment;
 use App\Domain\Segment\SegmentId;
 use App\Domain\Segment\SegmentRepository;
 use App\Infrastructure\CQRS\Command\Command;
@@ -40,11 +40,12 @@ final readonly class AddCustomSegmentCommandHandler implements CommandHandler
 
         if (null !== $command->getContents()) {
             $this->addFromGpx($command);
+
             return;
         }
 
         $activityId = $command->getActivityId();
-        if (null === $activityId || !$this->activityRepository->exists($activityId)) {
+        if (!$activityId instanceof \App\Domain\Activity\ActivityId || !$this->activityRepository->exists($activityId)) {
             throw CouldNotProcessCommand::withReason('The selected activity does not exist.');
         }
 
@@ -112,7 +113,7 @@ final readonly class AddCustomSegmentCommandHandler implements CommandHandler
     {
         $contents = $command->getContents();
         $sportType = $command->getSportType();
-        assert(null !== $contents && null !== $sportType);
+        assert(null !== $contents && $sportType instanceof \App\Domain\Activity\SportType\SportType);
         $metrics = $this->gpxParser->metrics($contents);
         if ($metrics['distance'] < self::MIN_DISTANCE_IN_METERS) {
             throw CouldNotProcessCommand::withReason(sprintf('Il segmento deve essere lungo almeno %d metri.', self::MIN_DISTANCE_IN_METERS));
@@ -123,10 +124,9 @@ final readonly class AddCustomSegmentCommandHandler implements CommandHandler
             segmentId: SegmentId::random(), name: $command->getName(), sportType: $sportType,
             distance: Meter::from(round($metrics['distance']))->toKilometer(), maxGradient: $metrics['maxGradient'],
             averageGradient: $metrics['averageGradient'], isFavourite: $command->isFavourite(),
-            countryCode: $countries ? strtolower($countries[0]) : null, polyline: $polyline,
+            countryCode: [] !== $countries ? strtolower($countries[0]) : null, polyline: $polyline,
         );
         $this->segmentRepository->add($segment);
         $this->localGeometry->recordUploaded($segment, $metrics);
     }
-
 }

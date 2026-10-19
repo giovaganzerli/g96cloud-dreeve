@@ -9,8 +9,8 @@ use App\Infrastructure\ValueObject\Geography\EncodedPolyline;
 final readonly class SegmentGeometryFromEffort
 {
     /** @param array<string, mixed> $effort
-     *  @param array<int, mixed> $latLng
-     *  @param array<int, mixed> $distance
+     * @param array<int, mixed> $latLng
+     * @param array<int, mixed> $distance
      */
     public function reconstruct(array $effort, array $latLng, array $distance, float $length): ?EncodedPolyline
     {
@@ -47,6 +47,7 @@ final readonly class SegmentGeometryFromEffort
             }
             $points[] = [$latitude, $longitude];
         }
+
         return EncodedPolyline::fromCoordinates($points);
     }
 }
