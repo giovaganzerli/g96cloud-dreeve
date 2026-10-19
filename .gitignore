@@ -9,6 +9,7 @@ node_modules
 /src/Entity
 /src/Repository
 /resources/countries/
+/docker/fit-tool/fit-tool
 .idea
 config/reference.php
 poc/
