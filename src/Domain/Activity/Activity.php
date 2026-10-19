@@ -419,6 +419,13 @@ final class Activity
         ]));
     }
 
+    public function withoutGear(): self
+    {
+        return $this->recordUpdate(clone ($this, [
+            'gearId' => null,
+        ]));
+    }
+
     public function getWeather(): ?Weather
     {
         if (!$this->weather) {
@@ -720,7 +727,11 @@ final class Activity
 
     public function getDeviceId(): RecordingDeviceId
     {
-        return RecordingDeviceId::fromName($this->getDeviceName() ?? 'none');
+        if (null === $deviceName = $this->getDeviceName()) {
+            return RecordingDeviceId::none();
+        }
+
+        return RecordingDeviceId::fromName($deviceName);
     }
 
     public function isCommute(): bool
@@ -889,6 +900,9 @@ final class Activity
     {
         if ($this->routeSignature() !== $clone->routeSignature()) {
             $clone->recordThat(new ActivityRouteWasUpdated());
+        }
+        if ($this->sportType !== $clone->sportType) {
+            $clone->recordOnlyOnce(new ActivitySportTypeWasChanged($clone->getId()));
         }
         if ($this->updateSignature() !== $clone->updateSignature()) {
             $clone->recordOnlyOnce(new ActivityWasUpdated(

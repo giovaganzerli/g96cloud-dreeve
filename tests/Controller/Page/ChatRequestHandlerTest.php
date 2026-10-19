@@ -11,6 +11,7 @@ use App\Domain\Settings\DbalSettingsRepository;
 use App\Domain\Settings\SettingsGroup;
 use App\Domain\Settings\SettingsRepository;
 use App\Infrastructure\CQRS\Command\Bus\CommandBus;
+use App\Infrastructure\Renderer\MarkdownRenderer;
 use App\Infrastructure\ValueObject\Time\SerializableDateTime;
 use App\Tests\Controller\Admin\AdminWebTestCase;
 use App\Tests\Infrastructure\CQRS\Command\Bus\SpyCommandBus;
@@ -139,7 +140,7 @@ class ChatRequestHandlerTest extends AdminWebTestCase
         );
 
         $agent = Agent::make(workflowId: 'chat')->setAiProvider(
-            new FakeAIProvider(new AssistantMessage('Hello World'))
+            new FakeAIProvider(new AssistantMessage('<img src=x onerror=alert(1)> **Hello** World'))
         );
 
         $requestHandler = $this->buildRequestHandlerForSse(
@@ -162,6 +163,9 @@ class ChatRequestHandlerTest extends AdminWebTestCase
         $this->assertStringContainsString('event: agentResponse', $content);
         $this->assertStringContainsString('Hello', $content);
         $this->assertStringContainsString('event: done', $content);
+
+        $this->assertStringContainsString('&lt;img src=x onerror=alert(1)&gt;', $content);
+        $this->assertStringContainsString('<strong>Hello</strong>', $content);
     }
 
     #[AllowMockObjectsWithoutExpectations]
@@ -224,6 +228,7 @@ class ChatRequestHandlerTest extends AdminWebTestCase
             settingsRepository: $this->buildSettingsRepository($aiUIEnabled),
             formFactory: $this->getContainer()->get(FormFactoryInterface::class),
             appShell: $this->getContainer()->get(AppShell::class),
+            markdownRenderer: new MarkdownRenderer(),
         );
     }
 
@@ -240,6 +245,7 @@ class ChatRequestHandlerTest extends AdminWebTestCase
             settingsRepository: $this->buildSettingsRepository(true),
             formFactory: $this->getContainer()->get(FormFactoryInterface::class),
             appShell: $this->getContainer()->get(AppShell::class),
+            markdownRenderer: new MarkdownRenderer(),
         );
     }
 

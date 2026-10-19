@@ -15,14 +15,18 @@ enum SettingsName: string
     case LOCALE = 'locale';
     case EDDINGTON = 'eddington';
     case REQUIRES_AUTHENTICATION = 'requiresAuthentication';
+    case ACTIVITIES_EXCLUDED_FROM_PEAK_POWER_OUTPUTS = 'excludedFromPeakPowerOutputs';
+    case ACTIVITIES_EXCLUDED_FROM_BEST_EFFORTS = 'excludedFromBestEfforts';
 
     public function group(): SettingsGroup
     {
         return match ($this) {
-            self::MAX_HEART_RATE_FORMULA, self::RESTING_HEART_RATE_FORMULA, self::WEIGHT_HISTORY => SettingsGroup::GENERAL,
+            self::MAX_HEART_RATE_FORMULA, self::RESTING_HEART_RATE_FORMULA => SettingsGroup::GENERAL,
+            self::WEIGHT_HISTORY => SettingsGroup::ATHLETE_WEIGHT,
             self::UNIT_SYSTEM, self::LOCALE => SettingsGroup::APPEARANCE,
             self::EDDINGTON => SettingsGroup::METRICS,
             self::REQUIRES_AUTHENTICATION => SettingsGroup::SECURITY,
+            self::ACTIVITIES_EXCLUDED_FROM_PEAK_POWER_OUTPUTS, self::ACTIVITIES_EXCLUDED_FROM_BEST_EFFORTS => SettingsGroup::ACTIVITY_EXCLUSIONS,
         };
     }
 

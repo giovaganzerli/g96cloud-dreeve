@@ -4,7 +4,6 @@ namespace App\Tests\Domain\Activity\Stream;
 
 use App\Domain\Activity\ActivityId;
 use App\Domain\Activity\ActivityRepository;
-use App\Domain\Activity\ActivityType;
 use App\Domain\Activity\ActivityWithRawData;
 use App\Domain\Activity\SportType\SportType;
 use App\Domain\Activity\Stream\ActivityHeartRateRepository;
@@ -127,42 +126,48 @@ class StreamBasedActivityHeartRateRepositoryTest extends ContainerTestCase
         );
     }
 
-    public function testFindTotalTimeInSecondsInHeartRateZonesSeesEveryActivity(): void
+    public function testFindRelativeHeartRateDistributionNormalisesByTheMaxHeartRateOnTheActivityDate(): void
     {
-        $this->provideFullTestSet();
-
-        $before = $this->activityHeartRateRepository->findTotalTimeInSecondsInHeartRateZones();
+        $athlete = $this->getContainer()->get(SettingsRepository::class)->general()->getAthlete();
+        $longAgo = SerializableDateTime::fromString('2014-10-15 10:00:00');
+        $recently = SerializableDateTime::fromString('2023-10-15 10:00:00');
+        $this->assertNotEquals($athlete->getMaxHeartRate($longAgo), $athlete->getMaxHeartRate($recently));
 
         $this->addActivityWithHeartRateDistribution(
             activityId: ActivityId::fromUnprefixed('42'),
-            heartRateDistribution: [180 => 600],
+            heartRateDistribution: [$athlete->getMaxHeartRate($longAgo) => 600],
+            startDate: $longAgo,
+        );
+        $this->addActivityWithHeartRateDistribution(
+            activityId: ActivityId::fromUnprefixed('43'),
+            heartRateDistribution: [$athlete->getMaxHeartRate($recently) => 300],
+            startDate: $recently,
+            sportType: SportType::RUN,
         );
 
-        $this->assertEquals(
-            $before->getTotalTimeInSeconds() + 600,
-            $this->activityHeartRateRepository->findTotalTimeInSecondsInHeartRateZones()->getTotalTimeInSeconds(),
-        );
+        $relativeHeartRateDistribution = $this->activityHeartRateRepository->findRelativeHeartRateDistribution();
+
+        $this->assertEquals([100 => 900], $relativeHeartRateDistribution->getBins());
+        $this->assertEquals(900, $relativeHeartRateDistribution->getTotalTimeInSeconds());
     }
 
-    public function testFindTotalTimeInSecondsInHeartRateZonesPerActivityType(): void
+    public function testFindRelativeHeartRateDistributionSpreadsAHeartRateOverThePercentagesItCovers(): void
     {
-        $this->provideFullTestSet();
+        $athlete = $this->getContainer()->get(SettingsRepository::class)->general()->getAthlete();
+        $startDate = SerializableDateTime::fromString('2023-10-15 10:00:00');
+        $athleteMaxHeartRate = $athlete->getMaxHeartRate($startDate);
 
-        $perActivityType = $this->activityHeartRateRepository->findTotalTimeInSecondsInHeartRateZonesPerActivityType();
-
-        $this->assertEqualsCanonicalizing(
-            array_map(fn (ActivityType $activityType): string => $activityType->value, ActivityType::cases()),
-            array_keys($perActivityType),
+        $this->addActivityWithHeartRateDistribution(
+            activityId: ActivityId::fromUnprefixed('42'),
+            heartRateDistribution: array_fill_keys(range($athleteMaxHeartRate - 40, $athleteMaxHeartRate), 60),
+            startDate: $startDate,
         );
-        $this->assertContainsOnlyInstancesOf(TimeInHeartRateZones::class, $perActivityType);
 
-        $this->assertEquals(
-            $this->activityHeartRateRepository->findTotalTimeInSecondsInHeartRateZones()->getTotalTimeInSeconds(),
-            array_sum(array_map(
-                fn (TimeInHeartRateZones $timeInHeartRateZones): int => $timeInHeartRateZones->getTotalTimeInSeconds(),
-                $perActivityType
-            )),
-        );
+        $bins = $this->activityHeartRateRepository->findRelativeHeartRateDistribution()->getBins();
+        $innerBins = array_slice(array_filter($bins), 1, -1);
+
+        $this->assertEqualsWithDelta(41 * 60, array_sum($bins), count($bins));
+        $this->assertLessThan(0.2 * max($innerBins), max($innerBins) - min($innerBins));
     }
 
     public function testFindTimeInHeartRateZonesForLast30DaysIgnoresOlderActivities(): void
@@ -243,11 +248,12 @@ class StreamBasedActivityHeartRateRepositoryTest extends ContainerTestCase
         ActivityId $activityId,
         array $heartRateDistribution,
         ?SerializableDateTime $startDate = null,
+        SportType $sportType = SportType::RIDE,
     ): void {
         $this->getContainer()->get(ActivityRepository::class)->add(ActivityWithRawData::fromState(
             ActivityBuilder::fromDefaults()
                 ->withActivityId($activityId)
-                ->withSportType(SportType::RIDE)
+                ->withSportType($sportType)
                 ->withStartDateTime($startDate ?? SerializableDateTime::fromString('2023-10-15 10:00:00'))
                 ->build(),
             [],

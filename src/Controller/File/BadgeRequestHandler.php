@@ -50,7 +50,7 @@ final readonly class BadgeRequestHandler
         $render = $this->cacheableRenderer->render(
             cacheability: Cacheability::for(
                 cacheKey: 'badge.dreeve',
-                cacheTags: CacheTags::of(RootCacheTag::ACTIVITIES, RootCacheTag::CHALLENGES),
+                cacheTags: CacheTags::of(RootCacheTag::ACTIVITIES, RootCacheTag::CHALLENGES, RootCacheTag::SETTINGS_GENERAL),
             ),
             render: fn (): string => $this->twig->load('svg/badge/svg-dreeve-badge.html.twig')->render([
                 'athlete' => $this->settingsRepository->general()->getAthlete(),
@@ -111,7 +111,7 @@ final readonly class BadgeRequestHandler
         $render = $this->cacheableRenderer->render(
             cacheability: Cacheability::for(
                 cacheKey: sprintf('badge.pb.%s', $sportType),
-                cacheTags: CacheTags::of(RootCacheTag::ACTIVITIES),
+                cacheTags: CacheTags::of(RootCacheTag::ACTIVITIES, RootCacheTag::SETTINGS_ACTIVITY_EXCLUSIONS),
             ),
             render: fn (): string => $this->twig->load('svg/badge/svg-pb-badge.html.twig')->render([
                 'sportType' => $sportTypeWithBestEfforts,

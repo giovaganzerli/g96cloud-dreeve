@@ -135,6 +135,17 @@ class FitFileParserTest extends ActivityFileParserTestCase
         $this->assertSame(113, $this->parser->parse(RawActivityFile::from(Path::fromString('/tmp/activity.fit'), ''))->getActivity()->getAveragePower());
     }
 
+    public function testParseFixesNikeRunClubSessionUnits(): void
+    {
+        $this->givenFitToolReturns((string) file_get_contents(__DIR__.'/fixtures/fit-document-nike-run-club.json'));
+
+        $activity = $this->parser->parse(RawActivityFile::from(Path::fromString('/tmp/activity.fit'), ''))->getActivity();
+
+        $this->assertEqualsWithDelta(11.606, $activity->getAverageSpeed()->toFloat(), 0.001);
+        $this->assertEqualsWithDelta(18.356, $activity->getMaxSpeed()->toFloat(), 0.001);
+        $this->assertSame(70, $activity->getAverageCadence());
+    }
+
     public function testParseMergesRecordsSplitAcrossSameTimestamp(): void
     {
         $this->givenFitToolReturns((string) file_get_contents(__DIR__.'/fixtures/fit-document-with-split-records.json'));
@@ -220,6 +231,17 @@ class FitFileParserTest extends ActivityFileParserTestCase
         $this->givenFitToolReturns(Json::encode($document));
 
         $this->assertSame('Suunto Vertical', $this->parser->parse(RawActivityFile::from(Path::fromString('/tmp/activity.fit'), ''))->getActivity()->getDeviceName());
+    }
+
+    public function testParseIgnoresProductNameForZwift(): void
+    {
+        $document = $this->minimalFitDocument(fileIdFields: [
+            ['name' => 'manufacturer', 'value' => 260],
+            ['name' => 'product_name', 'value' => 'with {wo'],
+        ]);
+        $this->givenFitToolReturns(Json::encode($document));
+
+        $this->assertSame('Zwift', $this->parser->parse(RawActivityFile::from(Path::fromString('/tmp/activity.fit'), ''))->getActivity()->getDeviceName());
     }
 
     public function testParseFallsBackToManufacturerWhenProductNameMissing(): void

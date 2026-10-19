@@ -76,15 +76,19 @@ final readonly class SettingsRequestHandler
     #[Route(path: '/admin/settings/{group}', name: 'admin_settings', methods: ['GET'], priority: 5)]
     public function handle(string $group, Request $request): HtmlResponse
     {
-        $settingsGroup = SettingsGroup::tryFrom($group)
+        $settingsGroup = SettingsGroup::fromSlug($group)
             ?? throw new NotFoundHttpException(sprintf('Unknown settings group "%s"', $group));
+
+        if (!$settingsGroup->hasSettingsPage()) {
+            throw new NotFoundHttpException(sprintf('Unknown settings group "%s"', $group));
+        }
 
         if (SettingsGroup::IMPORT === $settingsGroup && !$this->importMode->isStravaApi()) {
             throw new NotFoundHttpException('Page not found');
         }
 
         return new HtmlResponse($this->twig->render(
-            sprintf('html/admin/page/settings/%s.html.twig', $settingsGroup->value),
+            sprintf('html/admin/page/settings/%s.html.twig', $settingsGroup->getSlug()),
             [
                 'dispatchCommand' => UpdateSettings::getCommandName(),
                 'group' => $settingsGroup,

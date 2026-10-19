@@ -6,11 +6,11 @@ namespace App\Domain\Activity\Stream;
 
 use App\Domain\Activity\ActivityId;
 use App\Domain\Activity\ActivitySummaryRepository;
-use App\Domain\Activity\ActivityType;
 use App\Domain\Activity\SportType\SportType;
 use App\Domain\Activity\Stream\Metric\ActivityStreamMetricRepository;
 use App\Domain\Activity\Stream\Metric\ActivityStreamMetricType;
 use App\Domain\Athlete\HeartRateZone\HeartRateZone;
+use App\Domain\Athlete\HeartRateZone\RelativeHeartRateDistribution;
 use App\Domain\Athlete\HeartRateZone\TimeInHeartRateZones;
 use App\Domain\Athlete\HeartRateZone\TimeInHeartRateZonesForRollingWindow;
 use App\Domain\Settings\SettingsRepository;
@@ -52,22 +52,6 @@ final readonly class StreamBasedActivityHeartRateRepository implements ActivityH
         ));
     }
 
-    public function findTotalTimeInSecondsInHeartRateZones(): TimeInHeartRateZones
-    {
-        return $this->toTimeInHeartRateZones($this->aggregate()->getTotal());
-    }
-
-    /**
-     * @return array<string, TimeInHeartRateZones>
-     */
-    public function findTotalTimeInSecondsInHeartRateZonesPerActivityType(): array
-    {
-        return array_map(
-            $this->toTimeInHeartRateZones(...),
-            $this->aggregate()->getPerActivityType()
-        );
-    }
-
     public function findTimeInHeartRateZonesForLast30Days(): TimeInHeartRateZonesForRollingWindow
     {
         $heartRateZoneTotals = $this->aggregate();
@@ -76,6 +60,32 @@ final readonly class StreamBasedActivityHeartRateRepository implements ActivityH
             current: $this->toTimeInHeartRateZones($heartRateZoneTotals->getInLastXDays()),
             asOfPreviousDay: $this->toTimeInHeartRateZones($heartRateZoneTotals->getInLastXDaysAsOfPreviousDay()),
         );
+    }
+
+    public function findRelativeHeartRateDistribution(): RelativeHeartRateDistribution
+    {
+        $athlete = $this->settingsRepository->general()->getAthlete();
+
+        $secondsPerPercentage = [];
+        foreach ($this->fetchHeartRateDistributions() as $result) {
+            $heartRateDistribution = Json::uncompressAndDecode($result['data']);
+            $athleteMaxHeartRate = $athlete->getMaxHeartRate(SerializableDateTime::fromString($result['startDateTime']));
+
+            foreach ($heartRateDistribution as $heartRate => $numberOfSamples) {
+                $from = ($heartRate - 0.5) / $athleteMaxHeartRate * 100;
+                $to = ($heartRate + 0.5) / $athleteMaxHeartRate * 100;
+
+                for ($percentage = (int) round($from); $percentage <= (int) round($to); ++$percentage) {
+                    $overlap = min($to, $percentage + 0.5) - max($from, $percentage - 0.5);
+                    if ($overlap <= 0) {
+                        continue;
+                    }
+                    $secondsPerPercentage[$percentage] = ($secondsPerPercentage[$percentage] ?? 0) + $numberOfSamples * $overlap / ($to - $from);
+                }
+            }
+        }
+
+        return RelativeHeartRateDistribution::fromSecondsPerPercentage($secondsPerPercentage);
     }
 
     private function aggregate(): HeartRateZoneTotals
@@ -87,26 +97,10 @@ final readonly class StreamBasedActivityHeartRateRepository implements ActivityH
         $previousDayCutOffDate = $now->sub(\DateInterval::createFromDateString('1 day'));
         $previousDayWindowStart = $previousDayCutOffDate->sub($rollingWindow);
 
-        $total = $this->emptyZones();
         $inLastXDays = $this->emptyZones();
         $inLastXDaysAsOfPreviousDay = $this->emptyZones();
-        $perActivityType = array_combine(
-            array_map(fn (ActivityType $activityType): string => $activityType->value, ActivityType::cases()),
-            array_map(fn (ActivityType $activityType): array => $this->emptyZones(), ActivityType::cases()),
-        );
 
-        $results = $this->connection->executeQuery(
-            'SELECT a.startDateTime, a.sportType, m.data
-             FROM ActivityStreamMetric m
-             INNER JOIN Activity a ON a.activityId = m.activityId
-             WHERE m.streamType = :streamType AND m.metricType = :metricType',
-            [
-                'streamType' => StreamType::HEART_RATE->value,
-                'metricType' => ActivityStreamMetricType::VALUE_DISTRIBUTION->value,
-            ]
-        )->fetchAllAssociative();
-
-        foreach ($results as $result) {
+        foreach ($this->fetchHeartRateDistributions() as $result) {
             $heartRateDistribution = Json::uncompressAndDecode($result['data']);
             if ([] === $heartRateDistribution) {
                 continue;
@@ -120,15 +114,11 @@ final readonly class StreamBasedActivityHeartRateRepository implements ActivityH
                 heartRateDistribution: $heartRateDistribution,
             );
 
-            $activityType = $sportType->getActivityType();
             $isInCurrentWindow = $startDate->isAfterOrOn($cutOffDate);
             $isInPreviousDayWindow = $startDate->isAfterOrOn($previousDayWindowStart)
                 && $startDate->isBeforeOrOn($previousDayCutOffDate);
 
             foreach ($zoneSeconds as $zoneName => $secondsInZone) {
-                $total[$zoneName] += $secondsInZone;
-                $perActivityType[$activityType->value][$zoneName] += $secondsInZone;
-
                 if ($isInCurrentWindow) {
                     $inLastXDays[$zoneName] += $secondsInZone;
                 }
@@ -139,11 +129,29 @@ final readonly class StreamBasedActivityHeartRateRepository implements ActivityH
         }
 
         return HeartRateZoneTotals::fromState(
-            total: $total,
-            perActivityType: $perActivityType,
             inLastXDays: $inLastXDays,
             inLastXDaysAsOfPreviousDay: $inLastXDaysAsOfPreviousDay,
         );
+    }
+
+    /**
+     * @return list<array{startDateTime: string, sportType: string, data: string}>
+     */
+    private function fetchHeartRateDistributions(): array
+    {
+        /** @var list<array{startDateTime: string, sportType: string, data: string}> $results */
+        $results = $this->connection->executeQuery(
+            'SELECT a.startDateTime, a.sportType, m.data
+             FROM ActivityStreamMetric m
+             INNER JOIN Activity a ON a.activityId = m.activityId
+             WHERE m.streamType = :streamType AND m.metricType = :metricType',
+            [
+                'streamType' => StreamType::HEART_RATE->value,
+                'metricType' => ActivityStreamMetricType::VALUE_DISTRIBUTION->value,
+            ]
+        )->fetchAllAssociative();
+
+        return $results;
     }
 
     /**

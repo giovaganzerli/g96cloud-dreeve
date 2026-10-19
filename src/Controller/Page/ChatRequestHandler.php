@@ -11,6 +11,7 @@ use App\Domain\Settings\SettingsRepository;
 use App\Infrastructure\CQRS\Command\Bus\CommandBus;
 use App\Infrastructure\Http\PrivateNoStoreHtmlResponse;
 use App\Infrastructure\Http\ServerSentEvent;
+use App\Infrastructure\Renderer\MarkdownRenderer;
 use App\Infrastructure\Serialization\Json;
 use GuzzleHttp\Exception\ClientException;
 use NeuronAI\Agent\AgentInterface;
@@ -39,6 +40,7 @@ final readonly class ChatRequestHandler
         private FormFactoryInterface $formFactory,
         private AppShell $appShell,
         private Environment $twig,
+        private MarkdownRenderer $markdownRenderer,
     ) {
     }
 
@@ -101,6 +103,7 @@ final readonly class ChatRequestHandler
                 type: 'fullMessage'
             ));
 
+            $fullResponse = '';
             try {
                 foreach ($this->neuronAIAgent->stream(new UserMessage($message)) as $chunk) {
                     if (!$chunk instanceof TextChunk) {
@@ -110,6 +113,8 @@ final readonly class ChatRequestHandler
                         data: '',
                         type: 'removeThinking'
                     ));
+
+                    $fullResponse .= $chunk->content;
 
                     $response->sendEvent(new ServerSentEvent(
                         data: $chunk->content,
@@ -127,21 +132,21 @@ final readonly class ChatRequestHandler
                     $message = $e->getResponse()->getBody()->getContents(); // @codeCoverageIgnore
                 }
 
-                $fullMessage = 'Oh no, I made a booboo... <br />'.preg_replace('/\s+/', ' ', $message);
+                $fullResponse = 'Oh no, I made a booboo...'."\n\n".trim((string) preg_replace('/\s+/', ' ', $message));
 
                 $response->sendEvent(new ServerSentEvent(
-                    data: $fullMessage,
+                    data: $fullResponse,
                     type: 'agentResponse'
                 ));
 
                 $this->commandBus->dispatch(new AddChatMessage(
-                    message: $fullMessage,
+                    message: $fullResponse,
                     messageRole: MessageRole::ASSISTANT,
                 ));
             }
 
             $response->sendEvent(new ServerSentEvent(
-                data: 'done',
+                data: $this->markdownRenderer->render($fullResponse),
                 type: 'done'
             ));
         });

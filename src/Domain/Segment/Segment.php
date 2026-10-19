@@ -500,6 +500,7 @@ final class Segment implements SupportsAITooling
             'distanceInKilometer' => $this->getDistance(),
             'isFavourite' => $this->isFavourite(),
             'climbCategory' => $this->getClimbCategory(),
+            'stravaUrl' => $this->getStravaUrl(),
         ];
     }
 

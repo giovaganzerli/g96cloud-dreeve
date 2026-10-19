@@ -38,6 +38,17 @@ class MonthRequestHandlerTest extends ControllerWebTestCase
         $this->assertMatchesHtmlSnapshot((string) $this->client->getResponse()->getContent());
     }
 
+    public function testItSummarisesEachActivityOnHover(): void
+    {
+        $this->provideFullTestSet();
+
+        $this->client->request('GET', '/monthly-stats/2023-07');
+
+        $content = (string) $this->client->getResponse()->getContent();
+        $this->assertStringContainsString('title="Morning Ride&#10;31:56 · 112 km"', $content);
+        $this->assertStringContainsString('title="Virtual ride Zwift&#10;1:03:06"', $content);
+    }
+
     public function testItIsTaggedWithTheMonthsItRenders(): void
     {
         $this->provideFullTestSet();
@@ -46,7 +57,7 @@ class MonthRequestHandlerTest extends ControllerWebTestCase
 
         $this->assertResponseHeaderSame(
             'X-Dreeve-Cache-Tags',
-            'settings.appearance, settings.general, activities.2022-12, activities.2023-01, activities.2023-02',
+            'settings.appearance, activities.2022-12, activities.2023-01, activities.2023-02',
         );
     }
 
