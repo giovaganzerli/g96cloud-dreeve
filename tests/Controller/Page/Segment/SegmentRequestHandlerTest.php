@@ -32,8 +32,8 @@ class SegmentRequestHandlerTest extends ControllerWebTestCase
 
         $this->assertResponseIsSuccessful();
         $this->assertResponseHeaderSame('Content-Type', 'text/html; charset=UTF-8');
-        $this->assertStringEndsWith(
-            'segments.1',
+        $this->assertStringContainsString(
+            'segments.1.',
             (string) $this->client->getResponse()->headers->get('X-Dreeve-Cache-Key'),
         );
         // Scoped to this segment, so importing an activity that rode another segment leaves it alone.
