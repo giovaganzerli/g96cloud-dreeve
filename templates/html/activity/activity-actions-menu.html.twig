@@ -1,0 +1,102 @@
+{% set isAdmin = isAuthenticated() %}
+{% set gpxUrl = relativeUrl(path('activity_gpx', {'activityId': activity.getId()})) %}
+{% set originalFileUrl = relativeUrl(path('activity_original_file', {'activityId': activity.getId()})) %}
+{% set hasSegmentSearch = isAdmin and activity.getImportSource() != enum('App\\Domain\\Activity\\ImportSource').MANUAL %}
+{% set hasDownloads = hasGpxLink or hasOriginalFileLink %}
+{% if isAdmin or hasDownloads %}
+    <div class="relative shrink-0">
+        <button id="activityActionsButton"
+                data-dropdown="activityActionsDropdown"
+                data-dropdown-placement="bottom-end"
+                data-dropdown-offset-distance="6"
+                type="button"
+                class="inline-flex items-center gap-1.5 whitespace-nowrap text-xs font-medium text-gray-600 hover:text-gray-900 bg-white hover:bg-gray-50 border border-gray-200 shadow-xs rounded-lg px-3 py-1.5 transition">
+            {{ svg('cog', 'size-3.5') }}
+            {{ "Azioni"|trans({}, 'admin') }}
+            <svg xmlns="http://www.w3.org/2000/svg" class="size-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m6 9 6 6 6-6"/>
+            </svg>
+        </button>
+        <div id="activityActionsDropdown" class="hidden z-20 w-56 rounded-lg border border-gray-200 bg-white p-1 shadow-xl">
+            {% if isAdmin %}
+                <div class="flex items-center gap-1.5 px-2 pt-1.5 pb-1 text-[10px] font-semibold uppercase tracking-wider text-gray-400">
+                    {{ svg('cog', 'size-3') }}
+                    {{ "Attività"|trans({}, 'admin') }}
+                </div>
+                <ul aria-labelledby="activityActionsButton">
+                    <li>
+                        <a href="{{ relativeUrlWithRedirectTo(path('admin_edit_activity', {activityId: activity.getId()}), 'activities/' ~ activity.getId()) }}"
+                           data-close-dropdown
+                           class="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50">
+                            {{ svg('pencil', 'size-3.5') }}
+                            {{ "Modifica"|trans({}, 'admin') }}
+                        </a>
+                    </li>
+                    <li>
+                        {% if activity.hasRecalculatedMetrics() %}
+                            <form method="post" action="{{ relativeUrl(path('admin_recalculate_activity_metrics', {activityId: activity.getId()})) }}">
+                                <input type="hidden" name="_csrf_token" value="{{ csrf_token('dispatch-command') }}">
+                                <input type="hidden" name="action" value="revert">
+                                <button type="submit" data-close-dropdown class="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50">
+                                    {{ svg('upload', 'size-3.5') }}
+                                    {{ "Ripristina i dati"|trans({}, 'admin') }}
+                                </button>
+                            </form>
+                        {% else %}
+                            <form method="post" action="{{ relativeUrl(path('admin_recalculate_activity_metrics', {activityId: activity.getId()})) }}">
+                                <input type="hidden" name="_csrf_token" value="{{ csrf_token('dispatch-command') }}">
+                                <input type="hidden" name="action" value="recalculate">
+                                <button type="submit" data-close-dropdown class="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50">
+                                    {{ svg('route', 'size-3.5') }}
+                                    {{ "Ricalcola i dati"|trans({}, 'admin') }}
+                                </button>
+                            </form>
+                        {% endif %}
+                    </li>
+                </ul>
+            {% endif %}
+
+            {% if hasSegmentSearch %}
+                <div class="mt-1 flex items-center gap-1.5 border-t border-gray-100 px-2 pt-2 pb-1 text-[10px] font-semibold uppercase tracking-wider text-gray-400">
+                    {{ svg('ruler', 'size-3') }}
+                    {{ "Segmenti"|trans({}, 'admin') }}
+                </div>
+                <ul aria-labelledby="activityActionsButton">
+                    <li>
+                        <a href="{{ relativeUrlWithRedirectTo(path('admin_search_activity_segments', {activityId: activity.getId()}), 'activities/' ~ activity.getId()) }}"
+                           data-close-dropdown
+                           class="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50">
+                            {{ svg('search', 'size-3.5') }}
+                            {{ "Cerca segmenti"|trans({}, 'admin') }}
+                        </a>
+                    </li>
+                </ul>
+            {% endif %}
+
+            {% if hasDownloads %}
+                <div class="mt-1 flex items-center gap-1.5 border-t border-gray-100 px-2 pt-2 pb-1 text-[10px] font-semibold uppercase tracking-wider text-gray-400">
+                    {{ svg('upload', 'size-3') }}
+                    {{ "Download"|trans({}, 'admin') }}
+                </div>
+                <ul aria-labelledby="activityActionsButton">
+                    {% if hasGpxLink %}
+                        <li>
+                            <a href="{{ gpxUrl }}" download="{{ gpxFileName }}" data-activity-download data-close-dropdown class="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50">
+                                {{ svg('route', 'size-3.5') }}
+                                GPX
+                            </a>
+                        </li>
+                    {% endif %}
+                    {% if hasOriginalFileLink %}
+                        <li>
+                            <a href="{{ originalFileUrl }}" data-activity-download data-close-dropdown class="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50">
+                                {{ svg('upload', 'size-3.5') }}
+                                {{ "Original file"|trans({}, 'admin') }}
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            {% endif %}
+        </div>
+    </div>
+{% endif %}

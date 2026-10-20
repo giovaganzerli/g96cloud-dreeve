@@ -65,6 +65,7 @@ Appearance: Megjelenés
 Applied: Alkalmazva
 Apply: Alkalmaz
 'Apply to existing activities': 'Alkalmazás a meglévő tevékenységekre'
+'Apri in WindAhead': 'Apri in WindAhead'
 'Are you sure you want to delete the import of {name}?': 'Biztosan törölni szeretnéd a(z) {name} importját?'
 'Are you sure you want to delete the {component} component?': 'Biztosan törölni szeretnéd a(z) {component} komponenst?'
 'Are you sure you want to delete the {rule} rule?': 'Biztosan törölni szeretnéd a(z) {rule} szabályt?'
@@ -74,6 +75,7 @@ Apply: Alkalmaz
 'Assign gear': 'Felszerelés hozzárendelése'
 'Athlete settings': 'Sportoló beállításai'
 'Attached to': 'Hozzárendelve ehhez'
+Attività: Attività
 'Automatically fill in gear, commute, sport type and more on newly imported activities. Rules run top to bottom, and can also be applied to activities you already imported.': 'Automatikusan kitölti a felszerelést, ingázást, sporttípust és továbbiakat az újonnan importált tevékenységeken. A szabályok fentről lefelé futnak, és a már importált tevékenységekre is alkalmazhatók.'
 'Automation rules': 'Automatizálási szabályok'
 'Automation rules are only available in file import mode': 'Az automatizálási szabályok csak fájlimportálás módban érhetők el'
@@ -81,6 +83,7 @@ Apply: Alkalmaz
 'Average cadence': 'Átlagos kadencia'
 'Average heart rate (bpm)': 'Average heart rate (bpm)'
 'Average power': 'Átlagos teljesítmény'
+Azioni: Azioni
 'Back to app': 'Vissza az alkalmazáshoz'
 'Back to the admin panel': 'Vissza az adminfelülethez'
 'Base URI': 'Alap URI'
@@ -89,6 +92,7 @@ Birthday: Születésnap
 'By default only you can download the original FIT, TCX or GPX file from an activity page. Original files can contain more detail than the page shows.': 'By default only you can download the original FIT, TCX or GPX file from an activity page. Original files can contain more detail than the page shows.'
 'Calculate energy (kJ)': 'Energia számítása (kJ)'
 Cancel: Mégse
+'Cerca segmenti': 'Cerca segmenti'
 'Challenge name': 'Kihívás neve'
 'Changes still need to be processed before they appear on the app': 'A változásokat még fel kell dolgozni, mielőtt megjelennek az alkalmazásban'
 'Changes to these settings only take effect after you restart the daemon container.': 'Ezek a beállítások csak a daemon konténer újraindítása után lépnek életbe.'
@@ -138,6 +142,7 @@ Disabled: Letiltva
 Distance: Távolság
 'Do not download activity photos': 'Do not download activity photos'
 Done: Kész
+Download: Download
 'Download original file': 'Download original file'
 'Drag the start and end markers along the route to select the segment.': 'Drag the start and end markers along the route to select the segment.'
 'Drag to reorder': 'Húzással átrendezhető'
@@ -267,6 +272,7 @@ Metrics: Mérőszámok
 Minutes: Perc
 Mode: Mód
 Model: Modell
+Modifica: Modifica
 Monday: Hétfő
 'More pages': 'További oldalak'
 'Most recent activities (cards)': 'Most recent activities (cards)'
@@ -312,6 +318,7 @@ Operator: Operátor
 'Optional. Leave empty to always apply this goal.': 'Opcionális. Hagyd üresen, hogy ez a cél mindig érvényes legyen.'
 'Optional. Your current Zwift level (1 or higher). Leave empty to hide the Zwift badge.': 'Opcionális. A jelenlegi Zwift-szinted (1 vagy magasabb). Hagyd üresen a Zwift-jelvény elrejtéséhez.'
 'Optional. Your current Zwift racing score (between 0 and 1000).': 'Opcionális. A jelenlegi Zwift versenypontszámod (0 és 1000 között).'
+'Original file': 'Original file'
 'PHP date format for normal dates, e.g. d-m-Y renders to 01-01-2025.': 'PHP dátumformátum a normál dátumokhoz, pl. a d-m-Y így jelenik meg: 01-01-2025.'
 'PHP date format for short dates, e.g. d-m-y renders to 01-01-25.': 'PHP dátumformátum a rövid dátumokhoz, pl. a d-m-y így jelenik meg: 01-01-25.'
 'Parts you track maintenance for, eg: chains, cassettes, brake pads...': 'Alkatrészek, amelyek karbantartását követed, pl.: láncok, kazetták, fékbetétek...'
@@ -365,7 +372,9 @@ Retired: Nyugdíjazott
 'Retired components keep their history, but are hidden and no longer tracked.': 'Retired components keep their history, but are hidden and no longer tracked.'
 'Retry weather and reverse geocoding': 'Retry weather and reverse geocoding'
 'Return to app': 'Vissza az alkalmazáshoz'
+'Ricalcola i dati': 'Ricalcola i dati'
 Ride: Kerékpározás
+'Ripristina i dati': 'Ripristina i dati'
 'Rolling window (days)': 'Rolling window (days)'
 Rules: Szabályok
 'Rules to apply': 'Alkalmazandó szabályok'
@@ -380,6 +389,8 @@ Saving...: Mentés...
 Seconds: Másodperc
 Security: Biztonság
 'Segment management': 'Segment management'
+Segmenti: Segmenti
+Segmento: Segmento
 'Segments will appear here once you create them from one of your activities.': 'Segments will appear here once you create them from one of your activities.'
 'Select a component first...': 'Előbb válassz egy komponenst...'
 'Select a component…': 'Válassz egy komponenst…'
@@ -444,6 +455,7 @@ Source: Forrás
 'Strava client secret': 'Strava kliens-titok'
 'Strava import': 'Strava importálás'
 'Strava refresh token': 'Strava frissítési token'
+Strumenti: Strumenti
 Subtitle: Alcím
 Success: Sikeres
 Sunday: Vasárnap

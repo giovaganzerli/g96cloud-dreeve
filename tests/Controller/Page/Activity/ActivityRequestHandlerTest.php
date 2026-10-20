@@ -234,7 +234,7 @@ class ActivityRequestHandlerTest extends AdminWebTestCase
     }
 
     #[DataProvider('provideDownloadButtonScenarios')]
-    public function testItOffersTheDownloadsTheVisitorMayUse(bool $hasGpsStream, bool $loggedIn, bool $visitorsCanDownloadOriginalFiles, bool $expectDropButton, ?string $expectedPlainButtonHref): void
+    public function testItOffersTheDownloadsTheVisitorMayUse(bool $hasGpsStream, bool $loggedIn, bool $visitorsCanDownloadOriginalFiles, array $expectedDownloadLinks): void
     {
         $this->provideFullTestSet();
         $this->getContainer()->get(SettingsRepository::class)->saveGroup(SettingsGroup::SECURITY, [
@@ -271,24 +271,23 @@ class ActivityRequestHandlerTest extends AdminWebTestCase
         $crawler = $this->client->request('GET', '/activities/'.$activityId);
 
         $this->assertResponseIsSuccessful();
-        $this->assertCount($expectDropButton ? 1 : 0, $crawler->filter('button[data-dropdown="activityDownloadDropdown"]'));
-        $this->assertSame(
-            $expectDropButton ? ['/activities/activity-123456789/route.gpx', '/activities/activity-123456789/original-file'] : [],
-            $crawler->filter('#activityDownloadDropdown a')->extract(['href'])
+        $this->assertCount(
+            [] === $expectedDownloadLinks && !$loggedIn ? 0 : 1,
+            $crawler->filter('button[data-dropdown="activityActionsDropdown"]')
         );
         $this->assertSame(
-            null === $expectedPlainButtonHref ? [] : [$expectedPlainButtonHref],
-            $crawler->filter('a.shadow-xs[href$="/route.gpx"], a.shadow-xs[href$="/original-file"]')->extract(['href'])
+            $expectedDownloadLinks,
+            $crawler->filter('#activityActionsDropdown a[data-activity-download]')->extract(['href'])
         );
     }
 
     public static function provideDownloadButtonScenarios(): \Generator
     {
-        yield 'admin, both files' => [true, true, false, true, null];
-        yield 'visitor, original file not allowed' => [true, false, false, false, '/activities/activity-123456789/route.gpx'];
-        yield 'visitor, original file allowed' => [true, false, true, true, null];
-        yield 'admin, no GPS stream' => [false, true, false, false, '/activities/activity-123456789/original-file'];
-        yield 'visitor, no GPS stream, original file not allowed' => [false, false, false, false, null];
+        yield 'admin, both files' => [true, true, false, ['/activities/activity-123456789/route.gpx', '/activities/activity-123456789/original-file']];
+        yield 'visitor, original file not allowed' => [true, false, false, ['/activities/activity-123456789/route.gpx']];
+        yield 'visitor, original file allowed' => [true, false, true, ['/activities/activity-123456789/route.gpx', '/activities/activity-123456789/original-file']];
+        yield 'admin, no GPS stream' => [false, true, false, ['/activities/activity-123456789/original-file']];
+        yield 'visitor, no GPS stream, original file not allowed' => [false, false, false, []];
     }
 
     #[DataProvider('provideUrlsThatAreNotFound')]

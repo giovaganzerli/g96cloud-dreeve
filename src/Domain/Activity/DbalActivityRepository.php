@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Activity;
 
+use App\Domain\Activity\Recalculate\ActivityRecalculation;
 use App\Domain\Activity\SportType\SportType;
 use App\Domain\Activity\SportType\SportTypes;
 use App\Domain\Gear\Sensor\ConnectedSensors;
@@ -140,13 +141,13 @@ final readonly class DbalActivityRepository extends DbalRepository implements Ac
             elevation, startingCoordinateLatitude, startingCoordinateLongitude, calories, kilojoules,
             averagePower, maxPower, averageSpeed, maxSpeed, averageHeartRate, maxHeartRate,
             averageCadence,movingTimeInSeconds, elapsedTimeInSeconds, deviceName, connectedSensors, totalImageCount, localImagePaths,
-            polyline, routeGeography, weather, gearId, data, isCommute, isGroupActivity, workoutType
+            polyline, routeGeography, weather, gearId, data, isCommute, isGroupActivity, workoutType, recalculatedMetrics, pendingRecalculation
         ) VALUES(
             :activityId, :startDateTime, :sportType, :activityType, :worldType, :importSource, :externalReferenceId, :name, :description, :distance,
             :elevation, :startingCoordinateLatitude, :startingCoordinateLongitude, :calories, :kilojoules,
             :averagePower, :maxPower, :averageSpeed, :maxSpeed, :averageHeartRate, :maxHeartRate,
             :averageCadence, :movingTimeInSeconds, :elapsedTimeInSeconds, :deviceName, :connectedSensors, :totalImageCount, :localImagePaths,
-            :polyline, :routeGeography, :weather, :gearId, :data, :isCommute, :isGroupActivity, :workoutType
+            :polyline, :routeGeography, :weather, :gearId, :data, :isCommute, :isGroupActivity, :workoutType, :recalculatedMetrics, :pendingRecalculation
         )';
 
         $activity = $activityWithRawData->getActivity();
@@ -187,6 +188,8 @@ final readonly class DbalActivityRepository extends DbalRepository implements Ac
             'isCommute' => (int) $activity->isCommute(),
             'isGroupActivity' => (int) $activity->isGroupActivity(),
             'workoutType' => $activity->getWorkoutType()?->value,
+            'recalculatedMetrics' => $activity->getRecalculatedMetrics() instanceof RecalculatedMetrics ? Json::encode($activity->getRecalculatedMetrics()) : null,
+            'pendingRecalculation' => $activity->getPendingRecalculation() instanceof ActivityRecalculation ? Json::encode($activity->getPendingRecalculation()) : null,
         ]);
 
         $this->eventBus->publishEvents($activity->getRecordedEvents());
@@ -223,7 +226,9 @@ final readonly class DbalActivityRepository extends DbalRepository implements Ac
                     data = :data,
                     isCommute = :isCommute,
                     isGroupActivity = :isGroupActivity,
-                    workoutType = :workoutType    
+                    workoutType = :workoutType,
+                    recalculatedMetrics = :recalculatedMetrics,
+                    pendingRecalculation = :pendingRecalculation
                     WHERE activityId = :activityId';
 
         $activity = $activityWithRawData->getActivity();
@@ -236,16 +241,17 @@ final readonly class DbalActivityRepository extends DbalRepository implements Ac
             'name' => $activity->getOriginalName(),
             'description' => $activity->getDescription(),
             'deviceName' => $activity->getDeviceName(),
-            'distance' => $activity->getDistance()->toMeter()->toInt(),
-            'elevation' => $activity->getElevation()->toInt(),
+            // The device values are stored as-is, the recalculated metrics live in their own column.
+            'distance' => $activity->getDeviceDistance()->toMeter()->toInt(),
+            'elevation' => $activity->getDeviceElevation()->toInt(),
             'calories' => $activity->getCalories(),
             'kilojoules' => $activity->getKilojoules(),
-            'averageSpeed' => $activity->getAverageSpeed()->toFloat(),
+            'averageSpeed' => $activity->getDeviceAverageSpeed()->toFloat(),
             'maxSpeed' => $activity->getMaxSpeed()->toFloat(),
             'averageHeartRate' => $activity->getAverageHeartRate(),
             'maxHeartRate' => $activity->getMaxHeartRate(),
-            'movingTimeInSeconds' => $activity->getMovingTimeInSeconds(),
-            'elapsedTimeInSeconds' => $activity->getElapsedTimeInSeconds(),
+            'movingTimeInSeconds' => $activity->getDeviceMovingTimeInSeconds(),
+            'elapsedTimeInSeconds' => $activity->getDeviceElapsedTimeInSeconds(),
             'polyline' => $activity->getEncodedPolyline(),
             'startingCoordinateLatitude' => $activity->getStartingCoordinate()?->getLatitude()->toFloat(),
             'startingCoordinateLongitude' => $activity->getStartingCoordinate()?->getLongitude()->toFloat(),
@@ -257,6 +263,8 @@ final readonly class DbalActivityRepository extends DbalRepository implements Ac
             'isCommute' => (int) $activity->isCommute(),
             'isGroupActivity' => (int) $activity->isGroupActivity(),
             'workoutType' => $activity->getWorkoutType()?->value,
+            'recalculatedMetrics' => $activity->getRecalculatedMetrics() instanceof RecalculatedMetrics ? Json::encode($activity->getRecalculatedMetrics()) : null,
+            'pendingRecalculation' => $activity->getPendingRecalculation() instanceof ActivityRecalculation ? Json::encode($activity->getPendingRecalculation()) : null,
             'data' => Json::encode($this->cleanData($activityWithRawData->getRawData())),
         ]);
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Activity;
 
+use App\Domain\Activity\Recalculate\ActivityRecalculation;
 use App\Domain\Activity\Route\RouteGeography;
 use App\Domain\Activity\SportType\SportType;
 use App\Domain\Gear\GearId;
@@ -29,7 +30,7 @@ final readonly class ActivityHydrator
         'averagePower', 'maxPower', 'averageSpeed', 'maxSpeed', 'averageHeartRate', 'maxHeartRate',
         'averageCadence', 'movingTimeInSeconds', 'elapsedTimeInSeconds', 'deviceName',
         'connectedSensors', 'totalImageCount', 'localImagePaths', 'polyline', 'routeGeography',
-        'weather', 'gearId', 'isCommute', 'isGroupActivity', 'workoutType',
+        'weather', 'gearId', 'isCommute', 'isGroupActivity', 'workoutType', 'recalculatedMetrics', 'pendingRecalculation',
     ];
 
     public static function columns(?string $alias = null): string
@@ -91,6 +92,12 @@ final readonly class ActivityHydrator
             isCommute: (bool) $result['isCommute'],
             isGroupActivity: (bool) $result['isGroupActivity'],
             workoutType: WorkoutType::tryFrom($result['workoutType'] ?? ''),
+            recalculatedMetrics: isset($result['recalculatedMetrics']) && '' !== $result['recalculatedMetrics']
+                ? RecalculatedMetrics::fromArray(Json::decode((string) $result['recalculatedMetrics']))
+                : null,
+            pendingRecalculation: isset($result['pendingRecalculation']) && '' !== $result['pendingRecalculation']
+                ? ActivityRecalculation::fromArray(Json::decode((string) $result['pendingRecalculation']))
+                : null,
         );
     }
 }

@@ -65,6 +65,7 @@ Appearance: Appearance
 Applied: Applied
 Apply: Apply
 'Apply to existing activities': 'Apply to existing activities'
+'Apri in WindAhead': 'Apri in WindAhead'
 'Are you sure you want to delete the import of {name}?': 'Are you sure you want to delete the import of {name}?'
 'Are you sure you want to delete the {component} component?': 'Are you sure you want to delete the {component} component?'
 'Are you sure you want to delete the {rule} rule?': 'Are you sure you want to delete the {rule} rule?'
@@ -74,6 +75,7 @@ Apply: Apply
 'Assign gear': 'Assign gear'
 'Athlete settings': 'Athlete settings'
 'Attached to': 'Attached to'
+Attività: Attività
 'Automatically fill in gear, commute, sport type and more on newly imported activities. Rules run top to bottom, and can also be applied to activities you already imported.': 'Automatically fill in gear, commute, sport type and more on newly imported activities. Rules run top to bottom, and can also be applied to activities you already imported.'
 'Automation rules': 'Automation rules'
 'Automation rules are only available in file import mode': 'Automation rules are only available in file import mode'
@@ -81,6 +83,7 @@ Apply: Apply
 'Average cadence': 'Average cadence'
 'Average heart rate (bpm)': 'Average heart rate (bpm)'
 'Average power': 'Average power'
+Azioni: Azioni
 'Back to app': 'Back to app'
 'Back to the admin panel': 'Back to the admin panel'
 'Base URI': 'Base URI'
@@ -89,6 +92,7 @@ Birthday: Birthday
 'By default only you can download the original FIT, TCX or GPX file from an activity page. Original files can contain more detail than the page shows.': 'By default only you can download the original FIT, TCX or GPX file from an activity page. Original files can contain more detail than the page shows.'
 'Calculate energy (kJ)': 'Calculate energy (kJ)'
 Cancel: Cancel
+'Cerca segmenti': 'Cerca segmenti'
 'Challenge name': 'Challenge name'
 'Changes still need to be processed before they appear on the app': 'Changes still need to be processed before they appear on the app'
 'Changes to these settings only take effect after you restart the daemon container.': 'Changes to these settings only take effect after you restart the daemon container.'
@@ -138,6 +142,7 @@ Disabled: Disabled
 Distance: Distance
 'Do not download activity photos': 'Do not download activity photos'
 Done: Done
+Download: Download
 'Download original file': 'Download original file'
 'Drag the start and end markers along the route to select the segment.': 'Drag the start and end markers along the route to select the segment.'
 'Drag to reorder': 'Drag to reorder'
@@ -267,6 +272,7 @@ Metrics: Metrics
 Minutes: Minutes
 Mode: Mode
 Model: Model
+Modifica: Modifica
 Monday: Monday
 'More pages': 'More pages'
 'Most recent activities (cards)': 'Most recent activities (cards)'
@@ -312,6 +318,7 @@ Operator: Operator
 'Optional. Leave empty to always apply this goal.': 'Optional. Leave empty to always apply this goal.'
 'Optional. Your current Zwift level (1 or higher). Leave empty to hide the Zwift badge.': 'Optional. Your current Zwift level (1 or higher). Leave empty to hide the Zwift badge.'
 'Optional. Your current Zwift racing score (between 0 and 1000).': 'Optional. Your current Zwift racing score (between 0 and 1000).'
+'Original file': 'Original file'
 'PHP date format for normal dates, e.g. d-m-Y renders to 01-01-2025.': 'PHP date format for normal dates, e.g. d-m-Y renders to 01-01-2025.'
 'PHP date format for short dates, e.g. d-m-y renders to 01-01-25.': 'PHP date format for short dates, e.g. d-m-y renders to 01-01-25.'
 'Parts you track maintenance for, eg: chains, cassettes, brake pads...': 'Parts you track maintenance for, eg: chains, cassettes, brake pads...'
@@ -365,7 +372,9 @@ Retired: Retired
 'Retired components keep their history, but are hidden and no longer tracked.': 'Retired components keep their history, but are hidden and no longer tracked.'
 'Retry weather and reverse geocoding': 'Retry weather and reverse geocoding'
 'Return to app': 'Return to app'
+'Ricalcola i dati': 'Ricalcola i dati'
 Ride: Ride
+'Ripristina i dati': 'Ripristina i dati'
 'Rolling window (days)': 'Rolling window (days)'
 Rules: Rules
 'Rules to apply': 'Rules to apply'
@@ -380,6 +389,8 @@ Saving...: Saving...
 Seconds: Seconds
 Security: Security
 'Segment management': 'Segment management'
+Segmenti: Segmenti
+Segmento: Segmento
 'Segments will appear here once you create them from one of your activities.': 'Segments will appear here once you create them from one of your activities.'
 'Select a component first...': 'Select a component first...'
 'Select a component…': 'Select a component…'
@@ -444,6 +455,7 @@ Source: Source
 'Strava client secret': 'Strava client secret'
 'Strava import': 'Strava import'
 'Strava refresh token': 'Strava refresh token'
+Strumenti: Strumenti
 Subtitle: Subtitle
 Success: Success
 Sunday: Sunday

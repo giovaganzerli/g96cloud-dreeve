@@ -17,5 +17,11 @@ interface ActivityBestEffortRepository
 
     public function findByActivity(ActivityId $activity): ActivityBestEfforts;
 
+    /**
+     * All the best efforts stored for the activity, including the ones where the
+     * activity does not hold the overall record for that distance.
+     */
+    public function findAllByActivity(ActivityId $activityId): ActivityBestEfforts;
+
     public function deleteForActivity(ActivityId $activityId): void;
 }

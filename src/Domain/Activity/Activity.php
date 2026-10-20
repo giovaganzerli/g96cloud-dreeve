@@ -2,6 +2,7 @@
 
 namespace App\Domain\Activity;
 
+use App\Domain\Activity\Recalculate\ActivityRecalculation;
 use App\Domain\Activity\Route\RouteGeography;
 use App\Domain\Activity\SportType\SportType;
 use App\Domain\Gear\GearId;
@@ -14,6 +15,7 @@ use App\Infrastructure\Eventing\RecordsEvents;
 use App\Infrastructure\Measurement\Length\Kilometer;
 use App\Infrastructure\Measurement\Length\Meter;
 use App\Infrastructure\Measurement\Length\NauticalMile;
+use App\Infrastructure\Measurement\Time\Seconds;
 use App\Infrastructure\Measurement\UnitSystem;
 use App\Infrastructure\Measurement\Velocity\KmPerHour;
 use App\Infrastructure\Measurement\Velocity\Knot;
@@ -126,6 +128,10 @@ final class Activity
         private readonly bool $isGroupActivity,
         #[ORM\Column(type: 'string', nullable: true)]
         private readonly ?WorkoutType $workoutType,
+        #[ORM\Column(type: 'json', nullable: true)]
+        private readonly ?RecalculatedMetrics $recalculatedMetrics,
+        #[ORM\Column(type: 'json', nullable: true)]
+        private readonly ?ActivityRecalculation $pendingRecalculation,
     ) {
     }
 
@@ -300,6 +306,8 @@ final class Activity
         bool $isCommute,
         bool $isGroupActivity,
         ?WorkoutType $workoutType,
+        ?RecalculatedMetrics $recalculatedMetrics = null,
+        ?ActivityRecalculation $pendingRecalculation = null,
     ): self {
         return new self(
             activityId: $activityId,
@@ -334,7 +342,9 @@ final class Activity
             gearId: $gearId,
             isCommute: $isCommute,
             isGroupActivity: $isGroupActivity,
-            workoutType: $workoutType
+            workoutType: $workoutType,
+            recalculatedMetrics: $recalculatedMetrics,
+            pendingRecalculation: $pendingRecalculation
         );
     }
 
@@ -518,6 +528,14 @@ final class Activity
 
     public function getDistance(): Kilometer
     {
+        return $this->recalculatedMetrics?->getDistance() ?? $this->distance;
+    }
+
+    /**
+     * The distance as reported by the device, ignoring any recalculated value.
+     */
+    public function getDeviceDistance(): Kilometer
+    {
         return $this->distance;
     }
 
@@ -534,6 +552,14 @@ final class Activity
     }
 
     public function getElevation(): Meter
+    {
+        return $this->recalculatedMetrics?->getElevation() ?? $this->elevation;
+    }
+
+    /**
+     * The elevation as reported by the device, ignoring any recalculated value.
+     */
+    public function getDeviceElevation(): Meter
     {
         return $this->elevation;
     }
@@ -580,6 +606,14 @@ final class Activity
     }
 
     public function getAverageSpeed(): KmPerHour
+    {
+        return $this->recalculatedMetrics?->getAverageSpeed() ?? $this->averageSpeed;
+    }
+
+    /**
+     * The average speed as reported by the device, ignoring any recalculated value.
+     */
+    public function getDeviceAverageSpeed(): KmPerHour
     {
         return $this->averageSpeed;
     }
@@ -654,12 +688,30 @@ final class Activity
 
     public function getMovingTimeInSeconds(): int
     {
+        return $this->recalculatedMetrics?->getMovingTimeInSeconds() ?? $this->movingTimeInSeconds;
+    }
+
+    /**
+     * The moving time as reported by the device, ignoring any recalculated value.
+     */
+    public function getDeviceMovingTimeInSeconds(): int
+    {
         return $this->movingTimeInSeconds;
+    }
+
+    public function getDeviceMovingTimeFormatted(): string
+    {
+        return $this->formatDurationAsClock($this->movingTimeInSeconds);
+    }
+
+    public function getDeviceMovingTime(): Seconds
+    {
+        return Seconds::from($this->movingTimeInSeconds);
     }
 
     public function getMovingTimeInHours(): float
     {
-        return round($this->movingTimeInSeconds / 3600, 1);
+        return round($this->getMovingTimeInSeconds() / 3600, 1);
     }
 
     public function withMovingTimeInSeconds(int $movingTimeInSeconds): self
@@ -676,7 +728,25 @@ final class Activity
 
     public function getElapsedTimeInSeconds(): int
     {
+        return $this->recalculatedMetrics?->getElapsedTimeInSeconds() ?? $this->elapsedTimeInSeconds;
+    }
+
+    /**
+     * The elapsed time as reported by the device, ignoring any recalculated value.
+     */
+    public function getDeviceElapsedTimeInSeconds(): int
+    {
         return $this->elapsedTimeInSeconds;
+    }
+
+    public function getDeviceElapsedTimeFormatted(): string
+    {
+        return $this->formatDurationAsClock($this->elapsedTimeInSeconds);
+    }
+
+    public function getDeviceElapsedTime(): Seconds
+    {
+        return Seconds::from($this->elapsedTimeInSeconds);
     }
 
     public function withElapsedTimeInSeconds(int $elapsedTimeInSeconds): self
@@ -767,6 +837,58 @@ final class Activity
     {
         return $this->recordUpdate(clone ($this, [
             'workoutType' => $workoutType,
+        ]));
+    }
+
+    public function getRecalculatedMetrics(): ?RecalculatedMetrics
+    {
+        return $this->recalculatedMetrics;
+    }
+
+    public function hasRecalculatedMetrics(): bool
+    {
+        return $this->recalculatedMetrics instanceof RecalculatedMetrics
+            && !$this->recalculatedMetrics->isEmpty();
+    }
+
+    public function withRecalculatedMetrics(RecalculatedMetrics $recalculatedMetrics): self
+    {
+        return $this->recordUpdate(clone ($this, [
+            'recalculatedMetrics' => $recalculatedMetrics,
+        ]));
+    }
+
+    /**
+     * Drop the recalculated metrics and fall back to the values reported by the device.
+     */
+    public function withoutRecalculatedMetrics(): self
+    {
+        return $this->recordUpdate(clone ($this, [
+            'recalculatedMetrics' => null,
+        ]));
+    }
+
+    public function getPendingRecalculation(): ?ActivityRecalculation
+    {
+        return $this->pendingRecalculation;
+    }
+
+    public function hasPendingRecalculation(): bool
+    {
+        return $this->pendingRecalculation instanceof ActivityRecalculation;
+    }
+
+    public function withPendingRecalculation(ActivityRecalculation $pendingRecalculation): self
+    {
+        return $this->recordUpdate(clone ($this, [
+            'pendingRecalculation' => $pendingRecalculation,
+        ]));
+    }
+
+    public function withoutPendingRecalculation(): self
+    {
+        return $this->recordUpdate(clone ($this, [
+            'pendingRecalculation' => null,
         ]));
     }
 
@@ -888,6 +1010,7 @@ final class Activity
             'startingCoordinateLatitude' => $this->startingCoordinate?->getLatitude()->toFloat(),
             'startingCoordinateLongitude' => $this->startingCoordinate?->getLongitude()->toFloat(),
             'routeGeography' => $this->routeGeography->jsonSerialize(),
+            'recalculatedMetrics' => $this->recalculatedMetrics?->jsonSerialize(),
             'weather' => $this->weather,
             'gearId' => (string) $this->gearId,
             'isCommute' => $this->isCommute,

@@ -123,6 +123,27 @@ final readonly class DbalActivityBestEffortRepository extends DbalRepository imp
         ));
     }
 
+    public function findAllByActivity(ActivityId $activityId): ActivityBestEfforts
+    {
+        $sql = 'SELECT activityId, sportType, distanceInMeter, timeInSeconds
+                FROM ActivityBestEffort
+                WHERE activityId = :activityId
+                ORDER BY distanceInMeter ASC';
+
+        return ActivityBestEfforts::fromArray(array_map(
+            fn (array $result): ActivityBestEffort => ActivityBestEffort::fromState(
+                activityId: ActivityId::fromString($result['activityId']),
+                distanceInMeter: Meter::from($result['distanceInMeter']),
+                sportType: SportType::from($result['sportType']),
+                timeInSeconds: $result['timeInSeconds'],
+            ),
+            $this->connection->executeQuery(
+                $sql,
+                ['activityId' => (string) $activityId],
+            )->fetchAllAssociative()
+        ));
+    }
+
     public function deleteForActivity(ActivityId $activityId): void
     {
         $sql = 'DELETE FROM ActivityBestEffort WHERE activityId = :activityId';

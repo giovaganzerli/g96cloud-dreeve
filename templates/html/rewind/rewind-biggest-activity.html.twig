@@ -9,7 +9,7 @@
             'imageOverlay': leaflet.map.getOverlayImageUrl(),
             'bounds': leaflet.map.getBounds(),
         } %}
-        <div class="h-48" style="background-color:{{ leaflet.map.getBackgroundColor() }}"
+        <div class="h-48 relative z-0" style="background-color:{{ leaflet.map.getBackgroundColor() }}"
              data-leaflet='{{ leafletOptions|json_encode }}'></div>
     {% else %}
         <div class="flex h-48 justify-center">

@@ -8,13 +8,7 @@
             'url': 'segments/' ~ segment.getId(),
             'label': segment.getName()|ellipses(50)
         }], 'disableMargin': true} %}
-    {% if importMode.isFiles() and segment.getType().isCustom() %}
-        {% include 'html/navigation/admin-edit-link.html.twig' with {
-            path: 'admin/segments/' ~ segment.getId() ~ '/edit',
-            redirectTo: 'segments/' ~ segment.getId(),
-            title: "Edit this segment"|trans
-        } %}
-    {% endif %}
+    {% include 'html/segment/segment-actions-menu.html.twig' %}
 </div>
 {% autoescape false %}
     {% if segment.hasReconstructedGeometry() %}
@@ -45,12 +39,6 @@
                 {% endif %}
             </h1>
             <div class="flex items-center gap-x-4">
-                {% if segment.getWindAheadUrl() %}
-                    <a href="{{ segment.getWindAheadUrl() }}" target="_blank" rel="noopener" title="{{ "Analyze with WindAhead"|trans }}" class="inline-flex items-center gap-1.5 text-xs font-medium text-gray-600 hover:text-gray-900 bg-white hover:bg-gray-50 border border-gray-200 shadow-xs rounded-lg px-3 py-1.5 transition">
-                        {{ svg('windahead-logo', 'size-4') }}
-                        WindAhead
-                    </a>
-                {% endif %}
                 <ul class="hidden md:flex text-center divide-x divide-gray-200">
                     <li class="flex flex-col pr-2 text-sm" title="{{ "Distance"|trans }}">
                         <div>{{ segment.getDistance()|formatMeasurement(2) }}</div>
@@ -67,15 +55,6 @@
                 </ul>
             </div>
         </div>
-        {% if isAuthenticated() %}
-            <div class="flex items-center gap-2 mb-4">
-                {% include 'html/navigation/admin-edit-link.html.twig' with {
-                    path: 'admin/segments/' ~ segment.getId() ~ '/local/generate',
-                    redirectTo: 'segments/' ~ segment.getId(),
-                    title: 'Gestisci la traccia e cerca le attività del segmento', label: 'Genera traccia', icon: 'route'
-                } %}
-            </div>
-        {% endif %}
         <div class="space-y-4">
             <div class="grid grid-cols-1 gap-y-1">
                 {% if leaflet %}
@@ -89,7 +68,7 @@
                         'showStartMarker': true,
                         'showEndMarker': true
                     } %}
-                    <div class="h-87.5" style="background-color:{{ leaflet.map.getBackgroundColor() }}"
+                    <div class="h-87.5 relative z-0" style="background-color:{{ leaflet.map.getBackgroundColor() }}"
                          data-leaflet='{{ leafletOptions|json_encode }}'></div>
                 {% endif %}
                 <div class="tabs tabs--default">

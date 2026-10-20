@@ -36,6 +36,12 @@ services:
     App\Domain\Integration\Weather\OpenMeteo\OpenMeteo:
         class: App\Tests\Domain\Integration\Weather\OpenMeteo\SpyOpenMeteo
 
+    App\Domain\Integration\Elevation\OpenMeteo\OpenMeteoElevation:
+        class: App\Tests\Domain\Integration\Elevation\OpenMeteo\SpyOpenMeteoElevation
+
+    App\Domain\Integration\Elevation\TerrainTiles\TerrainTilesElevation:
+        class: App\Tests\Domain\Integration\Elevation\TerrainTiles\SpyTerrainTilesElevation
+
     App\Domain\Integration\Geocoding\Nominatim\Nominatim:
         class: App\Tests\Domain\Integration\Geocoding\Nominatim\SpyNominatim
 

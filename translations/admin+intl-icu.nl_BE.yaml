@@ -65,6 +65,7 @@ Appearance: Weergave
 Applied: Toegepast
 Apply: Toepassen
 'Apply to existing activities': 'Toepassen op bestaande activiteiten'
+'Apri in WindAhead': 'Apri in WindAhead'
 'Are you sure you want to delete the import of {name}?': 'Ben je zeker dat je de import van {name} wil verwijderen?'
 'Are you sure you want to delete the {component} component?': 'Ben je zeker dat je het onderdeel {component} wil verwijderen?'
 'Are you sure you want to delete the {rule} rule?': 'Ben je zeker dat je de regel {rule} wil verwijderen?'
@@ -74,6 +75,7 @@ Apply: Toepassen
 'Assign gear': 'Uitrusting toewijzen'
 'Athlete settings': Atleetinstellingen
 'Attached to': 'Gekoppeld aan'
+Attività: Attività
 'Automatically fill in gear, commute, sport type and more on newly imported activities. Rules run top to bottom, and can also be applied to activities you already imported.': 'Vul automatisch uitrusting, woon-werk, sporttype en meer in bij nieuw geïmporteerde activiteiten. Regels worden van boven naar onder uitgevoerd en kunnen ook toegepast worden op activiteiten die je al geïmporteerd hebt.'
 'Automation rules': Automatiseringsregels
 'Automation rules are only available in file import mode': 'Automatiseringsregels zijn enkel beschikbaar in de modus bestandsimport'
@@ -81,6 +83,7 @@ Apply: Toepassen
 'Average cadence': 'Gemiddelde cadans'
 'Average heart rate (bpm)': 'Gemiddelde hartslag (bpm)'
 'Average power': 'Gemiddeld vermogen'
+Azioni: Azioni
 'Back to app': 'Terug naar de app'
 'Back to the admin panel': 'Terug naar het beheerpaneel'
 'Base URI': Basis-URI
@@ -89,6 +92,7 @@ Birthday: Geboortedatum
 'By default only you can download the original FIT, TCX or GPX file from an activity page. Original files can contain more detail than the page shows.': 'By default only you can download the original FIT, TCX or GPX file from an activity page. Original files can contain more detail than the page shows.'
 'Calculate energy (kJ)': 'Energie berekenen (kJ)'
 Cancel: Annuleren
+'Cerca segmenti': 'Cerca segmenti'
 'Challenge name': 'Naam uitdaging'
 'Changes still need to be processed before they appear on the app': 'Wijzigingen moeten nog verwerkt worden voor ze in de app verschijnen'
 'Changes to these settings only take effect after you restart the daemon container.': 'Wijzigingen aan deze instellingen worden pas actief nadat je de daemon-container herstart.'
@@ -138,6 +142,7 @@ Disabled: Uitgeschakeld
 Distance: Afstand
 'Do not download activity photos': "Geen activiteitsfoto's downloaden"
 Done: Klaar
+Download: Download
 'Download original file': 'Origineel bestand downloaden'
 'Drag the start and end markers along the route to select the segment.': 'Drag the start and end markers along the route to select the segment.'
 'Drag to reorder': 'Sleep om te herschikken'
@@ -267,6 +272,7 @@ Metrics: Meetwaarden
 Minutes: Minuten
 Mode: Modus
 Model: Model
+Modifica: Modifica
 Monday: Maandag
 'More pages': "Meer pagina's"
 'Most recent activities (cards)': 'Most recent activities (cards)'
@@ -312,6 +318,7 @@ Operator: Operator
 'Optional. Leave empty to always apply this goal.': 'Optioneel. Laat leeg om dit doel altijd toe te passen.'
 'Optional. Your current Zwift level (1 or higher). Leave empty to hide the Zwift badge.': 'Optioneel. Je huidige Zwift-level (1 of hoger). Laat leeg om de Zwift-badge te verbergen.'
 'Optional. Your current Zwift racing score (between 0 and 1000).': 'Optioneel. Je huidige Zwift Racing Score (tussen 0 en 1000).'
+'Original file': 'Original file'
 'PHP date format for normal dates, e.g. d-m-Y renders to 01-01-2025.': 'PHP-datumformaat voor normale datums, bv. d-m-Y wordt 01-01-2025.'
 'PHP date format for short dates, e.g. d-m-y renders to 01-01-25.': 'PHP-datumformaat voor korte datums, bv. d-m-y wordt 01-01-25.'
 'Parts you track maintenance for, eg: chains, cassettes, brake pads...': 'Onderdelen waarvan je het onderhoud bijhoudt, bv.: kettingen, cassettes, remblokken...'
@@ -365,7 +372,9 @@ Retired: 'Buiten gebruik'
 'Retired components keep their history, but are hidden and no longer tracked.': 'Retired components keep their history, but are hidden and no longer tracked.'
 'Retry weather and reverse geocoding': 'Weer en reverse geocoding opnieuw proberen'
 'Return to app': 'Terug naar de app'
+'Ricalcola i dati': 'Ricalcola i dati'
 Ride: Rit
+'Ripristina i dati': 'Ripristina i dati'
 'Rolling window (days)': 'Voortschrijdend venster (dagen)'
 Rules: Regels
 'Rules to apply': 'Toe te passen regels'
@@ -380,6 +389,8 @@ Saving...: 'Aan het opslaan...'
 Seconds: Seconden
 Security: Beveiliging
 'Segment management': 'Segment management'
+Segmenti: Segmenti
+Segmento: Segmento
 'Segments will appear here once you create them from one of your activities.': 'Segments will appear here once you create them from one of your activities.'
 'Select a component first...': 'Selecteer eerst een onderdeel...'
 'Select a component…': 'Selecteer een onderdeel…'
@@ -444,6 +455,7 @@ Source: Bron
 'Strava client secret': 'Strava client secret'
 'Strava import': Strava-import
 'Strava refresh token': 'Strava refresh token'
+Strumenti: Strumenti
 Subtitle: Ondertitel
 Success: Geslaagd
 Sunday: Zondag

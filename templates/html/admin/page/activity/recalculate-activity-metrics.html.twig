@@ -1,0 +1,209 @@
+{% extends "html/admin/page/template.html.twig" %}
+{% block main %}
+    {% set activityUrl = relativeUrl(path('activity', {activityId: activity.getId()})) %}
+    {% set recalculateUrl = relativeUrl(path('admin_recalculate_activity_metrics', {activityId: activity.getId()})) %}
+    <div class="modal-like-form">
+        <div class="w-full max-w-4xl overflow-y-auto p-6 bg-white border border-gray-200 rounded-lg shadow-xl">
+            <div class="flex items-center justify-between gap-4 mb-2">
+                <h3 class="flex items-center gap-2 text-lg font-semibold text-gray-900">
+                    <span class="text-primary" aria-hidden="true">{{ svg('route', 'size-5') }}</span>
+                    Ricalcola i dati dell'attività
+                </h3>
+                <a href="{{ activityUrl }}" aria-label="Chiudi" title="Chiudi" class="grid place-items-center size-8 shrink-0 rounded-lg text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-900">{{ svg('close', 'size-5') }}</a>
+            </div>
+            <p class="text-sm text-gray-600 mb-4">
+                Ricalcola i dati dell'attività usando i valori calcolati dalla mappa e i dati del file caricato, al posto di quelli
+                rilevati dal dispositivo. I valori originali del dispositivo sono sempre conservati e puoi tornare indietro in
+                qualsiasi momento.
+            </p>
+
+            <div class="flex items-center gap-3 rounded-lg bg-gray-50 p-3 mb-4">
+                <span class="shrink-0 text-primary" aria-hidden="true">{{ svgSportType(sportType) }}</span>
+                <div class="min-w-0">
+                    <p class="min-w-0 text-sm font-semibold text-gray-900">{{ activity.getName() }}</p>
+                    <p class="text-xs text-gray-500">
+                        {{ activity.getStartDate()|formatDate }}{% if activity.getStartDate()|formatTime %} {{ activity.getStartDate()|formatTime }}{% endif %}
+                        · {{ sportType|trans }}
+                        · Le pause vengono riconosciute con una soglia di {{ pauseDetectionParameters.getThresholdInMetersPerSecond() }} m/s e una durata minima
+                        di {{ pauseDetectionParameters.getMinimumPauseDurationInSeconds() }} secondi.
+                        Lo sport si può cambiare solo in <a href="{{ relativeUrl(path('admin_edit_activity', {activityId: activity.getId()})) }}" class="underline">Modifica attività</a>.
+                    </p>
+                </div>
+            </div>
+
+            {% if error %}
+                <div class="form-error mb-4" role="alert">{{ error }}</div>
+            {% endif %}
+
+            {% if not hasPending %}
+                <div class="rounded-lg border border-gray-200 p-6 text-center">
+                    <p class="text-sm text-gray-600 mb-4">Non c'è nessun ricalcolo in attesa di conferma.</p>
+                    <form method="post" action="{{ recalculateUrl }}">
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('dispatch-command') }}">
+                        <input type="hidden" name="action" value="recalculate">
+                        <button type="submit" class="btn--primary">{{ svg('route', 'size-4') }} Ricalcola</button>
+                    </form>
+                </div>
+            {% else %}
+                <form method="post" action="{{ recalculateUrl }}">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('dispatch-command') }}">
+                    <input type="hidden" name="action" value="apply">
+
+                    <div class="rounded-lg border border-gray-200 overflow-hidden mb-4">
+                        <div class="px-4 py-3 bg-gray-50 border-b border-gray-200">
+                            <h4 class="text-sm font-semibold text-gray-900">Dati dell'attività</h4>
+                        </div>
+                        <table class="w-full text-sm">
+                            <thead>
+                                <tr class="text-left text-xs uppercase tracking-wider text-gray-500 border-b border-gray-200">
+                                    <th class="px-4 py-2 w-10"></th>
+                                    <th class="px-4 py-2 font-semibold">Metrica</th>
+                                    <th class="px-4 py-2 font-semibold text-right">Dispositivo</th>
+                                    <th class="px-4 py-2 font-semibold text-right">Ricalcolato</th>
+                                    <th class="px-4 py-2 font-semibold text-right">Differenza</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100">
+                                {% if pending.getDistance() %}
+                                    {% set distanceDifference = pending.getDistance().subtract(activity.getDeviceDistance()) %}
+                                    <tr>
+                                        <td class="px-4 py-2"><input type="checkbox" name="metrics[]" value="distance" checked class="mt-0.5 shrink-0"></td>
+                                        <td class="px-4 py-2">Distanza</td>
+                                        <td class="px-4 py-2 text-right text-gray-600">{{ activity.getDeviceDistance()|formatMeasurement(2) }} {{ activity.getDeviceDistance()|measurementSymbol }}</td>
+                                        <td class="px-4 py-2 text-right font-semibold text-gray-900">{{ pending.getDistance()|formatMeasurement(2) }} {{ pending.getDistance()|measurementSymbol }}</td>
+                                        <td class="px-4 py-2 text-right {{ distanceDifference.toFloat() > 0 ? 'text-emerald-600' : (distanceDifference.toFloat() < 0 ? 'text-orange-600' : 'text-gray-500') }}">
+                                            {{ distanceDifference.toFloat() > 0 ? '+' : '' }}{{ distanceDifference|formatMeasurement(2) }} {{ distanceDifference|measurementSymbol }}
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                                {% if pending.getElevation() %}
+                                    {% set elevationDifference = pending.getElevation().subtract(activity.getDeviceElevation()) %}
+                                    <tr>
+                                        <td class="px-4 py-2"><input type="checkbox" name="metrics[]" value="elevation" checked class="mt-0.5 shrink-0"></td>
+                                        <td class="px-4 py-2">Dislivello</td>
+                                        <td class="px-4 py-2 text-right text-gray-600">{{ activity.getDeviceElevation()|formatMeasurement(0) }} {{ activity.getDeviceElevation()|measurementSymbol }}</td>
+                                        <td class="px-4 py-2 text-right font-semibold text-gray-900">{{ pending.getElevation()|formatMeasurement(0) }} {{ pending.getElevation()|measurementSymbol }}</td>
+                                        <td class="px-4 py-2 text-right {{ elevationDifference.toFloat() > 0 ? 'text-emerald-600' : (elevationDifference.toFloat() < 0 ? 'text-orange-600' : 'text-gray-500') }}">
+                                            {{ elevationDifference.toFloat() > 0 ? '+' : '' }}{{ elevationDifference|formatMeasurement(0) }} {{ elevationDifference|measurementSymbol }}
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                                {% if pending.getMovingTimeInSeconds() is not null %}
+                                    {% set movingTimeDifference = pending.getMovingTimeInSeconds() - activity.getDeviceMovingTimeInSeconds() %}
+                                    <tr>
+                                        <td class="px-4 py-2"><input type="checkbox" name="metrics[]" value="movingTime" checked class="mt-0.5 shrink-0"></td>
+                                        <td class="px-4 py-2">Tempo in movimento</td>
+                                        <td class="px-4 py-2 text-right text-gray-600">{{ activity.getDeviceMovingTimeInSeconds()|formatSeconds }}</td>
+                                        <td class="px-4 py-2 text-right font-semibold text-gray-900">{{ pending.getMovingTimeInSeconds()|formatSeconds }}</td>
+                                        <td class="px-4 py-2 text-right {{ movingTimeDifference > 0 ? 'text-emerald-600' : (movingTimeDifference < 0 ? 'text-orange-600' : 'text-gray-500') }}">
+                                            {{ movingTimeDifference > 0 ? '+' : '' }}{{ movingTimeDifference|formatSeconds }}
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                                {% if pending.getElapsedTimeInSeconds() is not null %}
+                                    {% set elapsedTimeDifference = pending.getElapsedTimeInSeconds() - activity.getDeviceElapsedTimeInSeconds() %}
+                                    <tr>
+                                        <td class="px-4 py-2"><input type="checkbox" name="metrics[]" value="elapsedTime" checked class="mt-0.5 shrink-0"></td>
+                                        <td class="px-4 py-2">Tempo totale</td>
+                                        <td class="px-4 py-2 text-right text-gray-600">{{ activity.getDeviceElapsedTimeInSeconds()|formatSeconds }}</td>
+                                        <td class="px-4 py-2 text-right font-semibold text-gray-900">{{ pending.getElapsedTimeInSeconds()|formatSeconds }}</td>
+                                        <td class="px-4 py-2 text-right {{ elapsedTimeDifference > 0 ? 'text-emerald-600' : (elapsedTimeDifference < 0 ? 'text-orange-600' : 'text-gray-500') }}">
+                                            {{ elapsedTimeDifference > 0 ? '+' : '' }}{{ elapsedTimeDifference|formatSeconds }}
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                                {% if pending.getAverageSpeed() %}
+                                    {% set averageSpeedDifference = pending.getAverageSpeed().subtract(activity.getDeviceAverageSpeed()) %}
+                                    <tr>
+                                        <td class="px-4 py-2"><input type="checkbox" name="metrics[]" value="averageSpeed" checked class="mt-0.5 shrink-0"></td>
+                                        <td class="px-4 py-2">Velocità media</td>
+                                        <td class="px-4 py-2 text-right text-gray-600">{{ activity.getDeviceAverageSpeed()|formatMeasurement(1) }} {{ activity.getDeviceAverageSpeed()|measurementSymbol }}</td>
+                                        <td class="px-4 py-2 text-right font-semibold text-gray-900">{{ pending.getAverageSpeed()|formatMeasurement(1) }} {{ pending.getAverageSpeed()|measurementSymbol }}</td>
+                                        <td class="px-4 py-2 text-right {{ averageSpeedDifference.toFloat() > 0 ? 'text-emerald-600' : (averageSpeedDifference.toFloat() < 0 ? 'text-orange-600' : 'text-gray-500') }}">
+                                            {{ averageSpeedDifference.toFloat() > 0 ? '+' : '' }}{{ averageSpeedDifference|formatMeasurement(1) }} {{ averageSpeedDifference|measurementSymbol }}
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="rounded-lg border border-gray-200 overflow-hidden mb-4">
+                        <div class="px-4 py-3 bg-gray-50 border-b border-gray-200">
+                            <h4 class="text-sm font-semibold text-gray-900">Dati derivati</h4>
+                        </div>
+                        {% if bestEffortComparisons is not empty %}
+                            <div class="flex items-center gap-2 px-4 py-2.5 border-b border-gray-100 bg-gray-50/50">
+                                <input type="checkbox" id="recalculateBestEfforts" name="recalculateBestEfforts" value="1" checked class="mt-0.5 shrink-0">
+                                <label for="recalculateBestEfforts" class="text-sm font-medium text-gray-900 cursor-pointer select-none">
+                                    Ricalcola i personal best
+                                </label>
+                            </div>
+                            <table class="w-full text-sm border-b border-gray-200">
+                                <thead>
+                                    <tr class="text-left text-xs uppercase tracking-wider text-gray-500 border-b border-gray-200">
+                                        <th class="px-4 py-2 font-semibold">Personal best</th>
+                                        <th class="px-4 py-2 font-semibold text-right">Attuali</th>
+                                        <th class="px-4 py-2 font-semibold text-right">Ricalcolati</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-100">
+                                    {% for bestEffort in bestEffortComparisons %}
+                                        <tr>
+                                            <td class="px-4 py-2">{{ bestEffort.getDistance()|formatMeasurement(0) }} {{ bestEffort.getDistance()|measurementSymbol }}</td>
+                                            <td class="px-4 py-2 text-right text-gray-600">{{ bestEffort.getCurrentTimeInSeconds() ? bestEffort.getCurrentTimeInSeconds()|formatSeconds : '-' }}</td>
+                                            <td class="px-4 py-2 text-right font-semibold text-gray-900">
+                                                {% if bestEffort.hasDifference() %}{{ bestEffort.getRecalculatedTimeInSeconds()|formatSeconds }}{% else %}-{% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        {% endif %}
+                        {% if segmentEffortComparisons is not empty %}
+                            <div class="flex items-center gap-2 px-4 py-2.5 border-b border-gray-100 bg-gray-50/50">
+                                <input type="checkbox" id="recalculateSegmentEfforts" name="recalculateSegmentEfforts" value="1" checked class="mt-0.5 shrink-0">
+                                <label for="recalculateSegmentEfforts" class="text-sm font-medium text-gray-900 cursor-pointer select-none">
+                                    Ricalcola i segmenti
+                                </label>
+                            </div>
+                            <table class="w-full text-sm">
+                                <thead>
+                                    <tr class="text-left text-xs uppercase tracking-wider text-gray-500 border-b border-gray-200">
+                                        <th class="px-4 py-2 font-semibold">Segmento</th>
+                                        <th class="px-4 py-2 font-semibold text-right">Attuale</th>
+                                        <th class="px-4 py-2 font-semibold text-right">Ricalcolato</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-100">
+                                    {% for segmentEffort in segmentEffortComparisons %}
+                                        <tr>
+                                            <td class="px-4 py-2">{{ segmentEffort.getName() }}</td>
+                                            <td class="px-4 py-2 text-right text-gray-600">{{ segmentEffort.getCurrentElapsedTimeInSeconds()|formatSeconds }}</td>
+                                            <td class="px-4 py-2 text-right font-semibold text-gray-900">
+                                                {% if segmentEffort.hasDifference() %}{{ segmentEffort.getRecalculatedElapsedTimeInSeconds()|formatSeconds }}{% else %}-{% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        {% endif %}
+                    </div>
+
+                    <div class="flex flex-wrap justify-end gap-2">
+                        <button type="submit" form="recalculateForm" class="btn--secondary">{{ svg('route', 'size-4') }} Ricalcola</button>
+                        <button type="submit" name="action" value="apply" class="btn--primary">{{ svg('check', 'size-4') }} Conferma</button>
+                    </div>
+                    <div class="flex flex-wrap justify-end gap-2 mt-2">
+                        <a href="{{ activityUrl }}" type="button" class="btn--secondary">{{ svg('arrow-left', 'size-4') }} Torna all'attività</a>
+                    </div>
+                </form>
+
+                <form id="recalculateForm" method="post" action="{{ recalculateUrl }}" class="hidden">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('dispatch-command') }}">
+                    <input type="hidden" name="action" value="recalculate">
+                </form>
+            {% endif %}
+        </div>
+    </div>
+{% endblock main %}

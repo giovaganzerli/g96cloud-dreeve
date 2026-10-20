@@ -21,28 +21,50 @@ final readonly class ActivityBestEffortCalculator
 
     public function calculateFor(ActivityId $activityId): bool
     {
-        $activity = $this->activityRepository->find($activityId);
-        if (!$activity->getSportType()->supportsBestEffortsStats()) {
+        $bestEfforts = $this->calculate($activityId);
+        if ([] === $bestEfforts) {
             return false;
+        }
+
+        foreach ($bestEfforts as $bestEffort) {
+            $this->activityBestEffortRepository->add($bestEffort);
+        }
+
+        return true;
+    }
+
+    /**
+     * Calculate the best efforts for an activity without storing them.
+     *
+     * The distances to calculate for depend on the sport of the activity.
+     *
+     * @return list<ActivityBestEffort>
+     */
+    public function calculate(ActivityId $activityId): array
+    {
+        $activity = $this->activityRepository->find($activityId);
+        $sportType = $activity->getSportType();
+        if (!$sportType->supportsBestEffortsStats()) {
+            return [];
         }
 
         try {
             $distances = $this->activityStreamRepository->findOneByActivityAndStreamType($activityId, StreamType::DISTANCE)->getData();
             $time = $this->activityStreamRepository->findOneByActivityAndStreamType($activityId, StreamType::TIME)->getData();
         } catch (EntityNotFound) {
-            return false;
+            return [];
         }
         if ([] === $distances || [] === $time) {
-            return false;
+            return [];
         }
 
-        $distancesForBestEfforts = $activity->getSportType()->getActivityType()->getDistancesForBestEffortCalculation();
+        $distancesForBestEfforts = $sportType->getActivityType()->getDistancesForBestEffortCalculation();
         if ((end($distances) - $distances[0]) < $distancesForBestEfforts[0]->toMeter()->toInt()) {
             // Activity is too short for best effort calculation.
-            return false;
+            return [];
         }
 
-        $bestEffortsCalculated = false;
+        $bestEfforts = [];
         foreach ($distancesForBestEfforts as $distance) {
             if ($activity->getDistance()->toMeter()->toInt() < $distance->toMeter()->toInt()) {
                 // For some reason the Strava distance indicates a longer distance than the actual activity distance.
@@ -66,17 +88,14 @@ final readonly class ActivityBestEffortCalculator
                 continue;
             }
 
-            $bestEffortsCalculated = true;
-            $this->activityBestEffortRepository->add(
-                ActivityBestEffort::create(
-                    activityId: $activityId,
-                    distanceInMeter: $distance->toMeter(),
-                    sportType: $activity->getSportType(),
-                    timeInSeconds: $fastestTime,
-                )
+            $bestEfforts[] = ActivityBestEffort::create(
+                activityId: $activityId,
+                distanceInMeter: $distance->toMeter(),
+                sportType: $sportType,
+                timeInSeconds: $fastestTime,
             );
         }
 
-        return $bestEffortsCalculated;
+        return $bestEfforts;
     }
 }

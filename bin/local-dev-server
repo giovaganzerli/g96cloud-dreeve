@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+# Starts a local Dreeve instance with a throwaway database, so the recalculation
+# feature can be tried out without touching a real installation.
+#
+# Requirements: PHP 8.5 (with the intl extension) and the composer dependencies
+# installed in the project root.
+set -euo pipefail
+
+PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+PHP_BINARY="${PHP_BINARY:-php}"
+# Extra PHP options, for example PHP_OPTIONS="-d auto_prepend_file=/tmp/zstd-shim.php"
+PHP_OPTIONS="${PHP_OPTIONS:-}"
+TEST_DIR="${TEST_DIR:-/tmp/dreeve-test}"
+PORT="${PORT:-8099}"
+
+if [[ ! -f "$PROJECT_DIR/vendor/autoload.php" ]]; then
+    echo "Run composer install first." >&2
+    exit 1
+fi
+
+mkdir -p "$TEST_DIR/storage/database"
+
+if [[ ! -f "$PROJECT_DIR/.env.local" ]]; then
+    HASH=$("$PHP_BINARY" -r 'echo password_hash("test1234", PASSWORD_BCRYPT, ["cost" => 4]);')
+    cat > "$PROJECT_DIR/.env.local" <<EOF
+APP_ENV=dev
+APP_SECRET=localtestsecret1234567890
+APP_URL=http://127.0.0.1:$PORT
+DATABASE_DIRECTORY=$TEST_DIR/storage/database
+IMPORT_MODE=files
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD_HASH='$HASH'
+ADMIN_ALLOWED_IPS=
+TRUSTED_PROXIES=
+TZ=Europe/Rome
+EOF
+    echo "Created $PROJECT_DIR/.env.local (admin / test1234)."
+fi
+
+echo "==> Applying the migrations"
+# shellcheck disable=SC2086 # PHP_OPTIONS can hold multiple options
+(cd "$PROJECT_DIR" && "$PHP_BINARY" $PHP_OPTIONS bin/console doctrine:migrations:migrate --no-interaction)
+
+echo "==> Starting the server on http://127.0.0.1:$PORT"
+# shellcheck disable=SC2086 # PHP_OPTIONS can hold multiple options
+exec "$PHP_BINARY" $PHP_OPTIONS -S "127.0.0.1:$PORT" -t "$PROJECT_DIR/public" "$PROJECT_DIR/bin/dev-router.php"

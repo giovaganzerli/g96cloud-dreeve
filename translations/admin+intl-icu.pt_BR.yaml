@@ -65,6 +65,7 @@ Appearance: Aparência
 Applied: Aplicado
 Apply: Aplicar
 'Apply to existing activities': 'Aplicar a atividades existentes'
+'Apri in WindAhead': 'Apri in WindAhead'
 'Are you sure you want to delete the import of {name}?': 'Tem certeza de que deseja excluir a importação de {name}?'
 'Are you sure you want to delete the {component} component?': 'Tem certeza de que deseja excluir o componente {component}?'
 'Are you sure you want to delete the {rule} rule?': 'Tem certeza de que deseja excluir a regra {rule}?'
@@ -74,6 +75,7 @@ Apply: Aplicar
 'Assign gear': 'Atribuir equipamento'
 'Athlete settings': 'Configurações do atleta'
 'Attached to': 'Vinculado a'
+Attività: Attività
 'Automatically fill in gear, commute, sport type and more on newly imported activities. Rules run top to bottom, and can also be applied to activities you already imported.': 'Preencha automaticamente equipamento, deslocamento, tipo de esporte e mais em atividades recém-importadas. As regras são executadas de cima para baixo e também podem ser aplicadas a atividades já importadas.'
 'Automation rules': 'Regras de automação'
 'Automation rules are only available in file import mode': 'Regras de automação estão disponíveis apenas no modo de importação de arquivo'
@@ -81,6 +83,7 @@ Apply: Aplicar
 'Average cadence': 'Cadência média'
 'Average heart rate (bpm)': 'Frequência cardíaca média (bpm)'
 'Average power': 'Potência média'
+Azioni: Azioni
 'Back to app': 'Voltar para o aplicativo'
 'Back to the admin panel': 'Voltar ao painel de administração'
 'Base URI': 'URI base'
@@ -89,6 +92,7 @@ Birthday: 'Data de nascimento'
 'By default only you can download the original FIT, TCX or GPX file from an activity page. Original files can contain more detail than the page shows.': 'Por padrão, apenas você pode baixar o arquivo FIT, TCX ou GPX original de uma página de atividade. Os arquivos originais podem conter mais detalhes do que a página mostra.'
 'Calculate energy (kJ)': 'Calcular energia (kJ)'
 Cancel: Cancelar
+'Cerca segmenti': 'Cerca segmenti'
 'Challenge name': 'Nome do desafio'
 'Changes still need to be processed before they appear on the app': 'As alterações ainda precisam ser processadas antes de aparecerem no aplicativo'
 'Changes to these settings only take effect after you restart the daemon container.': 'As alterações nessas configurações só entram em vigor após reiniciar o contêiner do daemon.'
@@ -138,6 +142,7 @@ Disabled: Desativado
 Distance: Distância
 'Do not download activity photos': 'Não baixar fotos de atividades'
 Done: Concluído
+Download: Download
 'Download original file': 'Baixar arquivo original'
 'Drag the start and end markers along the route to select the segment.': 'Arraste os marcadores de início e fim ao longo da rota para selecionar o segmento.'
 'Drag to reorder': 'Arraste para reordenar'
@@ -267,6 +272,7 @@ Metrics: Métricas
 Minutes: Minutos
 Mode: Modo
 Model: Modelo
+Modifica: Modifica
 Monday: Segunda-feira
 'More pages': 'Mais páginas'
 'Most recent activities (cards)': 'Atividades mais recentes (cartões)'
@@ -312,6 +318,7 @@ Operator: Operador
 'Optional. Leave empty to always apply this goal.': 'Opcional. Deixe vazio para aplicar esta meta sempre.'
 'Optional. Your current Zwift level (1 or higher). Leave empty to hide the Zwift badge.': 'Opcional. Seu nível atual no Zwift (1 ou superior). Deixe vazio para ocultar o emblema do Zwift.'
 'Optional. Your current Zwift racing score (between 0 and 1000).': 'Opcional. Sua pontuação de corrida atual no Zwift (entre 0 e 1000).'
+'Original file': 'Original file'
 'PHP date format for normal dates, e.g. d-m-Y renders to 01-01-2025.': 'Formato de data PHP para datas normais, ex. d-m-Y renderiza para 01-01-2025.'
 'PHP date format for short dates, e.g. d-m-y renders to 01-01-25.': 'Formato de data PHP para datas curtas, ex. d-m-y renderiza para 01-01-25.'
 'Parts you track maintenance for, eg: chains, cassettes, brake pads...': 'Peças para as quais você acompanha a manutenção, ex: correntes, cassetes, pastilhas de freio...'
@@ -365,7 +372,9 @@ Retired: Aposentado
 'Retired components keep their history, but are hidden and no longer tracked.': 'Componentes aposentados mantêm seu histórico, mas ficam ocultos e não são mais monitorados.'
 'Retry weather and reverse geocoding': 'Tentar novamente clima e geocodificação reversa'
 'Return to app': 'Retornar ao aplicativo'
+'Ricalcola i dati': 'Ricalcola i dati'
 Ride: Pedal
+'Ripristina i dati': 'Ripristina i dati'
 'Rolling window (days)': 'Estatísticas recentes (dias)'
 Rules: Regras
 'Rules to apply': 'Regras a aplicar'
@@ -380,6 +389,8 @@ Saving...: Salvando...
 Seconds: Segundos
 Security: Segurança
 'Segment management': 'Gerenciamento de segmentos'
+Segmenti: Segmenti
+Segmento: Segmento
 'Segments will appear here once you create them from one of your activities.': 'Os segmentos aparecerão aqui assim que você criá-los a partir de uma de suas atividades.'
 'Select a component first...': 'Selecione um componente primeiro...'
 'Select a component…': 'Selecione um componente…'
@@ -444,6 +455,7 @@ Source: Fonte
 'Strava client secret': 'Segredo do cliente Strava'
 'Strava import': 'Importação do Strava'
 'Strava refresh token': 'Token de atualização do Strava'
+Strumenti: Strumenti
 Subtitle: Subtítulo
 Success: Sucesso
 Sunday: Domingo

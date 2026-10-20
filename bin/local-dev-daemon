@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+# Starts the Dreeve daemon for the local development instance.
+#
+# The daemon processes the files in the watch directory, so without it an uploaded
+# activity file just sits there with the "import pending" badge in the admin panel.
+#
+# Requirements: PHP 8.5 (with the intl extension), the composer dependencies and
+# the fit-tool binary (see bin/local-dev-server, it is built on demand).
+set -euo pipefail
+
+PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+PHP_BINARY="${PHP_BINARY:-php}"
+# Extra PHP options, for example PHP_OPTIONS="-d auto_prepend_file=/tmp/zstd-shim.php"
+PHP_OPTIONS="${PHP_OPTIONS:-}"
+TEST_DIR="${TEST_DIR:-/tmp/dreeve-test}"
+
+if [[ ! -f "$PROJECT_DIR/vendor/autoload.php" ]]; then
+    echo "Run composer install first." >&2
+    exit 1
+fi
+
+# The FIT parser shells out to fit-tool, it has to be on the PATH.
+if [[ ! -x "$TEST_DIR/bin/fit-tool" ]]; then
+    if ! command -v go >/dev/null; then
+        echo "Go is required to build fit-tool (brew install go)." >&2
+        exit 1
+    fi
+    echo "==> Building fit-tool"
+    mkdir -p "$TEST_DIR/bin"
+    (cd "$PROJECT_DIR/docker/fit-tool" && CGO_ENABLED=0 go build -ldflags="-s -w" -o "$TEST_DIR/bin/fit-tool" .)
+fi
+
+# The daemon runs its cron actions as separate processes, started through the
+# "php" in the PATH. Without it every cron action fails with
+# "env: php: No such file or directory" and nothing ever gets imported.
+if [[ "$PHP_BINARY" != "php" ]]; then
+    mkdir -p "$TEST_DIR/bin"
+    cat > "$TEST_DIR/bin/php" <<EOF
+#!/bin/sh
+exec "$PHP_BINARY" $PHP_OPTIONS "\$@"
+EOF
+    chmod +x "$TEST_DIR/bin/php"
+fi
+
+export PATH="$TEST_DIR/bin:$PATH"
+
+echo "==> Starting the daemon"
+# shellcheck disable=SC2086 # PHP_OPTIONS can hold multiple options
+exec "$PHP_BINARY" $PHP_OPTIONS "$PROJECT_DIR/bin/console" app:daemon:run
