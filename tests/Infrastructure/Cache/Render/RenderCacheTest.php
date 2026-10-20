@@ -3,6 +3,7 @@
 namespace App\Tests\Infrastructure\Cache\Render;
 
 use App\Application\AppVersion;
+use App\Application\BuildIdentity;
 use App\Infrastructure\Cache\Cacheability;
 use App\Infrastructure\Cache\Render\Render;
 use App\Infrastructure\Cache\Render\RenderCache;
@@ -123,7 +124,7 @@ class RenderCacheTest extends ContainerTestCase
             ->getMetadata()[ItemInterface::METADATA_EXPIRY] ?? null;
         $this->assertGreaterThan(50 * 365 * 86400, $storedExpiry - time());
 
-        $render = new RenderCache($pool, $tags)->get(
+        $render = new RenderCache($pool, $tags, BuildIdentity::fromString(''))->get(
             cacheKey: 'stored-without-an-expiry',
             cacheability: Cacheability::for('stub', CacheTags::of(RootCacheTag::ACTIVITY_IMAGES)),
             callback: fn (): string => 'should-not-run',

@@ -11,6 +11,7 @@ parameters:
     env(ADMIN_ALLOWED_IPS): ''
     env(DREEVE_API_KEY): ''
     env(TRUSTED_PROXIES): 'private_ranges'
+    env(APP_COMMIT): ''
     env(STRAVA_CLIENT_ID): 'replace-me'
     env(STRAVA_CLIENT_SECRET): 'replace-me'
     env(STRAVA_REFRESH_TOKEN): 'replace-me'
@@ -71,6 +72,10 @@ services:
     App\Infrastructure\Config\DevMode:
         factory: [ null, 'fromString' ]
         arguments: ['%env(string:DEV_MODE_IS_ENABLED)%']
+
+    App\Application\BuildIdentity:
+        factory: [ null, 'fromString' ]
+        arguments: ['%env(string:APP_COMMIT)%']
 
     App\Infrastructure\Security\AdminUserName:
         factory: [ null, 'fromString' ]

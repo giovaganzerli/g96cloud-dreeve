@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Cache\Render;
 
-use App\Application\AppVersion;
+use App\Application\BuildIdentity;
 use App\Infrastructure\Cache\Cacheability;
 use App\Infrastructure\Cache\Tag\CacheTag;
 use App\Infrastructure\Cache\Tag\CacheTags;
@@ -25,6 +25,7 @@ final readonly class RenderCache
         private TagAwareAdapterInterface $cache,
         #[Autowire(service: 'render.cache.tags')]
         private AdapterInterface $tags,
+        private BuildIdentity $buildIdentity,
     ) {
     }
 
@@ -36,7 +37,7 @@ final readonly class RenderCache
         $prefixedCacheKey = (string) preg_replace(
             self::CHARACTERS_RESERVED_IN_A_CACHE_KEY,
             '_',
-            AppVersion::getSemanticVersion().'.'.$cacheKey
+            $this->buildIdentity->getVersion().'.'.$cacheKey
         );
 
         $item = $this->cache->getItem($prefixedCacheKey);

@@ -3,6 +3,7 @@
 namespace App\Tests\Console\Cache;
 
 use App\Application\AppVersion;
+use App\Application\BuildIdentity;
 use App\Console\Cache\ClearRenderCacheConsoleCommand;
 use App\Infrastructure\Cache\Cacheability;
 use App\Infrastructure\Cache\Render\Render;
@@ -141,7 +142,8 @@ class ClearRenderCacheConsoleCommandTest extends ConsoleCommandTestCase
     {
         return new ClearRenderCacheConsoleCommand(
             $this->renderCache,
-            $this->buildStorage
+            $this->buildStorage,
+            BuildIdentity::fromString('')
         );
     }
 }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Http;
 
-use App\Application\AppVersion;
+use App\Application\BuildIdentity;
 use App\Infrastructure\Config\DevMode;
 use App\Infrastructure\ValueObject\Identifier\UuidFactory;
 use Symfony\Component\Asset\VersionStrategy\VersionStrategyInterface;
@@ -16,13 +16,14 @@ final readonly class AssetVersioningStrategy implements VersionStrategyInterface
     public function __construct(
         private DevMode $devMode,
         private UuidFactory $uuidFactory,
+        private BuildIdentity $buildIdentity,
     ) {
     }
 
     public function getVersion(string $path): string
     {
         if (!$this->devMode->isEnabled()) {
-            return AppVersion::getSemanticVersion();
+            return $this->buildIdentity->getVersion();
         }
 
         return $this->uuidFactory->random();

@@ -9,6 +9,11 @@ RUN CGO_ENABLED=0 GOOS=linux GOARCH=${TARGETARCH} go build -ldflags="-s -w" -o /
 
 FROM dunglas/frankenphp:1-php8.5-alpine
 
+# The commit the image was built from. The app uses it to invalidate the rendered
+# pages and to bust the browser cache of the assets after a deployment.
+ARG APP_COMMIT
+ENV APP_COMMIT=${APP_COMMIT}
+
 WORKDIR /var/www
 
 # Run in production by default for all self-hosted instances.

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Console\Cache;
 
-use App\Application\AppVersion;
+use App\Application\BuildIdentity;
 use App\Infrastructure\Cache\Render\RenderCache;
 use League\Flysystem\FilesystemOperator;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -24,6 +24,7 @@ final class ClearRenderCacheConsoleCommand extends Command
     public function __construct(
         private readonly RenderCache $renderCache,
         private readonly FilesystemOperator $buildStorage,
+        private readonly BuildIdentity $buildIdentity,
     ) {
         parent::__construct();
     }
@@ -40,7 +41,7 @@ final class ClearRenderCacheConsoleCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $output = new SymfonyStyle($input, $output);
-        $currentVersion = AppVersion::getSemanticVersion();
+        $currentVersion = $this->buildIdentity->getVersion();
 
         if ($input->getOption(self::WITH_VERSION_CHECK_OPTION) && $this->versionThatWroteTheCache() === $currentVersion) {
             $output->writeln('Render cache matches the current app version');
