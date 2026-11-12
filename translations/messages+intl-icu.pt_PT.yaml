@@ -7,6 +7,7 @@
 'A cluster tile is a visited tile whose four neighbours are visited too': 'Um quadrado de cluster é um quadrado visitado cujos quatro vizinhos também foram visitados'
 'A high intensity score means a larger share of your training is hard rather than easy.': 'A high intensity score means a larger share of your training is hard rather than easy.'
 'A high score means you concentrate more training into fewer, heavier days.': 'A high score means you concentrate more training into fewer, heavier days.'
+'A new description has been generated.': 'A new description has been generated.'
 'A:C Ratio': 'Rácio A:C'
 'A:C optimal in': 'A:C optimal in'
 'AI integration settings': 'AI integration settings'
@@ -27,6 +28,7 @@ Activity: Activity
 'Aero sensor': 'Aero sensor'
 Afternoon: Tarde
 All: All
+'All routes': 'All routes'
 'All time': 'Desde sempre'
 'Alpine Ski': 'Esqui Alpino'
 Apr: Abr
@@ -34,7 +36,11 @@ Apr: Abr
 'Athlete profile': 'Athlete profile'
 Aug: Ago
 Average: Average
+'Average altitude': 'Average altitude'
+'Average distance': 'Average distance'
 'Average gradient': 'Average gradient'
+'Average speed': 'Average speed'
+'Average temperature': 'Average temperature'
 'Avg distance': 'Avg distance'
 'Avg gradient': 'Avg gradient'
 'Avg pace': 'Avg pace'
@@ -68,6 +74,7 @@ Challenges: Desafios
 'Clear all filters': 'Clear all filters'
 'Clear chat': 'Clear chat'
 'Cluster tiles': 'Quadrados de cluster'
+Collections: Collections
 Columns: Columns
 Commute: Commute
 Commutes: 'Viagens Escritório'
@@ -81,6 +88,7 @@ Components: Components
 'Consider reducing load': 'Consider reducing load'
 Consistency: Consistency
 Cost: Cost
+'Countries visited': 'Countries visited'
 Country: Country
 Cricket: Cricket
 Crossfit: Crossfit
@@ -102,6 +110,7 @@ Day: Day
 Dec: Dez
 'Decreased compared to yesterday': 'Decreased compared to yesterday'
 Density: Density
+Description: Description
 Details: Details
 Device: Dispositivo
 Dist.: Dist.
@@ -111,6 +120,8 @@ Distance: Distância
 'Distance breakdown': 'Divisão da distância'
 'Distance distribution': 'Distance distribution'
 'Distance in {unit}': 'Distância em {unit}'
+'Distance on asphalt': 'Distance on asphalt'
+'Distance on unpaved roads': 'Distance on unpaved roads'
 'Distance over time per gear': 'Distância ao longo do tempo por equipamento'
 'Distance per month per gear': 'Distância por mês por equipamento'
 'Doing a mix of cycling, running, swimming, and strength work increases your variety score.': 'Doing a mix of cycling, running, swimming, and strength work increases your variety score.'
@@ -123,6 +134,7 @@ Duration: Duration
 Eddington: Eddington
 'Eddington number': 'Eddington number'
 'Eddington over time': 'Eddington over time'
+'Edit collection': 'Edit collection'
 'Edit dashboard': 'Edit dashboard'
 'Effort vs heart rate': 'Effort vs heart rate'
 'Elapsed time': 'Elapsed time'
@@ -144,6 +156,7 @@ Evening: 'Fim da tarde'
 'Explorer tiles include all your activities': 'Explorer tiles include all your activities'
 'FTP history': 'Histórico de FTP'
 Fastest: Fastest
+'Fastest stage': 'Fastest stage'
 Favourite: Favorito
 Feb: Fev
 'Filling up the bottles...': 'Filling up the bottles...'
@@ -165,9 +178,11 @@ Fri.: Fri.
 'Front rings': 'Front rings'
 'Front shifts': 'Front shifts'
 GAP: GAP
+Gallery: Gallery
 Gear: Equipamento
 'Gear maintenance': 'Manutenção de equipamento'
 'Gear that is retired is disabled by default.': 'Equipamento reformado é desativado por defeito.'
+Geography: Geography
 'Go to activity': 'Ir para a atividade'
 Goal: Goal
 Golf: Golfe
@@ -207,6 +222,7 @@ History: Histórico
 'How much training you do in total on days you train.': 'How much training you do in total on days you train.'
 'How often do you train': 'How often do you train'
 'Ice Skate': 'Patinagem no Gelo'
+Image: Image
 Imperial: Imperial
 "In that time, I’ve covered {totalDistance}, that's {numberOfTripsAroundTheWorld} trips around the world 🌍 or {numberOfTripsToTheMoonPercent}% of the way to the moon 🌕, and climbed an elevation of {totalElevation} which is {timesMountEverest} times Mount Everest 🏔. All up that's {totalTimeRecorded} of moving time 🎉.": "In that time, I’ve covered {totalDistance}, that's {numberOfTripsAroundTheWorld} trips around the world 🌍 or {numberOfTripsToTheMoonPercent}% of the way to the moon 🌕, and climbed an elevation of {totalElevation} which is {timesMountEverest} times Mount Everest 🏔. All up that's {totalTimeRecorded} of moving time 🎉."
 'Increased compared to yesterday': 'Increased compared to yesterday'
@@ -243,27 +259,37 @@ Loading...: 'A carregar...'
 'Longest activity (h)': 'Actividade mais longa (h)'
 'Longest day': 'Longest day'
 'Longest distance': 'Longest distance'
+'Longest stage': 'Longest stage'
 'Longest streaks': 'Maiores sequências'
 Low: Baixa
 'Low risk': 'Low risk'
 'Low training load': 'Low training load'
+'Main cities': 'Main cities'
+'Main summits': 'Main summits'
 Maintenance: Manutenção
 'Manage activities': 'Manage activities'
+'Manage collections': 'Manage collections'
 'Manage gear': 'Manage gear'
 'Manage recording devices': 'Manage recording devices'
 'Manage segments': 'Manage segments'
+'Manually edited': 'Manually edited'
 'Map settings': 'Map settings'
 'Map tiles at zoom level 14 that your activities passed through': 'Quadrados do mapa no nível de zoom 14 por onde as tuas atividades passaram'
 Mar: Mar
 Max: Máx
+'Max altitude': 'Max altitude'
 'Max cluster': 'Maior cluster'
 'Max gradient': 'Max gradient'
+'Max speed': 'Max speed'
 'Max square': 'Maior quadrado'
+'Max temperature': 'Max temperature'
 May: Mai
 Medium: Médio
 Metric: Metric
 'Metrics settings': 'Metrics settings'
 Milestones: Milestones
+'Min altitude': 'Min altitude'
+'Min temperature': 'Min temperature'
 'Mind & Body Sports': 'Desportos para Corpo e Mente'
 'Moderate fatigue with stable fitness. Well suited for consistent day-to-day training': 'Moderate fatigue with stable fitness. Well suited for consistent day-to-day training'
 'Moderate monotony': 'Monotonia moderada'
@@ -311,6 +337,7 @@ Oct: Out
 'One of your gear maintenance tasks is due': 'Uma das tarefas de manutenção de equipamento está atrasada'
 "Oops, looks like you've wandered off the map! 🗺️": "Oops, looks like you've wandered off the map! 🗺️"
 'Open Water Swim': 'Open Water Swim'
+'Open activity': 'Open activity'
 'Optimal training range': 'Intervalo de treino ideal'
 Other: Outro
 'Outdoor Sports': 'Desportos ao Ar Livre'
@@ -327,6 +354,7 @@ Padel: Padel
 'Per {unit}': 'Per {unit}'
 'Personal bests': 'Personal bests'
 Photo: Foto
+'Photo gallery': 'Photo gallery'
 Photos: Fotos
 'Physical Therapy': 'Physical Therapy'
 'Pickle Ball': Pickleball
@@ -376,6 +404,7 @@ Rides: 'Passeios de bicicleta'
 'Rock Climbing': Escalada
 'Roller Ski': 'Esqui de Rodas'
 'Rolling stats': 'Rolling stats'
+Route: Route
 Rowing: Remo
 Run: Run
 Running: Running
@@ -385,6 +414,7 @@ Sat: Sáb
 Sat.: Sat.
 Search: Pesquisar
 'Search activity...': 'Pesquisar atividade...'
+'Search collection...': 'Search collection...'
 'Search segment...': 'Pesquisar segmento...'
 Segments: Segmentos
 Sep: Set
@@ -410,15 +440,20 @@ Splits: Intervalos
 'Sport type': 'Sport type'
 'Sport variety': 'Sport variety'
 Squash: Squash
+'Stage with most ascent': 'Stage with most ascent'
+Stages: Stages
 'Stair Stepper': 'Subida de Escadas'
 'Stand Up Paddling': 'Stand Up Paddle'
 'Start times': 'Horas de início'
+Statistics: Statistics
 'Stats per weekday': 'Estatísticas por dia da semana'
 Status: Status
+'Stopped time': 'Stopped time'
 'Streak started on {date}': 'Streak started on {date}'
 Streaks: Sequências
 Sun: Dom
 Sun.: Sun.
+Surfaces: Surfaces
 Surfing: Surf
 'TSB (Form)': 'TSB (Forma)'
 'TSB positive in': 'TSB positive in'
@@ -518,6 +553,9 @@ Tennis: Ténis
 "That's {number} days of at least {distance}": "That's {number} days of at least {distance}"
 "That's {percentage}% of all countries 🌍": "That's {percentage}% of all countries 🌍"
 'The Eddington number in the context of cycling or running is defined as the maximum number E such that the athlete has covered at least E km on at least E days.': 'The Eddington number in the context of cycling or running is defined as the maximum number E such that the athlete has covered at least E km on at least E days.'
+'The collection has been created.': 'The collection has been created.'
+'The collection has been deleted.': 'The collection has been deleted.'
+'The collection has been updated.': 'The collection has been updated.'
 'The largest connected group of cluster tiles': 'The largest connected group of cluster tiles'
 'The largest square of visited tiles': 'The largest square of visited tiles'
 "The page you're looking for doesn't exist or may have been moved.": "The page you're looking for doesn't exist or may have been moved."
@@ -539,11 +577,14 @@ Title: Title
 'To enable it, configure this in the admin panel': 'To enable it, configure this in the admin panel'
 'Toggle sidebar': 'Ativar/desativar barra lateral'
 'Top 10': 'Top 10'
+'Total ascent': 'Total ascent'
+'Total distance': 'Total distance'
 'Total distance per month': 'Distância total por mês'
 'Total elevation per month': 'Elevação total por mês'
 'Total hours spent per gear': 'Total de horas por equipamento'
 'Total hours spent per sport type': 'Total de horas por desporto'
 'Total moving time per month': 'Total moving time per month'
+'Total time': 'Total time'
 'Trail Run': 'Trail Run'
 'Trail Runs': 'Corridas de Trilho'
 'Training 4–5 days every week scores higher than doing everything in one or two days.': 'Training 4–5 days every week scores higher than doing everything in one or two days.'
@@ -566,6 +607,7 @@ Usage: Usage
 'Very high': 'Muito alta'
 'View all': 'Ver tudo'
 'View details': 'Ver detalhes'
+'View full album': 'View full album'
 'View this month': 'View this month'
 'Virtual Ride': 'Virtual Ride'
 'Virtual Rides': 'Passeios Virtuais'
@@ -583,6 +625,7 @@ Walks: Passeios
 'Water Sports': 'Desportos Aquáticos'
 'Waxing the chain...': 'Waxing the chain...'
 'We detected following issues': 'Foram detectadas as seguintes situações'
+Weather: Weather
 Wed: Qua
 Wed.: Wed.
 Weekly: Weekly
@@ -596,7 +639,13 @@ Weight: Weight
 Wheelchair: 'Cadeira de Rodas'
 'Wind Surf': Windsurf
 'Winter Sports': 'Desportos de Inverno'
+'With description': 'With description'
+'With gallery': 'With gallery'
+'With image': 'With image'
 'With others': 'With others'
+'Without description': 'Without description'
+'Without gallery': 'Without gallery'
+'Without image': 'Without image'
 Workout: Treino
 'Workout assistant': 'Workout assistant'
 'Workout type': 'Tipo de exercício'

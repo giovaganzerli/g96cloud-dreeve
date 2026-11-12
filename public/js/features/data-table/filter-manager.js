@@ -166,7 +166,11 @@ export class FilterManager {
 
                 // Multi-checkbox filter.
                 if (Array.isArray(activeFilter)) {
-                    row.active = row.active && activeFilter.includes(filterValue?.toLowerCase());
+                    row.active = row.active && (
+                        Array.isArray(filterValue)
+                            ? activeFilter.some((f) => filterValue.map(v => v.toLowerCase()).includes(f))
+                            : activeFilter.includes(filterValue?.toLowerCase())
+                    );
                     continue;
                 }
 

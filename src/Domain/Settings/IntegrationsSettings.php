@@ -33,6 +33,10 @@ final readonly class IntegrationsSettings
         private ChatCommands $chatCommands,
         private ConfiguredNotificationUrls $configuredNotificationUrls,
         private bool $notifyOnSuccessfulImport,
+        private ?string $immichUrl,
+        #[\SensitiveParameter]
+        private ?string $immichApiKey,
+        private ?string $overpassEndpoint,
     ) {
     }
 
@@ -79,6 +83,12 @@ final readonly class IntegrationsSettings
             static fn (mixed $service): bool => is_string($service) && '' !== trim($service)
         ));
 
+        $immich = is_array($data['immich'] ?? null) ? $data['immich'] : [];
+        $immichUrl = self::optionalString($immich['url'] ?? null);
+        $immichApiKey = self::optionalString($immich['apiKey'] ?? null);
+
+        $openStreetMap = is_array($data['openStreetMap'] ?? null) ? $data['openStreetMap'] : [];
+
         return new self(
             aiIntegrationEnabled: $aiEnabled,
             aiIntegrationWithUIEnabled: $aiEnabled && filter_var($aiConfig['enableUI'] ?? false, FILTER_VALIDATE_BOOLEAN),
@@ -87,6 +97,9 @@ final readonly class IntegrationsSettings
             configuredNotificationUrls: ConfiguredNotificationUrls::fromConfig($services),
             // The stored key predates the removal of the build phase, renaming it would reset the user's setting.
             notifyOnSuccessfulImport: filter_var($notifications['notifyOnSuccessfulBuild'] ?? true, FILTER_VALIDATE_BOOLEAN),
+            immichUrl: $immichUrl,
+            immichApiKey: $immichApiKey,
+            overpassEndpoint: self::optionalString($openStreetMap['endpoint'] ?? null),
         );
     }
 
@@ -113,6 +126,42 @@ final readonly class IntegrationsSettings
     public function shouldNotifyOnSuccessfulImport(): bool
     {
         return $this->notifyOnSuccessfulImport;
+    }
+
+    public function isImmichIntegrationEnabled(): bool
+    {
+        return null !== $this->immichUrl && null !== $this->immichApiKey;
+    }
+
+    public function getImmichUrl(): ?string
+    {
+        return $this->immichUrl;
+    }
+
+    public function getImmichApiKey(): ?string
+    {
+        return $this->immichApiKey;
+    }
+
+    public function isOpenStreetMapIntegrationEnabled(): bool
+    {
+        return null !== $this->overpassEndpoint;
+    }
+
+    public function getOverpassEndpoint(): ?string
+    {
+        return $this->overpassEndpoint;
+    }
+
+    private static function optionalString(mixed $value): ?string
+    {
+        if (!is_string($value)) {
+            return null;
+        }
+
+        $value = trim($value);
+
+        return '' === $value ? null : $value;
     }
 
     public function getAIProvider(): AIProviderInterface

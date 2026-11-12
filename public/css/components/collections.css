@@ -1,0 +1,11 @@
+table.collections-table {
+    @apply w-full block border-collapse;
+
+    tbody {
+        @apply block;
+
+        tr {
+            @apply block;
+        }
+    }
+}

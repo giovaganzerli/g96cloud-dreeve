@@ -1,0 +1,68 @@
+{% autoescape false %}
+{% set collection = summary.getCollection() %}
+{% set imageUrl = collection.getImageUrl() %}
+{% set startDate = summary.getStartDate() %}
+{% set endDate = summary.getEndDate() %}
+<tr class="block">
+    <td class="block p-0 pb-4">
+        <a href="{{ relativeUrl(path('collection', {collectionId: collection.getId()})) }}"
+           class="flex overflow-hidden bg-white border border-gray-200 rounded-lg shadow-xs transition hover:shadow-md">
+            <div class="shrink-0 w-1/3 min-w-28 min-h-32 bg-gray-100 flex items-center justify-center text-gray-300">
+                {% if imageUrl %}
+                    <img src="{{ placeholderImage() }}" data-src="{{ relativeUrl(imageUrl) }}" alt="{{ collection.getName() }}"
+                         class="lazy h-full w-full object-cover">
+                {% else %}
+                    {{ svg('image', 'size-8') }}
+                {% endif %}
+            </div>
+            <div class="flex-1 min-w-0 flex flex-col gap-1.5 p-4">
+                <h3 class="font-semibold text-gray-900 line-clamp-1">{{ collection.getName() }}</h3>
+                <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-500">
+                    {% if startDate %}
+                        <span class="inline-flex items-center gap-1">
+                            {{ svg('calendar', 'size-3.5', 'text-gray-400') }}
+                            {% if endDate and startDate|date('Y-m-d') != endDate|date('Y-m-d') %}
+                                {{ startDate|formatDate() }} – {{ endDate|formatDate() }}
+                            {% else %}
+                                {{ startDate|formatDate() }}
+                            {% endif %}
+                        </span>
+                    {% endif %}
+                    {% if summary.getCountryCodes()|length > 0 %}
+                        <span class="inline-flex items-center gap-1">
+                            {{ svg('globe', 'size-3.5', 'text-gray-400') }}
+                            {% for countryCode in summary.getCountryCodes() %}
+                                {% set countryName = countries[countryCode] ?? countryCode|upper %}
+                                <img src="{{ countryCode|countryIcon }}" width="15" class="rounded-xs" title="{{ countryName }}" alt="{{ countryName }}">
+                            {% endfor %}
+                        </span>
+                    {% endif %}
+                    <span class="inline-flex items-center gap-1">
+                        {{ svg('distance', 'size-3.5', 'text-gray-400') }}
+                        {{ summary.getTotalDistance()|renderMeasurement(1) }}
+                    </span>
+                    <span class="inline-flex items-center gap-1">
+                        {{ svg('elevation', 'size-3.5', 'text-gray-400') }}
+                        {{ summary.getTotalElevation()|renderMeasurement(0) }}
+                    </span>
+                    <span class="inline-flex items-center gap-1">
+                        {{ svg('time', 'size-3.5', 'text-gray-400') }}
+                        {% if summary.getNumberOfDays() > 1 %}
+                            {{ summary.getNumberOfDays() }} {{ "days"|trans }}
+                        {% else %}
+                            {{ summary.getElapsedTimeInSeconds()|formatSeconds }}
+                        {% endif %}
+                    </span>
+                    <span class="inline-flex items-center gap-1">
+                        {{ svg('route', 'size-3.5', 'text-gray-400') }}
+                        {{ summary.getNumberOfActivities() }} {{ "activities"|trans }}
+                    </span>
+                </div>
+                {% if summary.hasDescription() %}
+                    <p class="text-sm text-gray-600 line-clamp-2">{{ collection.getDescription() }}</p>
+                {% endif %}
+            </div>
+        </a>
+    </td>
+</tr>
+{% endautoescape %}

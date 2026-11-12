@@ -33,6 +33,11 @@
     "App\\Domain\\Challenge\\ChallengeInvalidateCacheTagsListener": [
         "reactToChallengeWasImported"
     ],
+    "App\\Domain\\Collection\\CollectionInvalidateCacheTagsListener": [
+        "reactToCollectionWasAdded",
+        "reactToCollectionWasUpdated",
+        "reactToCollectionWasDeleted"
+    ],
     "App\\Domain\\Dashboard\\DashboardInvalidateCacheTagsListener": [
         "reactToDashboardLayoutWasUpdated"
     ],

@@ -8,6 +8,7 @@ use App\Domain\Activity\ActivityIdRepository;
 use App\Domain\Activity\BestEffort\ActivityBestEffortRepository;
 use App\Domain\Activity\Image\ImageRepository;
 use App\Domain\Challenge\ChallengeRepository;
+use App\Domain\Collection\CollectionRepository;
 use App\Domain\Gear\GearRepository;
 use App\Infrastructure\Cache\Cacheability;
 use App\Infrastructure\Cache\CacheableRenderer;
@@ -21,6 +22,7 @@ final readonly class SideBar
         private ActivityIdRepository $activityIdRepository,
         private GearRepository $gearRepository,
         private ChallengeRepository $challengeRepository,
+        private CollectionRepository $collectionRepository,
         private ActivityBestEffortRepository $activityBestEffortRepository,
         private ImageRepository $imageRepository,
         private CacheableRenderer $cacheableRenderer,
@@ -38,6 +40,7 @@ final readonly class SideBar
                     RootCacheTag::ACTIVITY_IMAGES,
                     RootCacheTag::CHALLENGES,
                     RootCacheTag::GEAR,
+                    RootCacheTag::COLLECTIONS,
                 ),
             ),
             render: fn (): string => $this->twig->load('html/navigation/sidebar.html.twig')->render([
@@ -45,6 +48,7 @@ final readonly class SideBar
                 'totalActivityCount' => $this->activityIdRepository->count(),
                 'completedChallenges' => $this->challengeRepository->count(),
                 'totalPhotoCount' => $this->imageRepository->count(),
+                'totalCollectionCount' => $this->collectionRepository->count(),
                 'hasGear' => $this->gearRepository->hasGear(),
                 'hasBestEfforts' => $this->activityBestEffortRepository->hasData(),
             ]),

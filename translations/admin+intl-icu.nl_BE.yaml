@@ -1,5 +1,6 @@
 24-hour: 24-uurs
 'A backfill is already queued. It runs on the next import cycle, within five minutes.': 'Er staat al een backfill in de wachtrij. Die wordt uitgevoerd bij de volgende importcyclus, binnen de vijf minuten.'
+'A random selection of photos of this album is shown on the collection page.': 'A random selection of photos of this album is shown on the collection page.'
 'A rule applies': 'Er is een regel van toepassing'
 AI: AI
 AM/PM: AM/PM
@@ -8,6 +9,7 @@ AM/PM: AM/PM
 Access: Access
 Actions: Acties
 Active: Actief
+Activities: Activities
 'Activities scanned': 'Gescande activiteiten'
 'Activities to skip during import': 'Over te slaan activiteiten bij het importeren'
 'Activities to update': 'Bij te werken activiteiten'
@@ -28,6 +30,7 @@ Activity: Activiteit
 'Add activity': 'Activiteit toevoegen'
 'Add automation rule': 'Automatiseringsregel toevoegen'
 'Add challenge': 'Uitdaging toevoegen'
+'Add collection': 'Add collection'
 'Add command': 'Commando toevoegen'
 'Add component': 'Onderdeel toevoegen'
 'Add condition': 'Voorwaarde toevoegen'
@@ -39,6 +42,7 @@ Activity: Activiteit
 'Add rule': 'Regel toevoegen'
 'Add segment': 'Add segment'
 'Add service': 'Dienst toevoegen'
+'Add statistic': 'Add statistic'
 'Add task': 'Taak toevoegen'
 'Add tile layer': 'Tegellaag toevoegen'
 'Add weight': 'Add weight'
@@ -104,6 +108,8 @@ Clear: Wissen
 'Click the map to set the center, or drag the marker to fine-tune it.': 'Klik op de kaart om het middelpunt in te stellen, of sleep de markering om het te verfijnen.'
 'Click the map to set the location, or drag the marker to fine-tune it.': 'Klik op de kaart om de locatie in te stellen, of sleep de markering om ze te verfijnen.'
 Close: Sluiten
+'Collection management': 'Collection management'
+'Collections will appear here once you add them.': 'Collections will appear here once you add them.'
 Command: Commando
 Commute: Woon-werk
 Component: Onderdeel
@@ -129,6 +135,7 @@ Daemon: Daemon
 Delete: Verwijderen
 'Delete activity': 'Activiteit verwijderen'
 'Delete automation rule': 'Automatiseringsregel verwijderen'
+'Delete collection': 'Delete collection'
 'Delete component': 'Onderdeel verwijderen'
 'Delete file import': 'Bestandsimport verwijderen'
 'Delete gear': 'Uitrusting verwijderen'
@@ -153,6 +160,7 @@ Duration: Duur
 Edit: Bewerken
 'Edit activity': 'Activiteit bewerken'
 'Edit automation rule': 'Automatiseringsregel bewerken'
+'Edit collection': 'Edit collection'
 'Edit component': 'Onderdeel bewerken'
 'Edit gear': 'Uitrusting bewerken'
 'Edit maintenance log': 'Onderhoudslog bewerken'
@@ -199,6 +207,8 @@ From: Van
 Gender: Geslacht
 General: Algemeen
 'Generate an API key': 'Een API-sleutel genereren'
+'Generate description with AI': 'Generate description with AI'
+Generating...: Generating...
 'Go to first page': 'Naar eerste pagina'
 'Go to last page': 'Naar laatste pagina'
 'Go to next page': 'Naar volgende pagina'
@@ -218,6 +228,8 @@ If: Als
 'Ignore retired gear': 'Uitrusting buiten gebruik negeren'
 Image: Afbeelding
 Images: Afbeeldingen
+Immich: Immich
+'Immich album': 'Immich album'
 Import: Importeren
 'Import Strava data': 'Strava-gegevens importeren'
 'Import activities': 'Activiteiten importeren'
@@ -241,9 +253,12 @@ Label: Label
 Latitude: Breedtegraad
 'Leave all unchecked to import every sport type. ⚠️ Restricting this after activities have been imported deletes activities of excluded sport types.': 'Laat alles uitgevinkt om elk sporttype te importeren. ⚠️ Als je dit beperkt nadat activiteiten geïmporteerd zijn, worden activiteiten van uitgesloten sporttypes verwijderd.'
 'Leave all unchecked to import every visibility. ⚠️ Restricting this after activities have been imported deletes activities of excluded visibilities.': 'Laat alles uitgevinkt om elke zichtbaarheid te importeren. ⚠️ Als je dit beperkt nadat activiteiten geïmporteerd zijn, worden activiteiten met uitgesloten zichtbaarheden verwijderd.'
+'Leave empty to disable the surface analysis. Every activity is analysed once, during the next import run.': 'Leave empty to disable the surface analysis. Every activity is analysed once, during the next import run.'
 'Leave empty to include all sport types.': 'Laat leeg om alle sporttypes mee te nemen.'
 'Leave empty to use the default title.': 'Laat leeg om de standaardtitel te gebruiken.'
+'Leave this empty and a description will be generated automatically with the AI, based on the statistics and the recorded tracks.': 'Leave this empty and a description will be generated automatically with the AI, based on the statistics and the recorded tracks.'
 'Lets an external client upload activity files over HTTP. The key is the only thing guarding that endpoint, so treat it like a password.': 'Laat een externe client activiteitsbestanden uploaden via HTTP. De sleutel is het enige wat dat endpoint beveiligt, dus behandel hem als een wachtwoord.'
+Linked: Linked
 'Loading the route...': 'Loading the route...'
 Locale: Taalinstelling
 Log: Log
@@ -278,10 +293,13 @@ Monday: Maandag
 'Most recent activities (cards)': 'Most recent activities (cards)'
 'Most recent activities (list)': 'Most recent activities (list)'
 'Moving time': Beweegtijd
+Name: Name
 'No activities imported yet.': 'Nog geen activiteiten geïmporteerd.'
 'No activities match the current filters.': 'Geen activiteiten die overeenkomen met de huidige filters.'
 'No activity found for that ID.': 'Geen activiteit gevonden voor dat ID.'
+'No album': 'No album'
 'No automation rules yet.': 'Nog geen automatiseringsregels.'
+'No collections added yet.': 'No collections added yet.'
 'No components yet.': 'Nog geen onderdelen.'
 'No file imports match the current filters.': 'Geen bestandsimports die overeenkomen met de huidige filters.'
 'No files imported yet.': 'Nog geen bestanden geïmporteerd.'
@@ -294,6 +312,7 @@ Monday: Maandag
 'No segments match the current filters.': 'No segments match the current filters.'
 'No sport types selected': 'Geen sporttypes geselecteerd'
 'No unit': 'Geen eenheid'
+None: None
 'Normal date format': 'Normaal datumformaat'
 'Not configured, the API is closed': 'Niet geconfigureerd, de API is gesloten'
 'Not fitted': 'Not fitted'
@@ -309,6 +328,7 @@ Notifications: Notifications
 'Number of widgets of this type you already have configured.': 'Aantal widgets van dit type dat je al geconfigureerd hebt.'
 'Only show activities with a map': 'Enkel activiteiten met een kaart tonen'
 "Oops, looks like you've wandered off the map! 🗺️": 'Oeps, het lijkt erop dat je van de kaart bent afgedwaald! 🗺️'
+OpenStreetMap: OpenStreetMap
 Operator: Operator
 'Optional YAML for date-range and sport-type specific zones. Leave empty unless you know you need it.': 'Optionele YAML voor zones per datumbereik en sporttype. Laat leeg tenzij je zeker weet dat je het nodig hebt.'
 'Optional link to your profile picture, shown in the nav bar. A square image is recommended. Leave empty to disable.': 'Optionele link naar je profielfoto, getoond in de navigatiebalk. Een vierkante afbeelding wordt aanbevolen. Laat leeg om uit te schakelen.'
@@ -319,6 +339,7 @@ Operator: Operator
 'Optional. Your current Zwift level (1 or higher). Leave empty to hide the Zwift badge.': 'Optioneel. Je huidige Zwift-level (1 of hoger). Laat leeg om de Zwift-badge te verbergen.'
 'Optional. Your current Zwift racing score (between 0 and 1000).': 'Optioneel. Je huidige Zwift Racing Score (tussen 0 en 1000).'
 'Original file': 'Original file'
+'Overpass API endpoint': 'Overpass API endpoint'
 'PHP date format for normal dates, e.g. d-m-Y renders to 01-01-2025.': 'PHP-datumformaat voor normale datums, bv. d-m-Y wordt 01-01-2025.'
 'PHP date format for short dates, e.g. d-m-y renders to 01-01-25.': 'PHP-datumformaat voor korte datums, bv. d-m-y wordt 01-01-25.'
 'Parts you track maintenance for, eg: chains, cassettes, brake pads...': 'Onderdelen waarvan je het onderhoud bijhoudt, bv.: kettingen, cassettes, remblokken...'
@@ -359,6 +380,7 @@ Remove: Verwijderen
 'Remove widget': 'Widget verwijderen'
 Removing...: 'Aan het verwijderen...'
 'Render the map tiles in greyscale': 'Kaarttegels in grijstinten weergeven'
+Reorder: Reorder
 "Reorder widgets and set each widget's width.": 'Herschik widgets en stel de breedte van elke widget in.'
 'Require a login for the entire app': 'Login vereisen voor de volledige app'
 'Require a login for the entire app, not just the admin panel. Recommended when your instance is reachable from the internet, which it has to be for the Strava webhook.': 'Vereis een login voor de volledige app, niet enkel het beheerpaneel. Aanbevolen als je instantie bereikbaar is via het internet, wat nodig is voor de Strava-webhook.'
@@ -404,6 +426,7 @@ Segmento: Segmento
 'Select gear...': 'Selecteer uitrusting...'
 'Select sensors': 'Sensoren selecteren'
 'Select sport types': 'Sporttypes selecteren'
+'Select the activities': 'Select the activities'
 'Select the serviced gear…': 'Selecteer de onderhouden uitrusting…'
 'Sends a notification after every successful import.': 'Stuurt een melding na elke geslaagde import.'
 'Sends a notification when a new app version is available. Requires a configured notification service.': 'Stuurt een melding wanneer er een nieuwe versie van de app beschikbaar is. Vereist een geconfigureerde meldingsdienst.'
@@ -411,6 +434,7 @@ Segmento: Segmento
 Sensors: Sensoren
 'Sensors are only recorded for activities imported from FIT files. Activities from Strava, GPX or TCX never match this condition.': 'Sensoren worden enkel geregistreerd voor activiteiten die geïmporteerd zijn uit FIT-bestanden. Activiteiten van Strava, GPX of TCX voldoen nooit aan deze voorwaarde.'
 'Serial number, size, where you bought it, ...': 'Serial number, size, where you bought it, ...'
+'Server URL': 'Server URL'
 'Set description': 'Beschrijving instellen'
 'Set its status to Retired instead to hide it from your active gear.': 'Zet de status op Buiten gebruik om het te verbergen tussen je actieve uitrusting.'
 'Set name': 'Naam instellen'
@@ -444,6 +468,7 @@ Source: Bron
 'Start date': Startdatum
 'Start date and time': 'Startdatum en -tijd'
 'Starts near': 'Start nabij'
+Statistics: Statistics
 'Stop processing further rules when this rule matches': 'Stop met het verwerken van volgende regels wanneer deze regel overeenkomt'
 'Stops after match': 'Stopt na overeenkomst'
 'Stops here': 'Stopt hier'
@@ -465,7 +490,9 @@ Task: Taak
 Tasks: Taken
 'Test automation rules': 'Automatiseringsregels testen'
 'Test rules': 'Regels testen'
+'The API key is used to fetch the photos of the linked album. The photos are served through Dreeve, your server never exposes the key to visitors.': 'The API key is used to fetch the photos of the linked album. The photos are served through Dreeve, your server never exposes the key to visitors.'
 'The URL the app is hosted on.': 'De URL waarop de app gehost wordt.'
+'The activities in this collection will not be deleted.': 'The activities in this collection will not be deleted.'
 'The activity started': 'De activiteit startte'
 'The activity will be marked as a commute.': 'De activiteit wordt gemarkeerd als woon-werk.'
 'The activity will be marked as a group activity.': 'De activiteit wordt gemarkeerd als groepsactiviteit.'
@@ -475,6 +502,7 @@ Tasks: Taken
 'The average power': 'Het gemiddelde vermogen'
 'The average speed': 'De gemiddelde snelheid'
 'The backfill runs on the next import cycle, using the rules as they are configured at that moment. This cannot be undone.': 'De backfill wordt uitgevoerd bij de volgende importcyclus, met de regels zoals ze op dat moment geconfigureerd zijn. Dit kan niet ongedaan gemaakt worden.'
+'The calculated statistics can be edited manually. Drag the rows to change the order, and add your own statistics for things like travel costs or nights spent camping.': 'The calculated statistics can be edited manually. Drag the rows to change the order, and add your own statistics for things like travel costs or nights spent camping.'
 'The calories burned': 'De verbrande calorieën'
 'The color of the routes drawn on every map. Accepts any valid CSS color, e.g. red, #FF0000 or rgb(255,0,0).': 'De kleur van de routes op elke kaart. Aanvaardt elke geldige CSS-kleur, bv. red, #FF0000 of rgb(255,0,0).'
 'The current name of the activity': 'De huidige naam van de activiteit'
@@ -498,6 +526,7 @@ Tasks: Taken
 'The segment has been created. Its efforts will show up after the next import run.': 'The segment has been created. Its efforts will show up after the next import run.'
 'The sport type, e.g. "Walk" or "Trail Run"': 'Het sporttype, bv. "Walk" of "Trail Run"'
 'The start date, optionally with a custom PHP date format': 'De startdatum, optioneel met een eigen PHP-datumformaat'
+'The statistics of the collection are calculated from these activities.': 'The statistics of the collection are calculated from these activities.'
 'The tile layer URLs used to render the maps. Add more than one to stack them, for example to overlay place names on top of a satellite layer.': "De URL's van de tegellagen om de kaarten weer te geven. Voeg er meer dan één toe om ze te stapelen, bijvoorbeeld om plaatsnamen over een satellietlaag te leggen."
 'The total distance ridden with the gear': 'De totale afstand afgelegd met de uitrusting'
 'The unit system used to render distances, elevations, temperatures, etc.': 'Het eenhedenstelsel voor afstanden, hoogtes, temperaturen, enz.'
@@ -510,6 +539,7 @@ Tasks: Taken
 'This activity has no GPS data.': 'This activity has no GPS data.'
 'This component is fitted to multiple gears, pick the one you serviced.': 'Dit onderdeel zit op meerdere uitrustingen, kies degene die je onderhouden hebt.'
 'This only removes the import record, the imported activity is kept.': 'Dit verwijdert enkel het importrecord, de geïmporteerde activiteit blijft behouden.'
+'This overwrites the current description with a freshly generated one, based on the statistics and the recorded tracks.': 'This overwrites the current description with a freshly generated one, based on the statistics and the recorded tracks.'
 'This page shows a different key every time it is opened, and only the one in your environment file is applied.': 'Deze pagina toont bij elke opening een andere sleutel, en enkel die in je omgevingsbestand wordt toegepast.'
 "This value is imported from Strava and can't be edited here.": 'Deze waarde wordt geïmporteerd van Strava en kan hier niet bewerkt worden.'
 'This widget still needs to be configured.': 'Deze widget moet nog geconfigureerd worden.'
@@ -539,8 +569,10 @@ Until: Until
 'Upload files': 'Bestanden uploaden'
 Uploaded: Geüpload
 Uploading...: 'Aan het uploaden...'
+'Used to calculate how much of your activities was recorded on paved and unpaved roads.': 'Used to calculate how much of your activities was recorded on paved and unpaved roads.'
 'Used to calculate the training load of this activity': 'Gebruikt om de trainingsbelasting van deze activiteit te berekenen'
 Username: Gebruikersnaam
+Value: Value
 'Verify token': Verificatietoken
 Warning: Waarschuwing
 'Weather and reverse geocoding have been retrieved.': 'Weer en reverse geocoding zijn opgehaald.'

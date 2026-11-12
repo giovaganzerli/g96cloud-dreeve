@@ -7,6 +7,7 @@
 'A cluster tile is a visited tile whose four neighbours are visited too': 'Una tessera del cluster è una tessera visitata le cui quattro vicine sono anch’esse visitate'
 'A high intensity score means a larger share of your training is hard rather than easy.': 'Un punteggio di intensità alto significa che una quota maggiore del tuo allenamento è impegnativa invece che facile.'
 'A high score means you concentrate more training into fewer, heavier days.': 'Un punteggio alto significa che concentri più allenamento in meno giorni, ma più intensi.'
+'A new description has been generated.': 'È stata generata una nuova descrizione.'
 'A:C Ratio': 'Rapporto A:C'
 'A:C optimal in': 'A:C ottimale tra'
 'AI integration settings': 'AI integration settings'
@@ -27,6 +28,7 @@ Activity: Attività
 'Aero sensor': 'Aero sensor'
 Afternoon: Pomeriggio
 All: Tutti
+'All routes': 'Tutti i percorsi'
 'All time': 'Da sempre'
 'Alpine Ski': 'Sci alpino'
 Apr: Apr
@@ -34,7 +36,11 @@ Apr: Apr
 'Athlete profile': 'Profilo atleta'
 Aug: Ago
 Average: Average
+'Average altitude': 'Altitudine media'
+'Average distance': 'Distanza media'
 'Average gradient': 'Pendenza media'
+'Average speed': 'Velocità media'
+'Average temperature': 'Temperatura media'
 'Avg distance': 'Avg distance'
 'Avg gradient': 'Avg gradient'
 'Avg pace': 'Avg pace'
@@ -68,6 +74,7 @@ Challenges: Sfide
 'Clear all filters': 'Clear all filters'
 'Clear chat': 'Cancella chat'
 'Cluster tiles': 'Tessere del cluster'
+Collections: Raccolte
 Columns: Columns
 Commute: Commute
 Commutes: 'Spostamenti quotidiani'
@@ -81,6 +88,7 @@ Components: Components
 'Consider reducing load': 'Valuta di ridurre il carico'
 Consistency: Consistency
 Cost: Cost
+'Countries visited': 'Paesi visitati'
 Country: Country
 Cricket: Cricket
 Crossfit: Crossfit
@@ -102,6 +110,7 @@ Day: Day
 Dec: Dic
 'Decreased compared to yesterday': 'Decreased compared to yesterday'
 Density: Density
+Description: Description
 Details: Dettagli
 Device: Dispositivo
 Dist.: Dist.
@@ -111,6 +120,8 @@ Distance: Distanza
 'Distance breakdown': 'Analisi della distanza'
 'Distance distribution': 'Distance distribution'
 'Distance in {unit}': 'Distanza in {unit}'
+'Distance on asphalt': 'Distanza su asfalto'
+'Distance on unpaved roads': 'Distanza su strade sterrate'
 'Distance over time per gear': 'Distanza nel tempo per attrezzatura'
 'Distance per month per gear': 'Distanza per mese per attrezzatura'
 'Doing a mix of cycling, running, swimming, and strength work increases your variety score.': 'Alternare ciclismo, corsa, nuoto e lavoro di forza aumenta il tuo punteggio di varietà.'
@@ -123,6 +134,7 @@ Duration: Duration
 Eddington: Eddington
 'Eddington number': 'Eddington number'
 'Eddington over time': 'Eddington over time'
+'Edit collection': 'Modifica raccolta'
 'Edit dashboard': 'Edit dashboard'
 'Effort vs heart rate': 'Sforzo vs frequenza cardiaca'
 'Elapsed time': 'Elapsed time'
@@ -144,6 +156,7 @@ Evening: Sera
 'Explorer tiles include all your activities': 'Explorer tiles include all your activities'
 'FTP history': 'Storico FTP'
 Fastest: Fastest
+'Fastest stage': 'Tappa più veloce'
 Favourite: Preferito
 Feb: Feb
 'Filling up the bottles...': 'Filling up the bottles...'
@@ -165,9 +178,11 @@ Fri.: Fri.
 'Front rings': 'Front rings'
 'Front shifts': 'Front shifts'
 GAP: GAP
+Gallery: Galleria
 Gear: Attrezzatura
 'Gear maintenance': 'Manutenzione attrezzatura'
 'Gear that is retired is disabled by default.': "L'attrezzatura dismessa è disabilitata di default."
+Geography: Geografia
 'Go to activity': "Vai all'attività"
 Goal: Goal
 Golf: Golf
@@ -207,6 +222,7 @@ History: Cronologia
 'How much training you do in total on days you train.': 'Quanto ti alleni complessivamente nei giorni in cui ti alleni.'
 'How often do you train': 'Con quale frequenza ti alleni'
 'Ice Skate': 'Pattinaggio su ghiaccio'
+Image: Image
 Imperial: Imperial
 "In that time, I’ve covered {totalDistance}, that's {numberOfTripsAroundTheWorld} trips around the world 🌍 or {numberOfTripsToTheMoonPercent}% of the way to the moon 🌕, and climbed an elevation of {totalElevation} which is {timesMountEverest} times Mount Everest 🏔. All up that's {totalTimeRecorded} of moving time 🎉.": 'In questo periodo ho percorso {totalDistance}, pari a {numberOfTripsAroundTheWorld} giri del mondo 🌍 oppure al {numberOfTripsToTheMoonPercent}% del tragitto verso la luna 🌕, e accumulato {totalElevation} di dislivello, cioè {timesMountEverest} volte il Monte Everest 🏔. In totale fanno {totalTimeRecorded} di tempo in movimento 🎉.'
 'Increased compared to yesterday': 'Increased compared to yesterday'
@@ -243,27 +259,37 @@ Loading...: Caricamento...
 'Longest activity (h)': 'Attività più lunga (h)'
 'Longest day': 'Longest day'
 'Longest distance': 'Distanza più lunga'
+'Longest stage': 'Tappa più lunga'
 'Longest streaks': 'Serie più lunghe'
 Low: Basso
 'Low risk': 'Rischio basso'
 'Low training load': 'Carico di allenamento basso'
+'Main cities': 'Principali città'
+'Main summits': 'Principali vette'
 Maintenance: Manutenzione
 'Manage activities': 'Manage activities'
+'Manage collections': 'Gestisci raccolte'
 'Manage gear': 'Manage gear'
 'Manage recording devices': 'Manage recording devices'
 'Manage segments': 'Manage segments'
+'Manually edited': 'Modificato manualmente'
 'Map settings': 'Map settings'
 'Map tiles at zoom level 14 that your activities passed through': 'Tessere della mappa a livello di zoom 14 attraversate dalle tue attività'
 Mar: Mar
 Max: Massimo
+'Max altitude': 'Altitudine massima'
 'Max cluster': 'Cluster più grande'
 'Max gradient': 'Pendenza massima'
+'Max speed': 'Velocità massima'
 'Max square': 'Quadrato più grande'
+'Max temperature': 'Temperatura massima'
 May: Mag
 Medium: Medio
 Metric: Metric
 'Metrics settings': 'Metrics settings'
 Milestones: Milestones
+'Min altitude': 'Altitudine minima'
+'Min temperature': 'Temperatura minima'
 'Mind & Body Sports': 'Sport Mente e Corpo'
 'Moderate fatigue with stable fitness. Well suited for consistent day-to-day training': 'Fatica moderata con forma stabile. Ben adatto a un allenamento costante giorno dopo giorno'
 'Moderate monotony': 'Monotonia moderata'
@@ -311,6 +337,7 @@ Oct: Ott
 'One of your gear maintenance tasks is due': "Uno dei tuoi compiti di manutenzione dell'attrezzatura è in scadenza"
 "Oops, looks like you've wandered off the map! 🗺️": "Oops, looks like you've wandered off the map! 🗺️"
 'Open Water Swim': 'Open Water Swim'
+'Open activity': "Apri l'attività"
 'Optimal training range': 'Intervallo di allenamento ottimale'
 Other: Altro
 'Outdoor Sports': "Sport all'aperto"
@@ -327,6 +354,7 @@ Padel: Padel
 'Per {unit}': 'Per {unit}'
 'Personal bests': 'Record personali'
 Photo: Foto
+'Photo gallery': 'Galleria fotografica'
 Photos: Foto
 'Physical Therapy': 'Physical Therapy'
 'Pickle Ball': Pickleball
@@ -376,6 +404,7 @@ Rides: Gare
 'Rock Climbing': 'Arrampicata su roccia'
 'Roller Ski': Skiroll
 'Rolling stats': 'Rolling stats'
+Route: Percorso
 Rowing: Canottaggio
 Run: Run
 Running: Running
@@ -385,6 +414,7 @@ Sat: Sab
 Sat.: Sat.
 Search: Cerca
 'Search activity...': 'Cerca attività...'
+'Search collection...': 'Cerca raccolta...'
 'Search segment...': 'Cerca segmento...'
 Segments: Segmenti
 Sep: Set
@@ -410,15 +440,20 @@ Splits: Intertempi
 'Sport type': 'Sport type'
 'Sport variety': 'Varietà sportiva'
 Squash: Squash
+'Stage with most ascent': 'Tappa con più dislivello'
+Stages: Tappe
 'Stair Stepper': 'Stepper a gradini'
 'Stand Up Paddling': 'Stand up paddle'
 'Start times': 'Orari di partenza'
+Statistics: Statistiche
 'Stats per weekday': 'Statistiche giornaliere'
 Status: Status
+'Stopped time': 'Tempo fermo'
 'Streak started on {date}': 'Serie iniziata il {date}'
 Streaks: Serie
 Sun: Dom
 Sun.: Sun.
+Surfaces: Superfici
 Surfing: Surf
 'TSB (Form)': 'TSB (Forma)'
 'TSB positive in': 'TSB positivo tra'
@@ -518,6 +553,9 @@ Tennis: Tennis
 "That's {number} days of at least {distance}": "That's {number} days of at least {distance}"
 "That's {percentage}% of all countries 🌍": "That's {percentage}% of all countries 🌍"
 'The Eddington number in the context of cycling or running is defined as the maximum number E such that the athlete has covered at least E km on at least E days.': 'The Eddington number in the context of cycling or running is defined as the maximum number E such that the athlete has covered at least E km on at least E days.'
+'The collection has been created.': 'La raccolta è stata creata.'
+'The collection has been deleted.': 'La raccolta è stata eliminata.'
+'The collection has been updated.': 'La raccolta è stata aggiornata.'
 'The largest connected group of cluster tiles': 'The largest connected group of cluster tiles'
 'The largest square of visited tiles': 'The largest square of visited tiles'
 "The page you're looking for doesn't exist or may have been moved.": "The page you're looking for doesn't exist or may have been moved."
@@ -539,11 +577,14 @@ Title: Title
 'To enable it, configure this in the admin panel': 'To enable it, configure this in the admin panel'
 'Toggle sidebar': 'Mostra/Nascondi barra laterale'
 'Top 10': 'Primi 10'
+'Total ascent': 'Dislivello totale'
+'Total distance': 'Distanza totale'
 'Total distance per month': 'Distanza totale per mese'
 'Total elevation per month': 'Dislivello totale per mese'
 'Total hours spent per gear': 'Ore totali per attrezzatura'
 'Total hours spent per sport type': 'Ore totali per tipo di sport'
 'Total moving time per month': 'Total moving time per month'
+'Total time': 'Tempo totale'
 'Trail Run': 'Trail Run'
 'Trail Runs': 'Corse trail'
 'Training 4–5 days every week scores higher than doing everything in one or two days.': 'Allenarsi 4–5 giorni ogni settimana ottiene un punteggio più alto rispetto a concentrare tutto in uno o due giorni.'
@@ -566,6 +607,7 @@ Usage: Usage
 'Very high': 'Molto alto'
 'View all': 'Vedi tutto'
 'View details': 'Vedi dettagli'
+'View full album': "Vedi tutto l'album"
 'View this month': 'View this month'
 'Virtual Ride': 'Virtual Ride'
 'Virtual Rides': 'Uscite virtuali'
@@ -583,6 +625,7 @@ Walks: Passeggiate
 'Water Sports': 'Sport acquatici'
 'Waxing the chain...': 'Waxing the chain...'
 'We detected following issues': 'Abbiamo rilevato i seguenti problemi'
+Weather: Meteo
 Wed: Mer
 Wed.: Wed.
 Weekly: Weekly
@@ -596,7 +639,13 @@ Weight: Weight
 Wheelchair: 'Sedia a rotelle'
 'Wind Surf': Windsurf
 'Winter Sports': 'Sport invernali'
+'With description': 'Con descrizione'
+'With gallery': 'Con galleria'
+'With image': 'Con immagine'
 'With others': 'With others'
+'Without description': 'Senza descrizione'
+'Without gallery': 'Senza galleria'
+'Without image': 'Senza immagine'
 Workout: Allenamento
 'Workout assistant': 'Assistente allenamento'
 'Workout type': 'Tipo di allenamento'

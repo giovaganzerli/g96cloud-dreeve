@@ -6,6 +6,7 @@ namespace App\Infrastructure\Twig;
 
 use App\Domain\Activity\ActivityType;
 use App\Domain\Activity\SportType\SportType;
+use App\Domain\Collection\Statistics\CollectionStatisticCategory;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Attribute\AsTwigFunction;
 
@@ -29,6 +30,12 @@ final readonly class EnumTwigExtension
             ],
             SportType::cases(),
         );
+    }
+
+    #[AsTwigFunction('collectionStatisticCategoryLabel')]
+    public function getCollectionStatisticCategoryLabel(CollectionStatisticCategory $category): string
+    {
+        return $category->trans($this->translator);
     }
 
     #[AsTwigFunction('activityTypeFrom')]

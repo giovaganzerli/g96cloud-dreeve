@@ -1,0 +1,139 @@
+<div class="flex items-center justify-between gap-4 mb-4">
+    {% include 'html/navigation/breadcrumbs.html.twig' with {'breadcrumbs': [{
+        'url': 'collections',
+        'label': 'Collections'|trans
+    }, {
+        'url': null,
+        'label': collection.getName()
+    }], 'disableMargin': true} %}
+    {% if isAuthenticated() %}
+        {% include 'html/navigation/admin-edit-link.html.twig' with {
+            path: path('admin_edit_collection', {collectionId: collection.getId()}),
+            redirectTo: path('collection', {collectionId: collection.getId()}),
+            title: "Edit collection"|trans,
+            label: "Edit"|trans({}, 'admin')
+        } %}
+    {% endif %}
+</div>
+{% autoescape false %}
+    <div class="grid grid-cols-1 gap-4">
+        <!-- COLLECTION HEADER -->
+        <div class="overflow-hidden bg-white border border-gray-200 rounded-lg shadow-xs">
+            {% set imageUrl = collection.getImageUrl() %}
+            {% if imageUrl %}
+                <img src="{{ placeholderImage() }}" data-src="{{ relativeUrl(imageUrl) }}" alt="{{ collection.getName() }}" class="lazy h-56 md:h-72 w-full object-cover">
+            {% endif %}
+            <div class="p-4 md:p-6 flex flex-col gap-3">
+                <h1 class="text-2xl md:text-3xl font-bold text-gray-900">{{ collection.getName() }}</h1>
+                {% if collection.getDescription() %}
+                    <p class="text-gray-600 whitespace-pre-line">{{ collection.getDescription() }}</p>
+                {% endif %}
+                <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-gray-500">
+                    <span class="inline-flex items-center gap-x-1">
+                        {{ svg('calendar', 'size-4') }}
+                        <span>{{ collection.getCreatedOn().translatedFormat('F Y') }}</span>
+                    </span>
+                    <span class="inline-flex items-center gap-x-1">
+                        {{ svg('route', 'size-4') }}
+                        <span>{{ activities|length }} {{ "activities"|trans }}</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <!-- COLLECTION MAP -->
+        <div class="p-4 bg-white border border-gray-200 rounded-lg shadow-xs">
+            <h2 class="flex items-center gap-x-1 text-lg font-semibold mb-4">
+                {{ svg('route', 'size-5') }}
+                <span>{{ "Route"|trans }}</span>
+            </h2>
+            {% set leafletOptions = {
+                'polylineUrl': relativeUrl(polylinesUrl),
+                'minZoom': 1,
+                'maxZoom': 17,
+                'imageOverlay': null,
+                'bounds': []
+            } %}
+            <div class="h-80 md:h-96 w-full z-0 rounded-lg overflow-hidden" data-leaflet='{{ leafletOptions|json_encode }}'></div>
+        </div>
+        <!-- COLLECTION STATISTICS -->
+        {% if statistics is not empty %}
+            <div class="p-4 bg-white border border-gray-200 rounded-lg shadow-xs">
+                <h2 class="flex items-center gap-x-1 text-lg font-semibold mb-4">
+                    {{ svg('columns', 'size-5') }}
+                    <span>{{ "Statistics"|trans }}</span>
+                </h2>
+                <div class="grid gap-4 grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
+                    {% for category, categoryStatistics in statistics.groupedByCategory() %}
+                        <div class="rounded-lg border border-gray-200 p-4">
+                            <h3 class="flex items-center gap-x-1 text-sm font-semibold text-gray-500 uppercase mb-3">
+                                {{ svg(categoryStatistics|first.getIcon(), 'size-4', 'text-primary') }}
+                                <span>{{ collectionStatisticCategoryLabel(categoryStatistics|first.getCategory()) }}</span>
+                            </h3>
+                            <dl class="flex flex-col gap-2">
+                                {% for statistic in categoryStatistics %}
+                                    {% set linkActivityId = statistic.getLinkActivityId() %}
+                                    <div class="flex items-baseline justify-between gap-3">
+                                        <dt class="text-sm text-gray-600">{{ statistic.getLabel() }}</dt>
+                                        <dd class="text-sm font-medium text-gray-900 text-right">
+                                            {% if linkActivityId %}
+                                                <a href="{{ relativeUrl(path('activity', {activityId: linkActivityId})) }}"
+                                                   class="hover:underline hover:text-primary transition"
+                                                   title="{{ "Open activity"|trans }}">{{ statistic.getValue() }}</a>
+                                            {% else %}
+                                                {{ statistic.getValue() }}
+                                            {% endif %}
+                                            {% if statistic.getUnit() %} {{ statistic.getUnit() }}{% endif %}
+                                            {% if statistic.isManuallyEdited() %}
+                                                <span class="ms-1 text-xs text-primary" title="{{ "Manually edited"|trans }}">✎</span>
+                                            {% endif %}
+                                        </dd>
+                                    </div>
+                                {% endfor %}
+                            </dl>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+        <!-- COLLECTION GALLERY -->
+        {% if collection.getImmichAlbumId() %}
+            <div class="p-4 bg-white border border-gray-200 rounded-lg shadow-xs" data-collection-gallery
+                 data-gallery-url="{{ relativeUrl(path('collection_gallery', {collectionId: collection.getId()})) }}">
+                <div class="flex items-center justify-between gap-4 mb-4">
+                    <h2 class="flex items-center gap-x-1 text-lg font-semibold">
+                        {{ svg('image', 'size-5') }}
+                        <span>{{ "Photo gallery"|trans }}</span>
+                    </h2>
+                    <a href="#" data-gallery-album-link target="_blank" rel="noopener" class="hidden text-sm font-medium text-primary hover:underline">
+                        {{ "View full album"|trans }}
+                    </a>
+                </div>
+                <div class="grid gap-2 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5" data-gallery-photos></div>
+            </div>
+        {% endif %}
+        <!-- COLLECTION ACTIVITIES -->
+        {% if activities is not empty %}
+            <div class="p-4 bg-white border border-gray-200 rounded-lg shadow-xs">
+                <h2 class="flex items-center gap-x-1 text-lg font-semibold mb-4">
+                    {{ svg('time', 'size-5') }}
+                    <span>{{ "Activities"|trans }}</span>
+                </h2>
+                <div class="flex flex-col divide-y divide-gray-100">
+                    {% for enrichedActivity in activities %}
+                        {% set activity = enrichedActivity.getActivity() %}
+                        <a href="{{ relativeUrl(path('activity', {activityId: activity.getId()})) }}"
+                           class="flex items-center gap-x-3 py-3 transition hover:bg-gray-50">
+                            <div class="w-8 shrink-0 text-gray-400">{{ svgSportType(activity.getSportType(), 'size-5') }}</div>
+                            <div class="flex-1 min-w-0">
+                                <div class="font-medium text-gray-900 truncate">{{ activity.getName() }}</div>
+                                <div class="text-xs text-gray-500">{{ activity.getStartDate().translatedFormat('D M Y') }}</div>
+                            </div>
+                            <div class="text-sm text-gray-600 shrink-0">{{ activity.getDistance()|formatMeasurement(1) }} {{ renderUnitSymbol('distance') }}</div>
+                            <div class="text-sm text-gray-600 shrink-0 w-20 text-right">{{ activity.getElevation()|formatMeasurement(0) }} {{ renderUnitSymbol('elevation') }}</div>
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+{% endautoescape %}

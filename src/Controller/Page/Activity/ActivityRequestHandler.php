@@ -24,6 +24,7 @@ use App\Domain\Activity\Stream\CombinedStream\CombinedActivityStreamRepository;
 use App\Domain\Activity\Stream\CombinedStream\CombinedStreamProfileCharts;
 use App\Domain\Activity\Stream\CombinedStream\CombinedStreamType;
 use App\Domain\Activity\Stream\StreamType;
+use App\Domain\Collection\CollectionRepository;
 use App\Domain\Import\FileImportRepository;
 use App\Domain\Settings\SettingsRepository;
 use App\Infrastructure\Cache\Cacheability;
@@ -58,6 +59,7 @@ final readonly class ActivityRequestHandler
         private ActivitySplitRepository $activitySplitRepository,
         private ActivityLapRepository $activityLapRepository,
         private ActivityDrivetrainUsageRepository $activityDrivetrainUsageRepository,
+        private CollectionRepository $collectionRepository,
         private SettingsRepository $settingsRepository,
         private TranslatorInterface $translator,
         private PageRenderer $pageRenderer,
@@ -164,6 +166,7 @@ final readonly class ActivityRequestHandler
             'drivetrainUsages' => $activity->getSportType()->supportsShiftingStats()
                 ? $this->activityDrivetrainUsageRepository->findByActivity($activityId)
                 : ActivityDrivetrainUsages::empty(),
+            'collections' => $this->collectionRepository->findByActivityId($activityId),
         ]);
     }
 }

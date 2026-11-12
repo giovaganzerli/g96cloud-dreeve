@@ -1,5 +1,6 @@
 24-hour: '24 órás'
 'A backfill is already queued. It runs on the next import cycle, within five minutes.': 'Egy visszatöltés már sorban áll. A következő importálási ciklusban lefut, öt percen belül.'
+'A random selection of photos of this album is shown on the collection page.': 'A random selection of photos of this album is shown on the collection page.'
 'A rule applies': 'Egy szabály érvényes'
 AI: AI
 AM/PM: AM/PM
@@ -8,6 +9,7 @@ AM/PM: AM/PM
 Access: Access
 Actions: Actions
 Active: Aktív
+Activities: Activities
 'Activities scanned': 'Átvizsgált tevékenységek'
 'Activities to skip during import': 'Importáláskor kihagyandó tevékenységek'
 'Activities to update': 'Frissítendő tevékenységek'
@@ -28,6 +30,7 @@ Activity: Tevékenység
 'Add activity': 'Tevékenység hozzáadása'
 'Add automation rule': 'Automatizálási szabály hozzáadása'
 'Add challenge': 'Kihívás hozzáadása'
+'Add collection': 'Add collection'
 'Add command': 'Parancs hozzáadása'
 'Add component': 'Komponens hozzáadása'
 'Add condition': 'Feltétel hozzáadása'
@@ -39,6 +42,7 @@ Activity: Tevékenység
 'Add rule': 'Szabály hozzáadása'
 'Add segment': 'Add segment'
 'Add service': 'Szerviz hozzáadása'
+'Add statistic': 'Add statistic'
 'Add task': 'Feladat hozzáadása'
 'Add tile layer': 'Csempe-réteg hozzáadása'
 'Add weight': 'Add weight'
@@ -104,6 +108,8 @@ Clear: Törlés
 'Click the map to set the center, or drag the marker to fine-tune it.': 'Kattints a térképre a középpont beállításához, vagy húzd a jelölőt a finomhangoláshoz.'
 'Click the map to set the location, or drag the marker to fine-tune it.': 'Kattints a térképre a hely beállításához, vagy húzd a jelölőt a finomhangoláshoz.'
 Close: Bezárás
+'Collection management': 'Collection management'
+'Collections will appear here once you add them.': 'Collections will appear here once you add them.'
 Command: Parancs
 Commute: Ingázás
 Component: Komponens
@@ -129,6 +135,7 @@ Daemon: Daemon
 Delete: Törlés
 'Delete activity': 'Tevékenység törlése'
 'Delete automation rule': 'Automatizálási szabály törlése'
+'Delete collection': 'Delete collection'
 'Delete component': 'Komponens törlése'
 'Delete file import': 'Fájlimport törlése'
 'Delete gear': 'Felszerelés törlése'
@@ -153,6 +160,7 @@ Duration: Időtartam
 Edit: Szerkesztés
 'Edit activity': 'Tevékenység szerkesztése'
 'Edit automation rule': 'Automatizálási szabály szerkesztése'
+'Edit collection': 'Edit collection'
 'Edit component': 'Komponens szerkesztése'
 'Edit gear': 'Felszerelés szerkesztése'
 'Edit maintenance log': 'Karbantartási napló szerkesztése'
@@ -199,6 +207,8 @@ From: Ettől
 Gender: Nem
 General: Általános
 'Generate an API key': 'API-kulcs generálása'
+'Generate description with AI': 'Generate description with AI'
+Generating...: Generating...
 'Go to first page': 'Ugrás az első oldalra'
 'Go to last page': 'Ugrás az utolsó oldalra'
 'Go to next page': 'Ugrás a következő oldalra'
@@ -218,6 +228,8 @@ If: Ha
 'Ignore retired gear': 'Nyugdíjazott felszerelés figyelmen kívül hagyása'
 Image: Kép
 Images: Képek
+Immich: Immich
+'Immich album': 'Immich album'
 Import: Importálás
 'Import Strava data': 'Strava-adatok importálása'
 'Import activities': 'Tevékenységek importálása'
@@ -241,9 +253,12 @@ Label: Címke
 Latitude: Szélesség
 'Leave all unchecked to import every sport type. ⚠️ Restricting this after activities have been imported deletes activities of excluded sport types.': 'Hagyj mindent bejelöletlenül az összes sporttípus importálásához. ⚠️ Ennek korlátozása a tevékenységek importálása után törli a kizárt sporttípusú tevékenységeket.'
 'Leave all unchecked to import every visibility. ⚠️ Restricting this after activities have been imported deletes activities of excluded visibilities.': 'Hagyj mindent bejelöletlenül az összes láthatóság importálásához. ⚠️ Ennek korlátozása a tevékenységek importálása után törli a kizárt láthatóságú tevékenységeket.'
+'Leave empty to disable the surface analysis. Every activity is analysed once, during the next import run.': 'Leave empty to disable the surface analysis. Every activity is analysed once, during the next import run.'
 'Leave empty to include all sport types.': 'Hagyd üresen az összes sporttípus belefoglalásához.'
 'Leave empty to use the default title.': 'Leave empty to use the default title.'
+'Leave this empty and a description will be generated automatically with the AI, based on the statistics and the recorded tracks.': 'Leave this empty and a description will be generated automatically with the AI, based on the statistics and the recorded tracks.'
 'Lets an external client upload activity files over HTTP. The key is the only thing guarding that endpoint, so treat it like a password.': 'Lehetővé teszi egy külső kliens számára, hogy HTTP-n keresztül tevékenységfájlokat töltsön fel. A kulcs az egyetlen, ami védi ezt a végpontot, ezért kezeld jelszóként.'
+Linked: Linked
 'Loading the route...': 'Loading the route...'
 Locale: Nyelv
 Log: Napló
@@ -278,10 +293,13 @@ Monday: Hétfő
 'Most recent activities (cards)': 'Most recent activities (cards)'
 'Most recent activities (list)': 'Most recent activities (list)'
 'Moving time': Mozgásidő
+Name: Name
 'No activities imported yet.': 'Még nincs importált tevékenység.'
 'No activities match the current filters.': 'Egyetlen tevékenység sem felel meg a jelenlegi szűrőknek.'
 'No activity found for that ID.': 'Nem található tevékenység ehhez az azonosítóhoz.'
+'No album': 'No album'
 'No automation rules yet.': 'Még nincsenek automatizálási szabályok.'
+'No collections added yet.': 'No collections added yet.'
 'No components yet.': 'Még nincsenek komponensek.'
 'No file imports match the current filters.': 'Egyetlen fájlimport sem felel meg a jelenlegi szűrőknek.'
 'No files imported yet.': 'Még nincsenek importált fájlok.'
@@ -294,6 +312,7 @@ Monday: Hétfő
 'No segments match the current filters.': 'No segments match the current filters.'
 'No sport types selected': 'Nincs kiválasztott sporttípus'
 'No unit': 'Nincs mértékegység'
+None: None
 'Normal date format': 'Normál dátumformátum'
 'Not configured, the API is closed': 'Nincs beállítva, az API zárva van'
 'Not fitted': 'Not fitted'
@@ -309,6 +328,7 @@ Notifications: Notifications
 'Number of widgets of this type you already have configured.': 'Az ilyen típusú, már beállított widgetek száma.'
 'Only show activities with a map': 'Csak térképpel rendelkező tevékenységek megjelenítése'
 "Oops, looks like you've wandered off the map! 🗺️": 'Hoppá, úgy tűnik, letértél a térképről! 🗺️'
+OpenStreetMap: OpenStreetMap
 Operator: Operátor
 'Optional YAML for date-range and sport-type specific zones. Leave empty unless you know you need it.': 'Opcionális YAML a dátumtartomány- és sporttípus-specifikus zónákhoz. Hagyd üresen, hacsak nem tudod biztosan, hogy szükséged van rá.'
 'Optional link to your profile picture, shown in the nav bar. A square image is recommended. Leave empty to disable.': 'Opcionális link a profilképedhez, amely a navigációs sávban jelenik meg. Négyzet alakú kép ajánlott. Hagyd üresen a letiltásához.'
@@ -319,6 +339,7 @@ Operator: Operátor
 'Optional. Your current Zwift level (1 or higher). Leave empty to hide the Zwift badge.': 'Opcionális. A jelenlegi Zwift-szinted (1 vagy magasabb). Hagyd üresen a Zwift-jelvény elrejtéséhez.'
 'Optional. Your current Zwift racing score (between 0 and 1000).': 'Opcionális. A jelenlegi Zwift versenypontszámod (0 és 1000 között).'
 'Original file': 'Original file'
+'Overpass API endpoint': 'Overpass API endpoint'
 'PHP date format for normal dates, e.g. d-m-Y renders to 01-01-2025.': 'PHP dátumformátum a normál dátumokhoz, pl. a d-m-Y így jelenik meg: 01-01-2025.'
 'PHP date format for short dates, e.g. d-m-y renders to 01-01-25.': 'PHP dátumformátum a rövid dátumokhoz, pl. a d-m-y így jelenik meg: 01-01-25.'
 'Parts you track maintenance for, eg: chains, cassettes, brake pads...': 'Alkatrészek, amelyek karbantartását követed, pl.: láncok, kazetták, fékbetétek...'
@@ -359,6 +380,7 @@ Remove: Eltávolítás
 'Remove widget': 'Widget eltávolítása'
 Removing...: Eltávolítás...
 'Render the map tiles in greyscale': 'A térképcsempék szürkeárnyalatos megjelenítése'
+Reorder: Reorder
 "Reorder widgets and set each widget's width.": 'Rendezd át a widgeteket, és állítsd be mindegyik szélességét.'
 'Require a login for the entire app': 'Bejelentkezés megkövetelése a teljes alkalmazáshoz'
 'Require a login for the entire app, not just the admin panel. Recommended when your instance is reachable from the internet, which it has to be for the Strava webhook.': 'Bejelentkezés megkövetelése a teljes alkalmazáshoz, nem csak az adminfelülethez. Ajánlott, ha a példányod elérhető az internetről, aminek a Strava webhookhoz így is lennie kell.'
@@ -404,6 +426,7 @@ Segmento: Segmento
 'Select gear...': 'Válassz felszerelést...'
 'Select sensors': 'Érzékelők kiválasztása'
 'Select sport types': 'Sporttípusok kiválasztása'
+'Select the activities': 'Select the activities'
 'Select the serviced gear…': 'Válaszd ki a szervizelt felszerelést…'
 'Sends a notification after every successful import.': 'Értesítést küld minden sikeres importálás után.'
 'Sends a notification when a new app version is available. Requires a configured notification service.': 'Értesítést küld, ha új alkalmazásverzió érhető el. Beállított értesítési szolgáltatást igényel.'
@@ -411,6 +434,7 @@ Segmento: Segmento
 Sensors: Érzékelők
 'Sensors are only recorded for activities imported from FIT files. Activities from Strava, GPX or TCX never match this condition.': 'Az érzékelők csak a FIT-fájlokból importált tevékenységeknél kerülnek rögzítésre. A Stravából, GPX- vagy TCX-fájlokból származó tevékenységek soha nem illeszkednek erre a feltételre.'
 'Serial number, size, where you bought it, ...': 'Serial number, size, where you bought it, ...'
+'Server URL': 'Server URL'
 'Set description': 'Leírás beállítása'
 'Set its status to Retired instead to hide it from your active gear.': 'Állítsd inkább Nyugdíjazott státuszra, hogy elrejtsd az aktív felszerelések közül.'
 'Set name': 'Név beállítása'
@@ -444,6 +468,7 @@ Source: Forrás
 'Start date': 'Start date'
 'Start date and time': 'Kezdő dátum és idő'
 'Starts near': 'A közelében kezdődik'
+Statistics: Statistics
 'Stop processing further rules when this rule matches': 'A további szabályok feldolgozásának leállítása, ha ez a szabály illeszkedik'
 'Stops after match': 'Illeszkedés után leáll'
 'Stops here': 'Itt leáll'
@@ -465,7 +490,9 @@ Task: Feladat
 Tasks: Feladatok
 'Test automation rules': 'Automatizálási szabályok tesztelése'
 'Test rules': 'Szabályok tesztelése'
+'The API key is used to fetch the photos of the linked album. The photos are served through Dreeve, your server never exposes the key to visitors.': 'The API key is used to fetch the photos of the linked album. The photos are served through Dreeve, your server never exposes the key to visitors.'
 'The URL the app is hosted on.': 'Az URL, amelyen az alkalmazás elérhető.'
+'The activities in this collection will not be deleted.': 'The activities in this collection will not be deleted.'
 'The activity started': 'A tevékenység elkezdődött'
 'The activity will be marked as a commute.': 'A tevékenység ingázásként lesz megjelölve.'
 'The activity will be marked as a group activity.': 'A tevékenység csoportos tevékenységként lesz megjelölve.'
@@ -475,6 +502,7 @@ Tasks: Feladatok
 'The average power': 'Az átlagos teljesítmény'
 'The average speed': 'Az átlagsebesség'
 'The backfill runs on the next import cycle, using the rules as they are configured at that moment. This cannot be undone.': 'A visszatöltés a következő importálási ciklusban fut le, az akkor beállított szabályokkal. Ez nem vonható vissza.'
+'The calculated statistics can be edited manually. Drag the rows to change the order, and add your own statistics for things like travel costs or nights spent camping.': 'The calculated statistics can be edited manually. Drag the rows to change the order, and add your own statistics for things like travel costs or nights spent camping.'
 'The calories burned': 'Az elégetett kalória'
 'The color of the routes drawn on every map. Accepts any valid CSS color, e.g. red, #FF0000 or rgb(255,0,0).': 'A minden térképen megrajzolt útvonalak színe. Bármilyen érvényes CSS-színt elfogad, pl. red, #FF0000 vagy rgb(255,0,0).'
 'The current name of the activity': 'A tevékenység jelenlegi neve'
@@ -498,6 +526,7 @@ Tasks: Feladatok
 'The segment has been created. Its efforts will show up after the next import run.': 'The segment has been created. Its efforts will show up after the next import run.'
 'The sport type, e.g. "Walk" or "Trail Run"': 'A sporttípus, pl. „Walk" vagy „Trail Run"'
 'The start date, optionally with a custom PHP date format': 'A kezdő dátum, opcionálisan egyéni PHP dátumformátummal'
+'The statistics of the collection are calculated from these activities.': 'The statistics of the collection are calculated from these activities.'
 'The tile layer URLs used to render the maps. Add more than one to stack them, for example to overlay place names on top of a satellite layer.': 'A térképek megjelenítéséhez használt csempe-réteg URL-ek. Adj hozzá többet is az egymásra helyezéshez, például helynevek rárakásához egy műholdas rétegre.'
 'The total distance ridden with the gear': 'A felszereléssel megtett teljes távolság'
 'The unit system used to render distances, elevations, temperatures, etc.': 'A távolságok, szintemelkedések, hőmérsékletek stb. megjelenítéséhez használt mértékegységrendszer.'
@@ -510,6 +539,7 @@ Tasks: Feladatok
 'This activity has no GPS data.': 'This activity has no GPS data.'
 'This component is fitted to multiple gears, pick the one you serviced.': 'Ez a komponens több felszerelésre is fel van szerelve, válaszd ki azt, amelyiket szervizelted.'
 'This only removes the import record, the imported activity is kept.': 'Ez csak az importálási rekordot távolítja el, az importált tevékenység megmarad.'
+'This overwrites the current description with a freshly generated one, based on the statistics and the recorded tracks.': 'This overwrites the current description with a freshly generated one, based on the statistics and the recorded tracks.'
 'This page shows a different key every time it is opened, and only the one in your environment file is applied.': 'Ez az oldal minden megnyitáskor más kulcsot mutat, és csak a környezeti fájlodban lévő érvényesül.'
 "This value is imported from Strava and can't be edited here.": 'Ez az érték a Stravából van importálva, és itt nem szerkeszthető.'
 'This widget still needs to be configured.': 'Ezt a widgetet még be kell állítani.'
@@ -539,8 +569,10 @@ Until: Until
 'Upload files': 'Fájlok feltöltése'
 Uploaded: Feltöltve
 Uploading...: Feltöltés...
+'Used to calculate how much of your activities was recorded on paved and unpaved roads.': 'Used to calculate how much of your activities was recorded on paved and unpaved roads.'
 'Used to calculate the training load of this activity': 'Used to calculate the training load of this activity'
 Username: Felhasználónév
+Value: Value
 'Verify token': 'Ellenőrző token'
 Warning: Figyelmeztetés
 'Weather and reverse geocoding have been retrieved.': 'Weather and reverse geocoding have been retrieved.'

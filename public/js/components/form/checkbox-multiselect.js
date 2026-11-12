@@ -1,5 +1,6 @@
 import {Dropdown} from 'flowbite';
 import {eventBus, Events} from '../../core/event-bus';
+import {debounce, fetchJson} from '../../utils';
 
 const MAX_VISIBLE_CHIPS = 3;
 
@@ -15,6 +16,14 @@ class CheckboxMultiselect {
         this.errorBox = root.querySelector('[data-multiselect-error]');
         this.placeholder = root.getAttribute('data-multiselect-placeholder') || '';
         this.requiredMessage = root.getAttribute('data-multiselect-required');
+        this.optionsUrl = root.getAttribute('data-multiselect-options-url');
+        this.selectedOptions = this.parseSelectedOptions();
+        this.list = this.panel?.querySelector('ul');
+        this.name = root.getAttribute('data-multiselect-name')
+            ?? this.checkboxes()[0]?.name
+            ?? '';
+        this.selectedValues = new Set(this.checkboxes().filter((box) => box.checked).map((box) => box.value));
+        this.loadOptions = debounce((term) => this.fetchOptions(term), 250);
     }
 
     init() {
@@ -47,11 +56,17 @@ class CheckboxMultiselect {
             this.checkboxes().forEach((box) => {
                 if (box.value === value) box.checked = false;
             });
+            this.selectedValues.delete(value);
             this.render();
         });
 
         this.root.addEventListener('change', (event) => {
             if (!(event.target instanceof HTMLInputElement) || 'checkbox' !== event.target.type) return;
+            if (event.target.checked) {
+                this.selectedValues.add(event.target.value);
+            } else {
+                this.selectedValues.delete(event.target.value);
+            }
             this.render();
         });
 
@@ -64,22 +79,107 @@ class CheckboxMultiselect {
         this.panel.querySelector('[data-multiselect-clear]').addEventListener('click', () => this.setAll(false));
 
         this.render();
+
+        if (this.optionsUrl) {
+            // Load the options right away, so the selected ones are visible as chips.
+            this.fetchOptions('');
+        }
     }
 
     checkboxes() {
         return Array.from(this.panel.querySelectorAll('input[type="checkbox"]'));
     }
 
+    parseSelectedOptions() {
+        const raw = this.root.getAttribute('data-multiselect-selected-options');
+        if (!raw) {
+            return [];
+        }
+        try {
+            const parsed = JSON.parse(raw);
+
+            return Array.isArray(parsed) ? parsed : [];
+        } catch (error) {
+            console.error('Failed to parse the selected options:', error);
+
+            return [];
+        }
+    }
+
     setAll(checked) {
-        this.checkboxes().forEach((box) => box.checked = checked);
+        this.checkboxes().forEach((box) => {
+            box.checked = checked;
+            if (checked) {
+                this.selectedValues.add(box.value);
+            } else {
+                this.selectedValues.delete(box.value);
+            }
+        });
         this.render();
     }
 
     applyFilter() {
+        if (this.optionsUrl) {
+            this.loadOptions(this.search.value.trim());
+
+            return;
+        }
+
         const term = this.search.value.trim().toLowerCase();
         this.panel.querySelectorAll('ul > li').forEach((row) => {
             row.classList.toggle('hidden', '' !== term && !row.textContent.toLowerCase().includes(term));
         });
+    }
+
+    // The options are loaded on demand, so the list doesn't have to render every activity.
+    async fetchOptions(term) {
+        if (!this.list) {
+            return;
+        }
+
+        const url = `${this.optionsUrl}${this.optionsUrl.includes('?') ? '&' : '?'}q=${encodeURIComponent(term)}`;
+        let options;
+        try {
+            options = await fetchJson(url);
+        } catch (error) {
+            console.error('Failed to load options:', error);
+
+            return;
+        }
+
+        this.list.textContent = '';
+        const rendered = new Set();
+        (options ?? []).forEach((option) => {
+            rendered.add(option.value);
+            this.appendOption(option);
+        });
+
+        // The selected options that don't match the filter stay visible, so they can be deselected.
+        this.selectedOptions
+            .filter((option) => !rendered.has(option.value))
+            .forEach((option) => this.appendOption(option));
+
+        this.render();
+    }
+
+    appendOption(option) {
+        if (!this.list) {
+            return;
+        }
+
+        const row = document.createElement('li');
+        const label = document.createElement('label');
+        const box = document.createElement('input');
+        box.type = 'checkbox';
+        box.name = this.name;
+        box.value = option.value;
+        box.checked = this.selectedValues.has(option.value);
+        const text = document.createElement('span');
+        text.textContent = option.label;
+
+        label.append(box, text);
+        row.appendChild(label);
+        this.list.appendChild(row);
     }
 
     render() {

@@ -2,9 +2,14 @@
 {% set placeholder = placeholder ?? '' %}
 {% set requiredMessage = requiredMessage ?? null %}
 {% set repeaterField = repeaterField ?? null %}
+{% set optionsUrl = optionsUrl ?? null %}
+{% set selectedOptions = selectedOptions ?? [] %}
 
 <div class="checkbox-multiselect" data-multiselect
      data-multiselect-placeholder="{{ placeholder }}"
+     data-multiselect-name="{{ name }}"
+     {% if optionsUrl %}data-multiselect-options-url="{{ optionsUrl }}"{% endif %}
+     {% if selectedOptions|length > 0 %}data-multiselect-selected-options='{{ selectedOptions|json_encode|e('html_attr') }}'{% endif %}
      {% if requiredMessage %}data-multiselect-required="{{ requiredMessage }}"{% endif %}>
     <div data-multiselect-trigger role="button" tabindex="0" aria-haspopup="true" aria-expanded="false">
         <span data-multiselect-chips></span>

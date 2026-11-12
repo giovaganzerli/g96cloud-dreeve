@@ -7,6 +7,7 @@
 'A cluster tile is a visited tile whose four neighbours are visited too': 'A cluster tile is a visited tile whose four neighbours are visited too'
 'A high intensity score means a larger share of your training is hard rather than easy.': 'A high intensity score means a larger share of your training is hard rather than easy.'
 'A high score means you concentrate more training into fewer, heavier days.': 'A high score means you concentrate more training into fewer, heavier days.'
+'A new description has been generated.': 'A new description has been generated.'
 'A:C Ratio': 'A:C Ratio'
 'A:C optimal in': 'A:C optimal in'
 'AI integration settings': 'AI integration settings'
@@ -27,6 +28,7 @@ Activity: Activity
 'Aero sensor': 'Aero sensor'
 Afternoon: Afternoon
 All: All
+'All routes': 'All routes'
 'All time': 'All time'
 'Alpine Ski': 'Alpine Ski'
 Apr: Apr
@@ -34,7 +36,11 @@ Apr: Apr
 'Athlete profile': 'Athlete profile'
 Aug: Aug
 Average: Average
+'Average altitude': 'Average altitude'
+'Average distance': 'Average distance'
 'Average gradient': 'Average gradient'
+'Average speed': 'Average speed'
+'Average temperature': 'Average temperature'
 'Avg distance': 'Avg distance'
 'Avg gradient': 'Avg gradient'
 'Avg pace': 'Avg pace'
@@ -68,6 +74,7 @@ Challenges: Challenges
 'Clear all filters': 'Clear all filters'
 'Clear chat': 'Clear chat'
 'Cluster tiles': 'Cluster tiles'
+Collections: Collections
 Columns: Columns
 Commute: Commute
 Commutes: Commutes
@@ -81,6 +88,7 @@ Components: Components
 'Consider reducing load': 'Consider reducing load'
 Consistency: Consistency
 Cost: Cost
+'Countries visited': 'Countries visited'
 Country: Country
 Cricket: Cricket
 Crossfit: Crossfit
@@ -102,6 +110,7 @@ Day: Day
 Dec: Dec
 'Decreased compared to yesterday': 'Decreased compared to yesterday'
 Density: Density
+Description: Description
 Details: Details
 Device: Device
 Dist.: Dist.
@@ -111,6 +120,8 @@ Distance: Distance
 'Distance breakdown': 'Distance breakdown'
 'Distance distribution': 'Distance distribution'
 'Distance in {unit}': 'Distance in {unit}'
+'Distance on asphalt': 'Distance on asphalt'
+'Distance on unpaved roads': 'Distance on unpaved roads'
 'Distance over time per gear': 'Distance over time per gear'
 'Distance per month per gear': 'Distance per month per gear'
 'Doing a mix of cycling, running, swimming, and strength work increases your variety score.': 'Doing a mix of cycling, running, swimming, and strength work increases your variety score.'
@@ -123,6 +134,7 @@ Duration: Duration
 Eddington: Eddington
 'Eddington number': 'Eddington number'
 'Eddington over time': 'Eddington over time'
+'Edit collection': 'Edit collection'
 'Edit dashboard': 'Edit dashboard'
 'Effort vs heart rate': 'Effort vs heart rate'
 'Elapsed time': 'Elapsed time'
@@ -144,6 +156,7 @@ Evening: Evening
 'Explorer tiles include all your activities': 'Explorer tiles include all your activities'
 'FTP history': 'FTP history'
 Fastest: Fastest
+'Fastest stage': 'Fastest stage'
 Favourite: Favourite
 Feb: Feb
 'Filling up the bottles...': 'Filling up the bottles...'
@@ -165,9 +178,11 @@ Fri.: Fri.
 'Front rings': 'Front rings'
 'Front shifts': 'Front shifts'
 GAP: GAP
+Gallery: Gallery
 Gear: Gear
 'Gear maintenance': 'Gear maintenance'
 'Gear that is retired is disabled by default.': 'Gear that is retired is disabled by default.'
+Geography: Geography
 'Go to activity': 'Go to activity'
 Goal: Goal
 Golf: Golf
@@ -207,6 +222,7 @@ History: History
 'How much training you do in total on days you train.': 'How much training you do in total on days you train.'
 'How often do you train': 'How often do you train'
 'Ice Skate': 'Ice Skate'
+Image: Image
 Imperial: Imperial
 "In that time, I’ve covered {totalDistance}, that's {numberOfTripsAroundTheWorld} trips around the world 🌍 or {numberOfTripsToTheMoonPercent}% of the way to the moon 🌕, and climbed an elevation of {totalElevation} which is {timesMountEverest} times Mount Everest 🏔. All up that's {totalTimeRecorded} of moving time 🎉.": "In that time, I’ve covered {totalDistance}, that's {numberOfTripsAroundTheWorld} trips around the world 🌍 or {numberOfTripsToTheMoonPercent}% of the way to the moon 🌕, and climbed an elevation of {totalElevation} which is {timesMountEverest} times Mount Everest 🏔. All up that's {totalTimeRecorded} of moving time 🎉."
 'Increased compared to yesterday': 'Increased compared to yesterday'
@@ -243,27 +259,37 @@ Loading...: Loading...
 'Longest activity (h)': 'Longest activity (h)'
 'Longest day': 'Longest day'
 'Longest distance': 'Longest distance'
+'Longest stage': 'Longest stage'
 'Longest streaks': 'Longest streaks'
 Low: Low
 'Low risk': 'Low risk'
 'Low training load': 'Low training load'
+'Main cities': 'Main cities'
+'Main summits': 'Main summits'
 Maintenance: Maintenance
 'Manage activities': 'Manage activities'
+'Manage collections': 'Manage collections'
 'Manage gear': 'Manage gear'
 'Manage recording devices': 'Manage recording devices'
 'Manage segments': 'Manage segments'
+'Manually edited': 'Manually edited'
 'Map settings': 'Map settings'
 'Map tiles at zoom level 14 that your activities passed through': 'Map tiles at zoom level 14 that your activities passed through'
 Mar: Mar
 Max: Max
+'Max altitude': 'Max altitude'
 'Max cluster': 'Max cluster'
 'Max gradient': 'Max gradient'
+'Max speed': 'Max speed'
 'Max square': 'Max square'
+'Max temperature': 'Max temperature'
 May: May
 Medium: Medium
 Metric: Metric
 'Metrics settings': 'Metrics settings'
 Milestones: Milestones
+'Min altitude': 'Min altitude'
+'Min temperature': 'Min temperature'
 'Mind & Body Sports': 'Mind & Body Sports'
 'Moderate fatigue with stable fitness. Well suited for consistent day-to-day training': 'Moderate fatigue with stable fitness. Well suited for consistent day-to-day training'
 'Moderate monotony': 'Moderate monotony'
@@ -311,6 +337,7 @@ Oct: Oct
 'One of your gear maintenance tasks is due': 'One of your gear maintenance tasks is due'
 "Oops, looks like you've wandered off the map! 🗺️": "Oops, looks like you've wandered off the map! 🗺️"
 'Open Water Swim': 'Open Water Swim'
+'Open activity': 'Open activity'
 'Optimal training range': 'Optimal training range'
 Other: Other
 'Outdoor Sports': 'Outdoor Sports'
@@ -327,6 +354,7 @@ Padel: Padel
 'Per {unit}': 'Per {unit}'
 'Personal bests': 'Personal bests'
 Photo: Photo
+'Photo gallery': 'Photo gallery'
 Photos: Photos
 'Physical Therapy': 'Physical Therapy'
 'Pickle Ball': 'Pickle Ball'
@@ -376,6 +404,7 @@ Rides: Rides
 'Rock Climbing': 'Rock Climbing'
 'Roller Ski': 'Roller Ski'
 'Rolling stats': 'Rolling stats'
+Route: Route
 Rowing: Rowing
 Run: Run
 Running: Running
@@ -385,6 +414,7 @@ Sat: Sat
 Sat.: Sat.
 Search: Search
 'Search activity...': 'Search activity...'
+'Search collection...': 'Search collection...'
 'Search segment...': 'Search segment...'
 Segments: Segments
 Sep: Sep
@@ -410,15 +440,20 @@ Splits: Splits
 'Sport type': 'Sport type'
 'Sport variety': 'Sport variety'
 Squash: Squash
+'Stage with most ascent': 'Stage with most ascent'
+Stages: Stages
 'Stair Stepper': 'Stair Stepper'
 'Stand Up Paddling': 'Stand Up Paddling'
 'Start times': 'Start times'
+Statistics: Statistics
 'Stats per weekday': 'Stats per weekday'
 Status: Status
+'Stopped time': 'Stopped time'
 'Streak started on {date}': 'Streak started on {date}'
 Streaks: Streaks
 Sun: Sun
 Sun.: Sun.
+Surfaces: Surfaces
 Surfing: Surfing
 'TSB (Form)': 'TSB (Form)'
 'TSB positive in': 'TSB positive in'
@@ -518,6 +553,9 @@ Tennis: Tennis
 "That's {number} days of at least {distance}": "That's {number} days of at least {distance}"
 "That's {percentage}% of all countries 🌍": "That's {percentage}% of all countries 🌍"
 'The Eddington number in the context of cycling or running is defined as the maximum number E such that the athlete has covered at least E km on at least E days.': 'The Eddington number in the context of cycling or running is defined as the maximum number E such that the athlete has covered at least E km on at least E days.'
+'The collection has been created.': 'The collection has been created.'
+'The collection has been deleted.': 'The collection has been deleted.'
+'The collection has been updated.': 'The collection has been updated.'
 'The largest connected group of cluster tiles': 'The largest connected group of cluster tiles'
 'The largest square of visited tiles': 'The largest square of visited tiles'
 "The page you're looking for doesn't exist or may have been moved.": "The page you're looking for doesn't exist or may have been moved."
@@ -539,11 +577,14 @@ Title: Title
 'To enable it, configure this in the admin panel': 'To enable it, configure this in the admin panel'
 'Toggle sidebar': 'Toggle sidebar'
 'Top 10': 'Top 10'
+'Total ascent': 'Total ascent'
+'Total distance': 'Total distance'
 'Total distance per month': 'Total distance per month'
 'Total elevation per month': 'Total elevation per month'
 'Total hours spent per gear': 'Total hours spent per gear'
 'Total hours spent per sport type': 'Total hours spent per sport type'
 'Total moving time per month': 'Total moving time per month'
+'Total time': 'Total time'
 'Trail Run': 'Trail Run'
 'Trail Runs': 'Trail Runs'
 'Training 4–5 days every week scores higher than doing everything in one or two days.': 'Training 4–5 days every week scores higher than doing everything in one or two days.'
@@ -566,6 +607,7 @@ Usage: Usage
 'Very high': 'Very high'
 'View all': 'View all'
 'View details': 'View details'
+'View full album': 'View full album'
 'View this month': 'View this month'
 'Virtual Ride': 'Virtual Ride'
 'Virtual Rides': 'Virtual Rides'
@@ -583,6 +625,7 @@ Walks: Walks
 'Water Sports': 'Water Sports'
 'Waxing the chain...': 'Waxing the chain...'
 'We detected following issues': 'We detected following issues'
+Weather: Weather
 Wed: Wed
 Wed.: Wed.
 Weekly: Weekly
@@ -596,7 +639,13 @@ Weight: Weight
 Wheelchair: Wheelchair
 'Wind Surf': 'Wind Surf'
 'Winter Sports': 'Winter Sports'
+'With description': 'With description'
+'With gallery': 'With gallery'
+'With image': 'With image'
 'With others': 'With others'
+'Without description': 'Without description'
+'Without gallery': 'Without gallery'
+'Without image': 'Without image'
 Workout: Workout
 'Workout assistant': 'Workout assistant'
 'Workout type': 'Workout type'

@@ -1,5 +1,6 @@
 24-hour: '24 heures'
 'A backfill is already queued. It runs on the next import cycle, within five minutes.': "Une application aux activités existantes est déjà en attente. Elle s'exécutera lors du prochain cycle d'import, dans les cinq minutes."
+'A random selection of photos of this album is shown on the collection page.': 'A random selection of photos of this album is shown on the collection page.'
 'A rule applies': "Une règle s'applique"
 AI: IA
 AM/PM: AM/PM
@@ -8,6 +9,7 @@ AM/PM: AM/PM
 Access: Access
 Actions: Actions
 Active: Actif
+Activities: Activities
 'Activities scanned': 'Activités analysées'
 'Activities to skip during import': "Activités à ignorer lors de l'import"
 'Activities to update': 'Activités à mettre à jour'
@@ -28,6 +30,7 @@ Activity: Activité
 'Add activity': 'Ajouter une activité'
 'Add automation rule': "Ajouter une règle d'automatisation"
 'Add challenge': 'Ajouter un défi'
+'Add collection': 'Add collection'
 'Add command': 'Ajouter une commande'
 'Add component': 'Ajouter un composant'
 'Add condition': 'Ajouter une condition'
@@ -39,6 +42,7 @@ Activity: Activité
 'Add rule': 'Ajouter une règle'
 'Add segment': 'Add segment'
 'Add service': 'Ajouter un service'
+'Add statistic': 'Add statistic'
 'Add task': 'Ajouter une tâche'
 'Add tile layer': 'Ajouter une couche de tuiles'
 'Add weight': 'Add weight'
@@ -104,6 +108,8 @@ Clear: Effacer
 'Click the map to set the center, or drag the marker to fine-tune it.': "Cliquez sur la carte pour définir le centre, ou déplacez le marqueur pour l'ajuster."
 'Click the map to set the location, or drag the marker to fine-tune it.': "Cliquez sur la carte pour définir l'emplacement, ou déplacez le marqueur pour l'ajuster."
 Close: Fermer
+'Collection management': 'Collection management'
+'Collections will appear here once you add them.': 'Collections will appear here once you add them.'
 Command: Commande
 Commute: 'Trajet domicile-travail'
 Component: Composant
@@ -129,6 +135,7 @@ Daemon: Daemon
 Delete: Supprimer
 'Delete activity': "Supprimer l'activité"
 'Delete automation rule': "Supprimer la règle d'automatisation"
+'Delete collection': 'Delete collection'
 'Delete component': 'Supprimer le component'
 'Delete file import': "Supprimer l'import de fichier"
 'Delete gear': 'Supprimer le matériel'
@@ -153,6 +160,7 @@ Duration: Durée
 Edit: Editer
 'Edit activity': "Editer l'activité"
 'Edit automation rule': "Editer la règle d'automatisation"
+'Edit collection': 'Edit collection'
 'Edit component': 'Editer le composant'
 'Edit gear': 'Editer le matériel'
 'Edit maintenance log': "Editer l'entrée de maintenance"
@@ -199,6 +207,8 @@ From: Origine
 Gender: Sexe
 General: Géneral
 'Generate an API key': 'Générer une clef API'
+'Generate description with AI': 'Generate description with AI'
+Generating...: Generating...
 'Go to first page': 'Aller à la première page'
 'Go to last page': 'Aller à la dernière page'
 'Go to next page': 'Aller à la page suivante'
@@ -218,6 +228,8 @@ If: Si
 'Ignore retired gear': 'Ignorer le matériel décommissionné'
 Image: Image
 Images: Images
+Immich: Immich
+'Immich album': 'Immich album'
 Import: Import
 'Import Strava data': 'Importer les données Strava'
 'Import activities': 'Importer des activités'
@@ -241,9 +253,12 @@ Label: Libellé
 Latitude: Latitude
 'Leave all unchecked to import every sport type. ⚠️ Restricting this after activities have been imported deletes activities of excluded sport types.': "Laissez tout décoché pour importer tous les types de sport. ⚠️ Restreindre cette liste après l'import d'activités supprime les activités des types de sport exclus."
 'Leave all unchecked to import every visibility. ⚠️ Restricting this after activities have been imported deletes activities of excluded visibilities.': "Laissez tout décoché pour importer toutes les visibilités. ⚠️ Restreindre cette liste après l'import d'activités supprime les activités des visibilités exclues."
+'Leave empty to disable the surface analysis. Every activity is analysed once, during the next import run.': 'Leave empty to disable the surface analysis. Every activity is analysed once, during the next import run.'
 'Leave empty to include all sport types.': 'Laissez vide pour inclure tous les types de sport.'
 'Leave empty to use the default title.': 'Laissez vide pour utiliser le titre par défaut.'
+'Leave this empty and a description will be generated automatically with the AI, based on the statistics and the recorded tracks.': 'Leave this empty and a description will be generated automatically with the AI, based on the statistics and the recorded tracks.'
 'Lets an external client upload activity files over HTTP. The key is the only thing guarding that endpoint, so treat it like a password.': "Permet à un client externe de téléverser des fichiers d'activité via HTTP. La clé est la seule protection de ce point d'accès, traitez-la donc comme un mot de passe."
+Linked: Linked
 'Loading the route...': 'Loading the route...'
 Locale: Langue
 Log: Journal
@@ -278,10 +293,13 @@ Monday: Lundi
 'Most recent activities (cards)': 'Most recent activities (cards)'
 'Most recent activities (list)': 'Most recent activities (list)'
 'Moving time': 'Temps en mouvement'
+Name: Name
 'No activities imported yet.': 'Aucune activité importée pour le moment.'
 'No activities match the current filters.': 'Aucune activité ne correspond aux filtres actuels.'
 'No activity found for that ID.': 'Aucune activité trouvée pour cet ID.'
+'No album': 'No album'
 'No automation rules yet.': "Aucune règle d'automatisation pour le moment."
+'No collections added yet.': 'No collections added yet.'
 'No components yet.': 'Aucun composant pour le moment.'
 'No file imports match the current filters.': 'Aucun import de fichier ne correspond aux filtres actuels.'
 'No files imported yet.': 'Aucun fichier importé pour le moment.'
@@ -294,6 +312,7 @@ Monday: Lundi
 'No segments match the current filters.': 'No segments match the current filters.'
 'No sport types selected': 'Aucun type de sport sélectionné'
 'No unit': "Pas d'unité"
+None: None
 'Normal date format': 'Format de date normal'
 'Not configured, the API is closed': "Non configurée, l'API est fermée"
 'Not fitted': 'Not fitted'
@@ -309,6 +328,7 @@ Notifications: Notifications
 'Number of widgets of this type you already have configured.': 'Nombre de widgets de ce type déjà configurés.'
 'Only show activities with a map': 'Afficher uniquement les activités avec une carte'
 "Oops, looks like you've wandered off the map! 🗺️": 'Oups, on dirait que vous êtes sorti de la carte ! 🗺️'
+OpenStreetMap: OpenStreetMap
 Operator: Operateur
 'Optional YAML for date-range and sport-type specific zones. Leave empty unless you know you need it.': 'YAML optionnel pour des zones spécifiques à une plage de dates ou à un type de sport. Laissez vide sauf si vous savez en avoir besoin.'
 'Optional link to your profile picture, shown in the nav bar. A square image is recommended. Leave empty to disable.': 'Lien optionnel vers votre photo de profil, affichée dans la barre de navigation. Une image carrée est recommandée. Laissez vide pour désactiver.'
@@ -319,6 +339,7 @@ Operator: Operateur
 'Optional. Your current Zwift level (1 or higher). Leave empty to hide the Zwift badge.': 'Optionnel. Votre niveau Zwift actuel (1 ou plus). Laissez vide pour masquer le badge Zwift.'
 'Optional. Your current Zwift racing score (between 0 and 1000).': 'Optionnel. Votre racing score Zwift actuel (entre 0 et 1000).'
 'Original file': 'Original file'
+'Overpass API endpoint': 'Overpass API endpoint'
 'PHP date format for normal dates, e.g. d-m-Y renders to 01-01-2025.': 'Format de date PHP pour les dates normales, par ex. d-m-Y donne 01-01-2025.'
 'PHP date format for short dates, e.g. d-m-y renders to 01-01-25.': 'Format de date PHP pour les dates courtes, par ex. d-m-y donne 01-01-25.'
 'Parts you track maintenance for, eg: chains, cassettes, brake pads...': 'Pièces dont vous suivez la maintenance, ex. : chaînes, cassettes, plaquettes de frein...'
@@ -359,6 +380,7 @@ Remove: Supprimer
 'Remove widget': 'Retirer le widget'
 Removing...: 'Suppression en cours'
 'Render the map tiles in greyscale': 'Afficher les tuiles de la carte en niveaux de gris'
+Reorder: Reorder
 "Reorder widgets and set each widget's width.": 'Réorganisez les widgets et définissez la largeur de chacun.'
 'Require a login for the entire app': "Exiger une connexion pour toute l'application"
 'Require a login for the entire app, not just the admin panel. Recommended when your instance is reachable from the internet, which it has to be for the Strava webhook.': "Exige une connexion pour toute l'application, pas seulement le panneau admin. Recommandé lorsque votre instance est accessible depuis internet, ce qui est nécessaire pour le webhook Strava."
@@ -404,6 +426,7 @@ Segmento: Segmento
 'Select gear...': 'Selectionner un matériel'
 'Select sensors': 'Selectionner des capteurs'
 'Select sport types': 'Sélectionner les types de sport'
+'Select the activities': 'Select the activities'
 'Select the serviced gear…': 'Sélectionnez le matériel entretenu…'
 'Sends a notification after every successful import.': 'Envoie une notification après chaque import réussi.'
 'Sends a notification when a new app version is available. Requires a configured notification service.': "Envoie une notification lorsqu'une nouvelle version de l'application est disponible. Nécessite un service de notification configuré."
@@ -411,6 +434,7 @@ Segmento: Segmento
 Sensors: Capteurs
 'Sensors are only recorded for activities imported from FIT files. Activities from Strava, GPX or TCX never match this condition.': 'Les capteurs ne sont enregistrés que pour les activités importées depuis des fichiers FIT. Les activités issues de Strava, GPX ou TCX ne remplissent jamais cette condition.'
 'Serial number, size, where you bought it, ...': 'Serial number, size, where you bought it, ...'
+'Server URL': 'Server URL'
 'Set description': 'Définir description'
 'Set its status to Retired instead to hide it from your active gear.': 'Passez plutôt son statut à Décommissionné pour le masquer de votre matériel actif.'
 'Set name': 'Définir le nom'
@@ -444,6 +468,7 @@ Source: Source
 'Start date': 'Date de début'
 'Start date and time': 'Date et heure de début'
 'Starts near': 'Commence près de'
+Statistics: Statistics
 'Stop processing further rules when this rule matches': 'Arrêter le traitement des règles suivantes lorsque cette règle correspond'
 'Stops after match': "S'arrête après correspondance"
 'Stops here': "S'arrête ici"
@@ -465,7 +490,9 @@ Task: Tâche
 Tasks: Tâches
 'Test automation rules': "Tester les règles d'automatisation"
 'Test rules': 'Tester les règles'
+'The API key is used to fetch the photos of the linked album. The photos are served through Dreeve, your server never exposes the key to visitors.': 'The API key is used to fetch the photos of the linked album. The photos are served through Dreeve, your server never exposes the key to visitors.'
 'The URL the app is hosted on.': "L'URL sur laquelle l'application est hébergée."
+'The activities in this collection will not be deleted.': 'The activities in this collection will not be deleted.'
 'The activity started': "L'activité a commencé"
 'The activity will be marked as a commute.': "L'activité sera marquée comme trajet domicile-travail."
 'The activity will be marked as a group activity.': "L'activité sera marquée comme activité de groupe."
@@ -475,6 +502,7 @@ Tasks: Tâches
 'The average power': 'La puissance moyenne'
 'The average speed': 'La vitesse moyenne'
 'The backfill runs on the next import cycle, using the rules as they are configured at that moment. This cannot be undone.': "L'application aux activités existantes s'exécute lors du prochain cycle d'import, avec les règles telles qu'elles sont configurées à ce moment-là. Cette action ne peut pas être annulée."
+'The calculated statistics can be edited manually. Drag the rows to change the order, and add your own statistics for things like travel costs or nights spent camping.': 'The calculated statistics can be edited manually. Drag the rows to change the order, and add your own statistics for things like travel costs or nights spent camping.'
 'The calories burned': 'Les calories dépensées'
 'The color of the routes drawn on every map. Accepts any valid CSS color, e.g. red, #FF0000 or rgb(255,0,0).': 'La couleur des parcours tracés sur chaque carte. Accepte toute couleur CSS valide, par ex. red, #FF0000 ou rgb(255,0,0).'
 'The current name of the activity': "Le nom actuel de l'activité"
@@ -498,6 +526,7 @@ Tasks: Tâches
 'The segment has been created. Its efforts will show up after the next import run.': 'The segment has been created. Its efforts will show up after the next import run.'
 'The sport type, e.g. "Walk" or "Trail Run"': 'Le type de sport, par ex. "Marche" ou "Trail"'
 'The start date, optionally with a custom PHP date format': 'La date de début, éventuellement avec un format de date PHP personnalisé'
+'The statistics of the collection are calculated from these activities.': 'The statistics of the collection are calculated from these activities.'
 'The tile layer URLs used to render the maps. Add more than one to stack them, for example to overlay place names on top of a satellite layer.': 'Les URL des couches de tuiles utilisées pour afficher les cartes. Ajoutez-en plusieurs pour les superposer, par exemple pour afficher les noms de lieux par-dessus une couche satellite.'
 'The total distance ridden with the gear': 'La distance totale parcourue avec le matériel'
 'The unit system used to render distances, elevations, temperatures, etc.': "Le système d'unités utilisé pour afficher les distances, dénivelés, températures, etc."
@@ -510,6 +539,7 @@ Tasks: Tâches
 'This activity has no GPS data.': 'This activity has no GPS data.'
 'This component is fitted to multiple gears, pick the one you serviced.': 'Ce composant est monté sur plusieurs matériels, choisissez celui que vous avez entretenu.'
 'This only removes the import record, the imported activity is kept.': "Seul l'enregistrement de l'import est supprimé, l'activité importée est conservée."
+'This overwrites the current description with a freshly generated one, based on the statistics and the recorded tracks.': 'This overwrites the current description with a freshly generated one, based on the statistics and the recorded tracks.'
 'This page shows a different key every time it is opened, and only the one in your environment file is applied.': "Cette page affiche une clé différente à chaque ouverture, et seule celle de votre fichier d'environnement est appliquée."
 "This value is imported from Strava and can't be edited here.": 'Cette valeur est importée depuis Strava et ne peut pas être modifiée ici.'
 'This widget still needs to be configured.': 'Ce widget doit encore être configuré.'
@@ -539,8 +569,10 @@ Until: Until
 'Upload files': 'Téléverser des fichiers'
 Uploaded: Téléversé
 Uploading...: 'Téléversement en cours'
+'Used to calculate how much of your activities was recorded on paved and unpaved roads.': 'Used to calculate how much of your activities was recorded on paved and unpaved roads.'
 'Used to calculate the training load of this activity': "Utilisé pour calculer la charge d'entraînement de cette activité"
 Username: "Nom d'utilisateur"
+Value: Value
 'Verify token': 'Vérifier le jeton'
 Warning: Avertissement
 'Weather and reverse geocoding have been retrieved.': 'La météo et le géocodage inversé ont été récupérés.'

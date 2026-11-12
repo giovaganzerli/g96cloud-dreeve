@@ -7,6 +7,7 @@
 'A cluster tile is a visited tile whose four neighbours are visited too': 'A klasztercsempe olyan meglátogatott csempe, amelynek mind a négy szomszédja is meglátogatott'
 'A high intensity score means a larger share of your training is hard rather than easy.': 'A magas intenzitási pontszám azt jelenti, hogy az edzéseid nagyobb része nehéz, nem könnyű.'
 'A high score means you concentrate more training into fewer, heavier days.': 'A magas pontszám azt jelenti, hogy több edzést koncentrálsz kevesebb, de nehezebb napra.'
+'A new description has been generated.': 'A new description has been generated.'
 'A:C Ratio': 'A:C arány'
 'A:C optimal in': 'A:C optimális ezután:'
 'AI integration settings': 'AI-integráció beállításai'
@@ -27,6 +28,7 @@ Activity: Tevékenység
 'Aero sensor': 'Aero szenzor'
 Afternoon: Délután
 All: Mind
+'All routes': 'All routes'
 'All time': Összesített
 'Alpine Ski': 'Alpesi sí'
 Apr: Ápr
@@ -34,7 +36,11 @@ Apr: Ápr
 'Athlete profile': 'Sportoló profil'
 Aug: Aug
 Average: Átlag
+'Average altitude': 'Average altitude'
+'Average distance': 'Average distance'
 'Average gradient': 'Átlagos lejtés'
+'Average speed': 'Average speed'
+'Average temperature': 'Average temperature'
 'Avg distance': 'Avg distance'
 'Avg gradient': 'Átl. emelkedő'
 'Avg pace': 'Átl. tempó'
@@ -68,6 +74,7 @@ Challenges: Kihívások
 'Clear all filters': 'Összes szűrő törlése'
 'Clear chat': 'Chat törlése'
 'Cluster tiles': Klasztercsempék
+Collections: Collections
 Columns: Oszlopok
 Commute: Ingázás
 Commutes: Ingázások
@@ -81,6 +88,7 @@ Components: Komponensek
 'Consider reducing load': 'Fontold meg a terhelés csökkentését'
 Consistency: Következetesség
 Cost: Cost
+'Countries visited': 'Countries visited'
 Country: Ország
 Cricket: Krikett
 Crossfit: Crossfit
@@ -102,6 +110,7 @@ Day: Nap
 Dec: Dec
 'Decreased compared to yesterday': 'Csökkent a tegnapihoz képest'
 Density: Sűrűség
+Description: Description
 Details: Részletek
 Device: Eszköz
 Dist.: Táv.
@@ -111,6 +120,8 @@ Distance: Távolság
 'Distance breakdown': 'Távolság részletezés'
 'Distance distribution': Távolság-eloszlás
 'Distance in {unit}': 'Távolság ({unit})'
+'Distance on asphalt': 'Distance on asphalt'
+'Distance on unpaved roads': 'Distance on unpaved roads'
 'Distance over time per gear': 'Távolság időben felszerelésenkén'
 'Distance per month per gear': 'Havi távolság felszerelésenkén'
 'Doing a mix of cycling, running, swimming, and strength work increases your variety score.': 'A kerékpározás, futás, úszás és erőedzés vegyítése növeli a változatossági pontszámodat.'
@@ -123,6 +134,7 @@ Duration: Időtartam
 Eddington: Eddington
 'Eddington number': Eddington-szám
 'Eddington over time': 'Eddington az idő során'
+'Edit collection': 'Edit collection'
 'Edit dashboard': 'Dashboard szerkesztése'
 'Effort vs heart rate': 'Erőfeszítés vs pulzus'
 'Elapsed time': 'Eltelt idő'
@@ -144,6 +156,7 @@ Evening: Este
 'Explorer tiles include all your activities': 'Explorer tiles include all your activities'
 'FTP history': 'FTP előzmények'
 Fastest: Leggyorsabb
+'Fastest stage': 'Fastest stage'
 Favourite: Kedvenc
 Feb: Febr
 'Filling up the bottles...': 'Kulacsok feltöltése...'
@@ -165,9 +178,11 @@ Fri.: Pén.
 'Front rings': 'Első lánckerekek'
 'Front shifts': 'Első váltások'
 GAP: GAP
+Gallery: Gallery
 Gear: Felszerelés
 'Gear maintenance': 'Felszerelés karbantartás'
 'Gear that is retired is disabled by default.': 'A visszavont felszerelés alapértelmezés szerint le van tiltva.'
+Geography: Geography
 'Go to activity': 'Ugrás a tevékenységhez'
 Goal: Cél
 Golf: Golf
@@ -207,6 +222,7 @@ History: Előzmények
 'How much training you do in total on days you train.': 'Mennyi összes edzést végzel az edzésnapjaidon.'
 'How often do you train': 'Milyen gyakran edzel'
 'Ice Skate': Jégkorcsolya
+Image: Image
 Imperial: Angolszász
 "In that time, I’ve covered {totalDistance}, that's {numberOfTripsAroundTheWorld} trips around the world 🌍 or {numberOfTripsToTheMoonPercent}% of the way to the moon 🌕, and climbed an elevation of {totalElevation} which is {timesMountEverest} times Mount Everest 🏔. All up that's {totalTimeRecorded} of moving time 🎉.": 'Ez idő alatt {totalDistance}-t tettem meg, ami {numberOfTripsAroundTheWorld} körülutazás a Föld körül, vagy {numberOfTripsToTheMoonPercent}% az úton a Hold felé, és {totalElevation} szintemelkedést győztem le, ami {timesMountEverest}-szer a Mount Everest magassága. Összesen {totalTimeRecorded} mozgásban töltött idő.'
 'Increased compared to yesterday': 'Nőtt a tegnapihoz képest'
@@ -243,27 +259,37 @@ Loading...: Betöltés...
 'Longest activity (h)': 'Leghosszabb tevékenység (h)'
 'Longest day': 'Leghosszabb nap'
 'Longest distance': 'Leghosszabb távolság'
+'Longest stage': 'Longest stage'
 'Longest streaks': 'Leghosszabb sorozatok'
 Low: Alacsony
 'Low risk': 'Alacsony kockázat'
 'Low training load': 'Alacsony edzésterhelés'
+'Main cities': 'Main cities'
+'Main summits': 'Main summits'
 Maintenance: Karbantartás
 'Manage activities': 'Tevékenységek kezelése'
+'Manage collections': 'Manage collections'
 'Manage gear': 'Felszerelések kezelése'
 'Manage recording devices': 'Rögzítő eszközök kezelése'
 'Manage segments': 'Manage segments'
+'Manually edited': 'Manually edited'
 'Map settings': 'Térkép beállításai'
 'Map tiles at zoom level 14 that your activities passed through': 'A 14-es nagyítási szintű térképcsempék, amelyeken az aktivitásaid áthaladtak'
 Mar: Már
 Max: Max
+'Max altitude': 'Max altitude'
 'Max cluster': 'Legnagyobb klaszter'
 'Max gradient': 'Max. lejtés'
+'Max speed': 'Max speed'
 'Max square': 'Legnagyobb négyzet'
+'Max temperature': 'Max temperature'
 May: Máj
 Medium: Közepes
 Metric: Metrikus
 'Metrics settings': 'Mérőszámok beállításai'
 Milestones: Mérföldkövek
+'Min altitude': 'Min altitude'
+'Min temperature': 'Min temperature'
 'Mind & Body Sports': 'Test-lélek sportok'
 'Moderate fatigue with stable fitness. Well suited for consistent day-to-day training': 'Mérsékelt fáradtság stabil fittséggel. Kiváló a következetes napi edzéshez'
 'Moderate monotony': 'Mérsékelt monotonitás'
@@ -311,6 +337,7 @@ Oct: Okt
 'One of your gear maintenance tasks is due': 'Az egyik felszerelés karbantartási feladatod esedékes'
 "Oops, looks like you've wandered off the map! 🗺️": 'Hoppá, úgy tűnik, letértél a térképről! 🗺️'
 'Open Water Swim': 'Nyíltvízi úszás'
+'Open activity': 'Open activity'
 'Optimal training range': 'Optimális edzéstartomány'
 Other: Egyéb
 'Outdoor Sports': 'Szabadtéri sportok'
@@ -327,6 +354,7 @@ Padel: Padel
 'Per {unit}': 'Per {unit}'
 'Personal bests': 'Személyes csúcsok'
 Photo: Fotó
+'Photo gallery': 'Photo gallery'
 Photos: Fotók
 'Physical Therapy': Gyógytorna
 'Pickle Ball': Pickleball
@@ -376,6 +404,7 @@ Rides: 'Kerékpáros túrák'
 'Rock Climbing': Sziklamászás
 'Roller Ski': 'Görkorcsolyás sí'
 'Rolling stats': 'Rolling stats'
+Route: Route
 Rowing: Evezés
 Run: Futás
 Running: Futás
@@ -385,6 +414,7 @@ Sat: Szo
 Sat.: Szo.
 Search: Keresés
 'Search activity...': 'Tevékenység keresése...'
+'Search collection...': 'Search collection...'
 'Search segment...': 'Szegmens keresése...'
 Segments: Szegmensek
 Sep: Szept
@@ -410,15 +440,20 @@ Splits: Részidők
 'Sport type': 'Sport type'
 'Sport variety': Sporttípus-változatosság
 Squash: Squash
+'Stage with most ascent': 'Stage with most ascent'
+Stages: Stages
 'Stair Stepper': 'Lépcső szimulátor'
 'Stand Up Paddling': SUP
 'Start times': 'Kezdési idők'
+Statistics: Statistics
 'Stats per weekday': 'Statisztikák napokra bontva'
 Status: Állapot
+'Stopped time': 'Stopped time'
 'Streak started on {date}': 'Sorozat kezdete: {date}'
 Streaks: Sorozatok
 Sun: V
 Sun.: Vas.
+Surfaces: Surfaces
 Surfing: Szörfözés
 'TSB (Form)': 'TSB (Forma)'
 'TSB positive in': 'TSB pozitív ezután:'
@@ -518,6 +553,9 @@ Tennis: Tenisz
 "That's {number} days of at least {distance}": 'Ez {number} nap legalább {distance}-vel'
 "That's {percentage}% of all countries 🌍": 'Ez az összes ország {percentage}%-a 🌍'
 'The Eddington number in the context of cycling or running is defined as the maximum number E such that the athlete has covered at least E km on at least E days.': 'Az Eddington-szám kerékpározás vagy futás esetén az a legnagyobb E szám, amelyre igaz, hogy a sportoló legalább E napon legalább E km-t tett meg.'
+'The collection has been created.': 'The collection has been created.'
+'The collection has been deleted.': 'The collection has been deleted.'
+'The collection has been updated.': 'The collection has been updated.'
 'The largest connected group of cluster tiles': 'The largest connected group of cluster tiles'
 'The largest square of visited tiles': 'The largest square of visited tiles'
 "The page you're looking for doesn't exist or may have been moved.": 'A keresett oldal nem létezik, vagy áthelyezték.'
@@ -539,11 +577,14 @@ Title: Cím
 'To enable it, configure this in the admin panel': 'Az engedélyezéséhez állítsd be az adminfelületen'
 'Toggle sidebar': 'Oldalsáv ki/be'
 'Top 10': 'Top 10'
+'Total ascent': 'Total ascent'
+'Total distance': 'Total distance'
 'Total distance per month': 'Havi össztávolság'
 'Total elevation per month': 'Havi össz szintemelkedés'
 'Total hours spent per gear': 'Összes óra felszerelésenkén'
 'Total hours spent per sport type': 'Összes óra sporttípusonként'
 'Total moving time per month': 'Teljes mozgásidő havonta'
+'Total time': 'Total time'
 'Trail Run': Terepfutás
 'Trail Runs': Terepfutások
 'Training 4–5 days every week scores higher than doing everything in one or two days.': 'A heti 4–5 napos edzés magasabb pontszámot ér el, mint ha mindent egy-két napra zsúfolnak.'
@@ -566,6 +607,7 @@ Usage: Usage
 'Very high': 'Nagyon magas'
 'View all': 'Összes megtekintése'
 'View details': 'Részletek megtekintése'
+'View full album': 'View full album'
 'View this month': 'Ez a hónap megtekintése'
 'Virtual Ride': 'Virtuális kerékpározás'
 'Virtual Rides': 'Virtuális kerékpározás'
@@ -583,6 +625,7 @@ Walks: Séták
 'Water Sports': 'Vízi sportok'
 'Waxing the chain...': 'Lánc viaszolása...'
 'We detected following issues': 'A következő problémákat észleltük'
+Weather: Weather
 Wed: Sze
 Wed.: Szer.
 Weekly: Heti
@@ -596,7 +639,13 @@ Weight: Súly
 Wheelchair: Kerekesszék
 'Wind Surf': Windsurfing
 'Winter Sports': 'Téli sportok'
+'With description': 'With description'
+'With gallery': 'With gallery'
+'With image': 'With image'
 'With others': Másokkal
+'Without description': 'Without description'
+'Without gallery': 'Without gallery'
+'Without image': 'Without image'
 Workout: Edzés
 'Workout assistant': 'Edzési asszisztens'
 'Workout type': 'Edzés típusa'

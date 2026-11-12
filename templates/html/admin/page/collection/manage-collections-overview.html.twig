@@ -1,0 +1,110 @@
+{% extends "html/admin/page/template.html.twig" %}
+{% block main %}
+    {% autoescape false %}
+    <div class="p-4 bg-white border border-gray-200 rounded-lg shadow-xs">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-semibold">
+                {{ "Collection management"|trans({}, 'admin') }}
+            </h3>
+            <a href="{{ relativeUrl(path('admin_add_collection')) }}" type="button" class="btn--add">
+                <svg class="size-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5"/>
+                </svg>
+                <span>
+                    {{ "Add collection"|trans({}, 'admin') }}
+                </span>
+            </a>
+        </div>
+        <div class="relative overflow-x-auto">
+            <table class="data-table">
+                <thead>
+                <tr>
+                    <th scope="col" class="narrow w-px">
+                        <span class="sr-only">{{ "Image"|trans({}, 'admin') }}</span>
+                    </th>
+                    <th scope="col" class="text-left">
+                        {{ "Name"|trans }}
+                    </th>
+                    <th scope="col">
+                        {{ "Activities"|trans }}
+                    </th>
+                    <th scope="col">
+                        {{ "Gallery"|trans }}
+                    </th>
+                    <th scope="col" class="narrow sticky-actions">
+                        <span class="sr-only">{{ "Edit"|trans({}, 'admin') }}</span>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for collection in collections %}
+                    <tr class="group/row">
+                        <td class="narrow w-px">
+                            <img class="size-10 max-w-none rounded-md object-cover bg-gray-100"
+                                 src="{{ collection.getImageUrl() ?: placeholderImage() }}"
+                                 alt="{{ collection.getName() }}"/>
+                        </td>
+                        <td class="whitespace-nowrap text-left font-medium text-gray-800">
+                            {{ collection.getName() }}
+                        </td>
+                        <td class="whitespace-nowrap">
+                            {{ collection.getActivityIds()|length }}
+                        </td>
+                        <td class="whitespace-nowrap">
+                            {% if collection.getImmichAlbumId() %}
+                                <span class="pill pill--success text-xs">
+                                    <span class="size-1.5 rounded-full bg-current"></span>
+                                    {{ "Linked"|trans({}, 'admin') }}
+                                </span>
+                            {% else %}
+                                <span class="pill pill--neutral text-xs">
+                                    <span class="size-1.5 rounded-full bg-current"></span>
+                                    {{ "None"|trans({}, 'admin') }}
+                                </span>
+                            {% endif %}
+                        </td>
+                        <td class="narrow whitespace-nowrap sticky-actions">
+                            <div class="inline-flex items-center gap-2">
+                                <a href="{{ relativeUrl(path('admin_edit_collection', {collectionId: collection.getId()})) }}"
+                                   class="inline-flex items-center justify-center text-gray-500 transition-colors hover:text-primary"
+                                   title="{{ "Edit"|trans({}, 'admin') }}">
+                                    <span class="sr-only">{{ "Edit"|trans({}, 'admin') }}</span>
+                                    <svg class="size-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z"/>
+                                    </svg>
+                                </a>
+                                <a href="{{ relativeUrl(path('admin_delete_collection', {collectionId: collection.getId()})) }}"
+                                   class="inline-flex items-center justify-center text-gray-500 transition-colors hover:text-red-600"
+                                   title="{{ "Delete"|trans({}, 'admin') }}">
+                                    <span class="sr-only">{{ "Delete"|trans({}, 'admin') }}</span>
+                                    <svg class="size-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"/>
+                                    </svg>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                {% if collections.isEmpty() %}
+                    <tr>
+                        <td colspan="5">
+                            <div class="flex flex-col items-center justify-center gap-3 py-12 px-4 text-center">
+                                <span class="grid place-items-center size-12 rounded-full bg-gray-100 text-gray-400" aria-hidden="true">
+                                    <svg class="size-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7.5A2.5 2.5 0 0 1 5.5 5h3.879a1 1 0 0 1 .707.293l1.414 1.414A1 1 0 0 0 12.207 7h6.293A2.5 2.5 0 0 1 21 9.5v8a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 17.5v-10Z"/>
+                                    </svg>
+                                </span>
+                                <div class="flex flex-col gap-1">
+                                    <span class="text-sm font-medium text-gray-800">{{ "No collections added yet."|trans({}, 'admin') }}</span>
+                                    <span class="text-xs text-gray-500">{{ "Collections will appear here once you add them."|trans({}, 'admin') }}</span>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endautoescape %}
+{% endblock main %}

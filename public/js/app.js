@@ -74,6 +74,11 @@ if ($photoWallWrapper) {
     new PhotoWall($photoWallWrapper).render();
 }
 
+document.querySelectorAll('[data-collection-gallery]').forEach((gallery) => {
+    import(/* webpackChunkName: "collections" */ './features/collections/collection-gallery')
+        .then(({default: CollectionGallery}) => new CollectionGallery(gallery).init());
+});
+
 if (document.querySelector('.chat--wrapper')) {
     import(/* webpackChunkName: "chat" */ './features/chat/chat')
         .then(({default: Chat}) => new Chat(document).render());

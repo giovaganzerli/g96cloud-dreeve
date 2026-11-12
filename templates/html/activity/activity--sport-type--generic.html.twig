@@ -166,6 +166,36 @@
                 </div>
             </section>
         {% endblock mainStatsOnTop %}
+        {% if collections is not empty %}
+            <section>
+                <div class="flex items-center gap-2 mb-3">
+                    <h3 class="font-bold text-gray-900">{{ "Collections"|trans }}</h3>
+                    <span class="text-xs font-medium text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">{{ collections|length }}</span>
+                </div>
+                <div class="grid gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+                    {% for collection in collections %}
+                        {% set collectionImageUrl = collection.getImageUrl() %}
+                        <a href="{{ relativeUrl(path('collection', {collectionId: collection.getId()})) }}"
+                           class="flex items-center gap-3 p-3 bg-white border border-gray-200 rounded-lg shadow-xs transition hover:shadow-md">
+                            {% if collectionImageUrl %}
+                                <img src="{{ placeholderImage() }}" data-src="{{ relativeUrl(collectionImageUrl) }}" alt="{{ collection.getName() }}"
+                                     class="lazy size-14 shrink-0 rounded-md object-cover bg-gray-100">
+                            {% else %}
+                                <span class="grid place-items-center size-14 shrink-0 rounded-md bg-gray-100 text-gray-300" aria-hidden="true">
+                                    {{ svg('image', 'size-6') }}
+                                </span>
+                            {% endif %}
+                            <div class="min-w-0">
+                                <div class="font-medium text-gray-900 truncate">{{ collection.getName() }}</div>
+                                <div class="text-xs text-gray-500">
+                                    {{ collection.getActivityIds()|length }} {{ "activities"|trans }}
+                                </div>
+                            </div>
+                        </a>
+                    {% endfor %}
+                </div>
+            </section>
+        {% endif %}
         {% set localImagePaths = activity.getLocalImagePaths() %}
         {% if localImagePaths %}
             <section>

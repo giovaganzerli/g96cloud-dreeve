@@ -10,6 +10,7 @@ enum NavigationSection: string
     case ACTIVITIES = 'activities';
     case GEAR = 'gear';
     case SEGMENTS = 'segments';
+    case COLLECTIONS = 'collections';
     case MONTHLY_STATS = 'monthly-stats';
     case EDDINGTON = 'eddington';
     case HEATMAP = 'heatmap';

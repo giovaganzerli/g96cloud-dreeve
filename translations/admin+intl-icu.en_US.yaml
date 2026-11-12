@@ -1,5 +1,6 @@
 24-hour: 24-hour
 'A backfill is already queued. It runs on the next import cycle, within five minutes.': 'A backfill is already queued. It runs on the next import cycle, within five minutes.'
+'A random selection of photos of this album is shown on the collection page.': 'A random selection of photos of this album is shown on the collection page.'
 'A rule applies': 'A rule applies'
 AI: AI
 AM/PM: AM/PM
@@ -8,6 +9,7 @@ AM/PM: AM/PM
 Access: Access
 Actions: Actions
 Active: Active
+Activities: Activities
 'Activities scanned': 'Activities scanned'
 'Activities to skip during import': 'Activities to skip during import'
 'Activities to update': 'Activities to update'
@@ -28,6 +30,7 @@ Activity: Activity
 'Add activity': 'Add activity'
 'Add automation rule': 'Add automation rule'
 'Add challenge': 'Add challenge'
+'Add collection': 'Add collection'
 'Add command': 'Add command'
 'Add component': 'Add component'
 'Add condition': 'Add condition'
@@ -39,6 +42,7 @@ Activity: Activity
 'Add rule': 'Add rule'
 'Add segment': 'Add segment'
 'Add service': 'Add service'
+'Add statistic': 'Add statistic'
 'Add task': 'Add task'
 'Add tile layer': 'Add tile layer'
 'Add weight': 'Add weight'
@@ -104,6 +108,8 @@ Clear: Clear
 'Click the map to set the center, or drag the marker to fine-tune it.': 'Click the map to set the center, or drag the marker to fine-tune it.'
 'Click the map to set the location, or drag the marker to fine-tune it.': 'Click the map to set the location, or drag the marker to fine-tune it.'
 Close: Close
+'Collection management': 'Collection management'
+'Collections will appear here once you add them.': 'Collections will appear here once you add them.'
 Command: Command
 Commute: Commute
 Component: Component
@@ -129,6 +135,7 @@ Daemon: Daemon
 Delete: Delete
 'Delete activity': 'Delete activity'
 'Delete automation rule': 'Delete automation rule'
+'Delete collection': 'Delete collection'
 'Delete component': 'Delete component'
 'Delete file import': 'Delete file import'
 'Delete gear': 'Delete gear'
@@ -153,6 +160,7 @@ Duration: Duration
 Edit: Edit
 'Edit activity': 'Edit activity'
 'Edit automation rule': 'Edit automation rule'
+'Edit collection': 'Edit collection'
 'Edit component': 'Edit component'
 'Edit gear': 'Edit gear'
 'Edit maintenance log': 'Edit maintenance log'
@@ -199,6 +207,8 @@ From: From
 Gender: Gender
 General: General
 'Generate an API key': 'Generate an API key'
+'Generate description with AI': 'Generate description with AI'
+Generating...: Generating...
 'Go to first page': 'Go to first page'
 'Go to last page': 'Go to last page'
 'Go to next page': 'Go to next page'
@@ -218,6 +228,8 @@ If: If
 'Ignore retired gear': 'Ignore retired gear'
 Image: Image
 Images: Images
+Immich: Immich
+'Immich album': 'Immich album'
 Import: Import
 'Import Strava data': 'Import Strava data'
 'Import activities': 'Import activities'
@@ -241,9 +253,12 @@ Label: Label
 Latitude: Latitude
 'Leave all unchecked to import every sport type. ⚠️ Restricting this after activities have been imported deletes activities of excluded sport types.': 'Leave all unchecked to import every sport type. ⚠️ Restricting this after activities have been imported deletes activities of excluded sport types.'
 'Leave all unchecked to import every visibility. ⚠️ Restricting this after activities have been imported deletes activities of excluded visibilities.': 'Leave all unchecked to import every visibility. ⚠️ Restricting this after activities have been imported deletes activities of excluded visibilities.'
+'Leave empty to disable the surface analysis. Every activity is analysed once, during the next import run.': 'Leave empty to disable the surface analysis. Every activity is analysed once, during the next import run.'
 'Leave empty to include all sport types.': 'Leave empty to include all sport types.'
 'Leave empty to use the default title.': 'Leave empty to use the default title.'
+'Leave this empty and a description will be generated automatically with the AI, based on the statistics and the recorded tracks.': 'Leave this empty and a description will be generated automatically with the AI, based on the statistics and the recorded tracks.'
 'Lets an external client upload activity files over HTTP. The key is the only thing guarding that endpoint, so treat it like a password.': 'Lets an external client upload activity files over HTTP. The key is the only thing guarding that endpoint, so treat it like a password.'
+Linked: Linked
 'Loading the route...': 'Loading the route...'
 Locale: Locale
 Log: Log
@@ -278,10 +293,13 @@ Monday: Monday
 'Most recent activities (cards)': 'Most recent activities (cards)'
 'Most recent activities (list)': 'Most recent activities (list)'
 'Moving time': 'Moving time'
+Name: Name
 'No activities imported yet.': 'No activities imported yet.'
 'No activities match the current filters.': 'No activities match the current filters.'
 'No activity found for that ID.': 'No activity found for that ID.'
+'No album': 'No album'
 'No automation rules yet.': 'No automation rules yet.'
+'No collections added yet.': 'No collections added yet.'
 'No components yet.': 'No components yet.'
 'No file imports match the current filters.': 'No file imports match the current filters.'
 'No files imported yet.': 'No files imported yet.'
@@ -294,6 +312,7 @@ Monday: Monday
 'No segments match the current filters.': 'No segments match the current filters.'
 'No sport types selected': 'No sport types selected'
 'No unit': 'No unit'
+None: None
 'Normal date format': 'Normal date format'
 'Not configured, the API is closed': 'Not configured, the API is closed'
 'Not fitted': 'Not fitted'
@@ -309,6 +328,7 @@ Notifications: Notifications
 'Number of widgets of this type you already have configured.': 'Number of widgets of this type you already have configured.'
 'Only show activities with a map': 'Only show activities with a map'
 "Oops, looks like you've wandered off the map! 🗺️": "Oops, looks like you've wandered off the map! 🗺️"
+OpenStreetMap: OpenStreetMap
 Operator: Operator
 'Optional YAML for date-range and sport-type specific zones. Leave empty unless you know you need it.': 'Optional YAML for date-range and sport-type specific zones. Leave empty unless you know you need it.'
 'Optional link to your profile picture, shown in the nav bar. A square image is recommended. Leave empty to disable.': 'Optional link to your profile picture, shown in the nav bar. A square image is recommended. Leave empty to disable.'
@@ -319,6 +339,7 @@ Operator: Operator
 'Optional. Your current Zwift level (1 or higher). Leave empty to hide the Zwift badge.': 'Optional. Your current Zwift level (1 or higher). Leave empty to hide the Zwift badge.'
 'Optional. Your current Zwift racing score (between 0 and 1000).': 'Optional. Your current Zwift racing score (between 0 and 1000).'
 'Original file': 'Original file'
+'Overpass API endpoint': 'Overpass API endpoint'
 'PHP date format for normal dates, e.g. d-m-Y renders to 01-01-2025.': 'PHP date format for normal dates, e.g. d-m-Y renders to 01-01-2025.'
 'PHP date format for short dates, e.g. d-m-y renders to 01-01-25.': 'PHP date format for short dates, e.g. d-m-y renders to 01-01-25.'
 'Parts you track maintenance for, eg: chains, cassettes, brake pads...': 'Parts you track maintenance for, eg: chains, cassettes, brake pads...'
@@ -359,6 +380,7 @@ Remove: Remove
 'Remove widget': 'Remove widget'
 Removing...: Removing...
 'Render the map tiles in greyscale': 'Render the map tiles in greyscale'
+Reorder: Reorder
 "Reorder widgets and set each widget's width.": "Reorder widgets and set each widget's width."
 'Require a login for the entire app': 'Require a login for the entire app'
 'Require a login for the entire app, not just the admin panel. Recommended when your instance is reachable from the internet, which it has to be for the Strava webhook.': 'Require a login for the entire app, not just the admin panel. Recommended when your instance is reachable from the internet, which it has to be for the Strava webhook.'
@@ -404,6 +426,7 @@ Segmento: Segmento
 'Select gear...': 'Select gear...'
 'Select sensors': 'Select sensors'
 'Select sport types': 'Select sport types'
+'Select the activities': 'Select the activities'
 'Select the serviced gear…': 'Select the serviced gear…'
 'Sends a notification after every successful import.': 'Sends a notification after every successful import.'
 'Sends a notification when a new app version is available. Requires a configured notification service.': 'Sends a notification when a new app version is available. Requires a configured notification service.'
@@ -411,6 +434,7 @@ Segmento: Segmento
 Sensors: Sensors
 'Sensors are only recorded for activities imported from FIT files. Activities from Strava, GPX or TCX never match this condition.': 'Sensors are only recorded for activities imported from FIT files. Activities from Strava, GPX or TCX never match this condition.'
 'Serial number, size, where you bought it, ...': 'Serial number, size, where you bought it, ...'
+'Server URL': 'Server URL'
 'Set description': 'Set description'
 'Set its status to Retired instead to hide it from your active gear.': 'Set its status to Retired instead to hide it from your active gear.'
 'Set name': 'Set name'
@@ -444,6 +468,7 @@ Source: Source
 'Start date': 'Start date'
 'Start date and time': 'Start date and time'
 'Starts near': 'Starts near'
+Statistics: Statistics
 'Stop processing further rules when this rule matches': 'Stop processing further rules when this rule matches'
 'Stops after match': 'Stops after match'
 'Stops here': 'Stops here'
@@ -465,7 +490,9 @@ Task: Task
 Tasks: Tasks
 'Test automation rules': 'Test automation rules'
 'Test rules': 'Test rules'
+'The API key is used to fetch the photos of the linked album. The photos are served through Dreeve, your server never exposes the key to visitors.': 'The API key is used to fetch the photos of the linked album. The photos are served through Dreeve, your server never exposes the key to visitors.'
 'The URL the app is hosted on.': 'The URL the app is hosted on.'
+'The activities in this collection will not be deleted.': 'The activities in this collection will not be deleted.'
 'The activity started': 'The activity started'
 'The activity will be marked as a commute.': 'The activity will be marked as a commute.'
 'The activity will be marked as a group activity.': 'The activity will be marked as a group activity.'
@@ -475,6 +502,7 @@ Tasks: Tasks
 'The average power': 'The average power'
 'The average speed': 'The average speed'
 'The backfill runs on the next import cycle, using the rules as they are configured at that moment. This cannot be undone.': 'The backfill runs on the next import cycle, using the rules as they are configured at that moment. This cannot be undone.'
+'The calculated statistics can be edited manually. Drag the rows to change the order, and add your own statistics for things like travel costs or nights spent camping.': 'The calculated statistics can be edited manually. Drag the rows to change the order, and add your own statistics for things like travel costs or nights spent camping.'
 'The calories burned': 'The calories burned'
 'The color of the routes drawn on every map. Accepts any valid CSS color, e.g. red, #FF0000 or rgb(255,0,0).': 'The color of the routes drawn on every map. Accepts any valid CSS color, e.g. red, #FF0000 or rgb(255,0,0).'
 'The current name of the activity': 'The current name of the activity'
@@ -498,6 +526,7 @@ Tasks: Tasks
 'The segment has been created. Its efforts will show up after the next import run.': 'The segment has been created. Its efforts will show up after the next import run.'
 'The sport type, e.g. "Walk" or "Trail Run"': 'The sport type, e.g. "Walk" or "Trail Run"'
 'The start date, optionally with a custom PHP date format': 'The start date, optionally with a custom PHP date format'
+'The statistics of the collection are calculated from these activities.': 'The statistics of the collection are calculated from these activities.'
 'The tile layer URLs used to render the maps. Add more than one to stack them, for example to overlay place names on top of a satellite layer.': 'The tile layer URLs used to render the maps. Add more than one to stack them, for example to overlay place names on top of a satellite layer.'
 'The total distance ridden with the gear': 'The total distance ridden with the gear'
 'The unit system used to render distances, elevations, temperatures, etc.': 'The unit system used to render distances, elevations, temperatures, etc.'
@@ -510,6 +539,7 @@ Tasks: Tasks
 'This activity has no GPS data.': 'This activity has no GPS data.'
 'This component is fitted to multiple gears, pick the one you serviced.': 'This component is fitted to multiple gears, pick the one you serviced.'
 'This only removes the import record, the imported activity is kept.': 'This only removes the import record, the imported activity is kept.'
+'This overwrites the current description with a freshly generated one, based on the statistics and the recorded tracks.': 'This overwrites the current description with a freshly generated one, based on the statistics and the recorded tracks.'
 'This page shows a different key every time it is opened, and only the one in your environment file is applied.': 'This page shows a different key every time it is opened, and only the one in your environment file is applied.'
 "This value is imported from Strava and can't be edited here.": "This value is imported from Strava and can't be edited here."
 'This widget still needs to be configured.': 'This widget still needs to be configured.'
@@ -539,8 +569,10 @@ Until: Until
 'Upload files': 'Upload files'
 Uploaded: Uploaded
 Uploading...: Uploading...
+'Used to calculate how much of your activities was recorded on paved and unpaved roads.': 'Used to calculate how much of your activities was recorded on paved and unpaved roads.'
 'Used to calculate the training load of this activity': 'Used to calculate the training load of this activity'
 Username: Username
+Value: Value
 'Verify token': 'Verify token'
 Warning: Warning
 'Weather and reverse geocoding have been retrieved.': 'Weather and reverse geocoding have been retrieved.'

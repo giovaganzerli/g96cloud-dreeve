@@ -1,0 +1,189 @@
+{% extends "html/admin/page/template.html.twig" %}
+{% block main %}
+    {% autoescape false %}
+    {% set collection = collection is defined ? collection : null %}
+    {% set statistics = statistics is defined ? statistics : null %}
+    {% set overviewUrl = relativeUrl(path('admin_manage_collection_overview')) %}
+    {% set editUrl = collection ? relativeUrl(path('admin_edit_collection', {collectionId: collection.getId()})) : overviewUrl %}
+    <div class="modal-like-form">
+        <div class="w-full max-w-3xl overflow-y-auto p-6 bg-white border border-gray-200 rounded-lg shadow-xl">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold">
+                    {{ collection ? "Edit collection"|trans({}, 'admin') : "Add collection"|trans({}, 'admin') }}
+                </h3>
+                <a href="{{ overviewUrl }}" aria-label="{{ "Close"|trans({}, 'admin') }}"
+                   class="grid place-items-center size-8 rounded-lg text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-900">
+                    <svg class="size-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 17.94 6M18 18 6.06 6"/>
+                    </svg>
+                </a>
+            </div>
+            {% if collection and generateDescriptionCommand is defined %}
+                <form data-dispatch-command="{{ generateDescriptionCommand }}" data-redirect="{{ editUrl }}" class="mb-4">
+                    <input type="hidden" name="collectionId" value="{{ collection.getId() }}">
+                    <div data-form-error class="form-error hidden" role="alert"></div>
+                    <button type="submit" data-has-loading-state class="btn--secondary inline-flex items-center gap-1.5">
+                        <span class="label">{{ "Generate description with AI"|trans({}, 'admin') }}</span>
+                        <span class="label--loading">{{ "Generating..."|trans({}, 'admin') }}</span>
+                    </button>
+                    <p class="description">
+                        {{ "This overwrites the current description with a freshly generated one, based on the statistics and the recorded tracks."|trans({}, 'admin') }}
+                    </p>
+                </form>
+            {% endif %}
+            <form data-dispatch-command="{{ dispatchCommand }}" data-redirect="{{ overviewUrl }}" class="flex flex-col gap-4">
+                {% if collection %}
+                    <input type="hidden" name="collectionId" value="{{ collection.getId() }}">
+                {% endif %}
+                <div data-form-error class="form-error hidden" role="alert"></div>
+                <div>
+                    <label for="collection-name">{{ "Name"|trans({}, 'admin') }}</label>
+                    <input type="text" id="collection-name" name="name" required value="{{ collection ? collection.getName() : '' }}">
+                </div>
+                <div>
+                    <label for="collection-description">{{ "Description"|trans({}, 'admin') }}</label>
+                    <textarea id="collection-description" name="description" rows="4">{{ collection ? collection.getDescription() : '' }}</textarea>
+                    <p class="description">
+                        {{ "Leave this empty and a description will be generated automatically with the AI, based on the statistics and the recorded tracks."|trans({}, 'admin') }}
+                    </p>
+                </div>
+                <div>
+                    <label>{{ "Image"|trans({}, 'admin') }}</label>
+                    {% set existingImages = [] %}
+                    {% if collection and collection.getLocalImagePath() %}
+                        {% set imagePath = collection.getLocalImagePath() %}
+                        {% set existingImages = [{ url: imagePath, name: imagePath|split('/')|last, path: imagePath }] %}
+                    {% endif %}
+                    {% include 'html/admin/component/image-dropzone-upload.html.twig' with { name: 'localImagePath', maxImages: 1, existingImages: existingImages } %}
+                </div>
+                <div>
+                    <label>{{ "Activities"|trans({}, 'admin') }}</label>
+                    {% set selectedActivityIds = [] %}
+                    {% set selectedActivityOptions = [] %}
+                    {% if collection %}
+                        {% for activityId in collection.getActivityIds() %}
+                            {% set selectedActivityIds = selectedActivityIds|merge([activityId.toUnprefixedString()]) %}
+                            {% set selectedActivityOptions = selectedActivityOptions|merge([{ value: activityId.toUnprefixedString(), label: activityId.toUnprefixedString() }]) %}
+                        {% endfor %}
+                    {% endif %}
+                    {% include 'html/admin/component/checkbox-multiselect.html.twig' with {
+                        name: 'activityIds[]',
+                        options: [],
+                        selected: selectedActivityIds,
+                        selectedOptions: selectedActivityOptions,
+                        optionsUrl: relativeUrl(path('collection_activity_search')),
+                        placeholder: "Select the activities"|trans({}, 'admin'),
+                    } %}
+                    <p class="description">
+                        {{ "The statistics of the collection are calculated from these activities."|trans({}, 'admin') }}
+                    </p>
+                </div>
+                <div>
+                    <label for="collection-immich-album">{{ "Immich album"|trans({}, 'admin') }}</label>
+                    <select id="collection-immich-album" name="immichAlbumId"
+                            data-async-select-url="{{ relativeUrl(path('admin_collection_immich_albums')) }}"
+                            data-async-select-placeholder="{{ "No album"|trans({}, 'admin') }}">
+                        <option value="">{{ "No album"|trans({}, 'admin') }}</option>
+                        {% if collection and collection.getImmichAlbumId() %}
+                            <option value="{{ collection.getImmichAlbumId() }}" selected>{{ collection.getImmichAlbumId() }}</option>
+                        {% endif %}
+                    </select>
+                    <p class="description">
+                        {{ "A random selection of photos of this album is shown on the collection page."|trans({}, 'admin') }}
+                    </p>
+                </div>
+                <!-- STATISTICS -->
+                <div data-statistics-editor>
+                    <div class="flex items-center justify-between mb-2">
+                        <label>{{ "Statistics"|trans({}, 'admin') }}</label>
+                        <button type="button" data-statistics-add class="btn--secondary inline-flex items-center gap-1.5">
+                            <svg class="size-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5"/>
+                            </svg>
+                            <span>{{ "Add statistic"|trans({}, 'admin') }}</span>
+                        </button>
+                    </div>
+                    <input type="hidden" name="statisticOrder" data-statistics-order value="[]">
+                    <input type="hidden" name="customStatistics" data-statistics-custom value="[]">
+                    <div class="flex flex-col gap-2 max-h-96 overflow-y-auto rounded-lg border border-gray-200 p-2" data-statistics-list>
+                        {% if statistics %}
+                            {% for statistic in statistics %}
+                                {% if statistic.isCustom() %}
+                                    <div class="flex items-center gap-2 p-2 bg-gray-50 rounded-lg border border-gray-200"
+                                         data-sort-item data-sort-id="{{ statistic.getKey() }}" data-custom-statistic="{{ statistic.getKey()|replace({'custom.': ''}) }}">
+                                        <button type="button" class="unstyled cursor-grab text-gray-400" data-drag-handle aria-label="{{ "Reorder"|trans({}, 'admin') }}">
+                                            <svg class="size-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                                                <path d="M9 4a1 1 0 1 1-2 0 1 1 0 0 1 2 0Zm0 8a1 1 0 1 1-2 0 1 1 0 0 1 2 0Zm0 8a1 1 0 1 1-2 0 1 1 0 0 1 2 0Zm8 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0Zm0-8a1 1 0 1 1-2 0 1 1 0 0 1 2 0Zm0-8a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"/>
+                                            </svg>
+                                        </button>
+                                        <input type="hidden" data-custom-statistic-id value="{{ statistic.getKey()|replace({'custom.': ''}) }}">
+                                        <input type="text" data-custom-statistic-label placeholder="{{ "Label"|trans({}, 'admin') }}" value="{{ statistic.getLabel() }}" class="flex-1">
+                                        <input type="text" data-custom-statistic-value placeholder="{{ "Value"|trans({}, 'admin') }}" value="{{ statistic.getValue() }}" class="flex-1">
+                                        <input type="text" data-custom-statistic-unit placeholder="{{ "Unit"|trans({}, 'admin') }}" value="{{ statistic.getUnit() }}" class="w-20">
+                                        <input type="hidden" data-custom-statistic-icon value="{{ statistic.getIcon() }}">
+                                        <input type="hidden" data-custom-statistic-category value="{{ statistic.getCategory().value }}">
+                                        <button type="button" data-statistics-remove class="unstyled cursor-pointer text-gray-400 transition-colors hover:text-red-600"
+                                                aria-label="{{ "Remove"|trans({}, 'admin') }}">
+                                            <svg class="size-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 17.94 6M18 18 6.06 6"/>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                {% else %}
+                                    <div class="flex items-center gap-2 p-2 bg-white rounded-lg border border-gray-200"
+                                         data-sort-item data-sort-id="{{ statistic.getKey() }}">
+                                        <button type="button" class="unstyled cursor-grab text-gray-400" data-drag-handle aria-label="{{ "Reorder"|trans({}, 'admin') }}">
+                                            <svg class="size-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                                                <path d="M9 4a1 1 0 1 1-2 0 1 1 0 0 1 2 0Zm0 8a1 1 0 1 1-2 0 1 1 0 0 1 2 0Zm0 8a1 1 0 1 1-2 0 1 1 0 0 1 2 0Zm8 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0Zm0-8a1 1 0 1 1-2 0 1 1 0 0 1 2 0Zm0-8a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"/>
+                                            </svg>
+                                        </button>
+                                        <span class="text-primary">{{ svg(statistic.getIcon(), 'size-4', 'text-primary') }}</span>
+                                        <span class="flex-1 text-sm text-gray-700">{{ statistic.getLabel() }}</span>
+                                        <input type="text" name="statisticOverrides[{{ statistic.getKey() }}]"
+                                               value="{{ statistic.getValue() }}" class="w-40">
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    <template data-statistics-template>
+                        <div class="flex items-center gap-2 p-2 bg-gray-50 rounded-lg border border-gray-200"
+                             data-sort-item data-custom-statistic>
+                            <button type="button" class="unstyled cursor-grab text-gray-400" data-drag-handle aria-label="{{ "Reorder"|trans({}, 'admin') }}">
+                                <svg class="size-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M9 4a1 1 0 1 1-2 0 1 1 0 0 1 2 0Zm0 8a1 1 0 1 1-2 0 1 1 0 0 1 2 0Zm0 8a1 1 0 1 1-2 0 1 1 0 0 1 2 0Zm8 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0Zm0-8a1 1 0 1 1-2 0 1 1 0 0 1 2 0Zm0-8a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"/>
+                                </svg>
+                            </button>
+                            <input type="hidden" data-custom-statistic-id>
+                            <input type="text" data-custom-statistic-label placeholder="{{ "Label"|trans({}, 'admin') }}" class="flex-1">
+                            <input type="text" data-custom-statistic-value placeholder="{{ "Value"|trans({}, 'admin') }}" class="flex-1">
+                            <input type="text" data-custom-statistic-unit placeholder="{{ "Unit"|trans({}, 'admin') }}" class="w-20">
+                            <input type="hidden" data-custom-statistic-icon value="hashtag">
+                            <input type="hidden" data-custom-statistic-category value="other">
+                            <button type="button" data-statistics-remove class="unstyled cursor-pointer text-gray-400 transition-colors hover:text-red-600"
+                                    aria-label="{{ "Remove"|trans({}, 'admin') }}">
+                                <svg class="size-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 17.94 6M18 18 6.06 6"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </template>
+                    <p class="description">
+                        {{ "The calculated statistics can be edited manually. Drag the rows to change the order, and add your own statistics for things like travel costs or nights spent camping."|trans({}, 'admin') }}
+                    </p>
+                </div>
+                <div class="flex justify-end gap-2 border-t border-gray-200 pt-4">
+                    {% if collection %}
+                        <a href="{{ relativeUrl(path('admin_delete_collection', {collectionId: collection.getId()})) }}" type="button" class="btn--danger me-auto">{{ "Delete"|trans({}, 'admin') }}</a>
+                    {% endif %}
+                    <a href="{{ overviewUrl }}" type="button" class="btn--secondary">{{ "Cancel"|trans({}, 'admin') }}</a>
+                    <button type="submit" data-has-loading-state class="group btn--primary">
+                        <span class="label">{{ "Save"|trans({}, 'admin') }}</span>
+                        <span class="label--loading">{{ "Saving..."|trans({}, 'admin') }}</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    {% endautoescape %}
+{% endblock main %}
